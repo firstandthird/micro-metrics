@@ -3,6 +3,8 @@ app:
   command: 'nodemon'
   volumes:
     - '.:/app/server'
+  external_links:
+    - mongo_1
   environment:
     PORT: 8081
   ports:

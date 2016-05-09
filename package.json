@@ -24,6 +24,9 @@
   },
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
+    "hapi-mongodb": "^6.0.0",
+    "joi": "^8.1.0",
+    "logr": "^1.8.0",
     "rapptor": "firstandthird/rapptor#13332ac"
   },
   "devDependencies": {
