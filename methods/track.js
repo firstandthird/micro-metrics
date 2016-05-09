@@ -2,27 +2,29 @@
 'use strict';
 
 const Joi = require('joi');
-const Logr = require('logr');
 const _ = require('lodash');
 
-const log = new Logr({
-  setDefaults: true,
-  defaultTags: ['micrometrics'],
-  type: 'console',
-  renderOptions: {
-    console: {
-      pretty: true
-    }
-  }
-});
-
 module.exports = {
-  method(payload, done) {
+  method(payload, trackData, done) {
     if (!done) {
       done = _.noop;
     }
 
+    if (!trackData) {
+      trackData = {};
+    }
+
     const server = this;
+
+    if (payload.tags && _.isString(payload.tags)) {
+      payload.tags = payload.tags.split(',');
+    }
+
+    if (!payload.data) {
+      payload.data = {};
+    }
+
+    payload.data = _.merge(payload.data, trackData);
 
     const validation = Joi.object().keys({
       type: Joi.string().required(),
@@ -34,7 +36,7 @@ module.exports = {
 
     Joi.validate(payload, validation, (err, val) => {
       if (err) {
-        log(['track', 'validation-error'], { err, message: 'payload failed validation' });
+        server.log(['track', 'validation-error'], { err, message: 'payload failed validation' });
         return done(err);
       }
 
@@ -43,7 +45,7 @@ module.exports = {
       const db = server.plugins['hapi-mongodb'].db;
       db.collection('tracks').insertOne(val, (dbErr, data) => {
         if (dbErr) {
-          log(['track', 'dbError'], {
+          server.log(['track', 'dbError'], {
             err,
             message: 'Error inserting data into database',
             payload: val
@@ -53,7 +55,7 @@ module.exports = {
         }
 
         if (data.result.ok !== 1) {
-          log(['track', 'dbError'], {
+          server.log(['track', 'dbError'], {
             err: data.result,
             message: 'Db Insert Result returned ok:0',
             payload: val

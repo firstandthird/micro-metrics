@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 exports.main = {
   method: 'GET',
   path: '/r/',
@@ -13,13 +11,10 @@ exports.main = {
       return reply({ err: 'must provide a location to redirect' });
     }
 
-    _.unset(payload, 'to');
+    delete payload.to;
 
-    if (payload.tags) {
-      payload.tags = payload.tags.split(',');
-    }
-
-    request.server.methods.track(payload);
+    const data = request.server.methods.extractInfo(request);
+    request.server.methods.track(payload, data);
 
     reply.redirect(to);
   }

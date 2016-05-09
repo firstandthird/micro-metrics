@@ -1,23 +1,15 @@
-
+'use strict';
 
 exports.main = {
   method: 'GET',
   path: '/t.gif',
   handler: (request, reply) => {
-    const buf = new Buffer([
-      0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00,
-      0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x2c,
-      0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02,
-      0x02, 0x44, 0x01, 0x00, 0x3b]);
-
     const payload = request.query;
-    if (payload.tags) {
-      payload.tags = payload.tags.split(',');
-    }
 
-    request.server.methods.track(payload);
+    const data = request.server.methods.extractInfo(request);
 
-    reply(buf)
-      .header('Content-Type', 'image/gif');
+    request.server.methods.track(payload, data);
+
+    reply('').code(204);
   }
 };
