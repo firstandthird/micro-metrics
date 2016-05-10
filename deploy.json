@@ -1,0 +1,4 @@
+{
+  "dockerargs": "-p 8080 -e NODE_ENV={{env}} --log-driver awslogs --log-opt \"awslogs-group={{vars.ENV_TYPE}}-apps\" --log-opt \"awslogs-stream=micrometrics-{{safeBranch}}--\" -e VIRTUAL_HOST={{safeBranch}}-micrometrics.{{vars.ROOT_HOST}}",
+  "scale": "{{ env == 'production' ? 3 : 1 }}"
+}
