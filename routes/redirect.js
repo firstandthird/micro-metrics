@@ -13,8 +13,8 @@ exports.main = {
 
     delete payload.to;
 
-    const data = request.server.methods.extractInfo(request);
-    request.server.methods.track(payload, data);
+    payload.data = request.server.methods.extractInfo(request);
+    request.server.methods.track(payload);
 
     reply.redirect(to);
   }

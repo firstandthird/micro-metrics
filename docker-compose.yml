@@ -4,7 +4,7 @@ app:
   volumes:
     - '.:/app/server'
   external_links:
-    - mongo_1:mongo
+    - mongo
   environment:
     PORT: 8081
   ports:

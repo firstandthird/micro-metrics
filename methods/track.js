@@ -5,13 +5,9 @@ const Joi = require('joi');
 const _ = require('lodash');
 
 module.exports = {
-  method(payload, trackData, done) {
+  method(payload, done) {
     if (!done) {
       done = _.noop;
-    }
-
-    if (!trackData) {
-      trackData = {};
     }
 
     const server = this;
@@ -19,12 +15,6 @@ module.exports = {
     if (payload.tags && _.isString(payload.tags)) {
       payload.tags = payload.tags.split(',');
     }
-
-    if (!payload.data) {
-      payload.data = {};
-    }
-
-    payload.data = _.merge(payload.data, trackData);
 
     const validation = Joi.object().keys({
       type: Joi.string().required(),

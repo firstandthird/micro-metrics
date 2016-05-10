@@ -7,9 +7,9 @@ exports.main = {
     const payload = request.query;
 
     const data = request.server.methods.extractInfo(request);
+    payload.data = data;
+    request.server.methods.track(payload);
 
-    request.server.methods.track(payload, data);
-
-    reply('').code(204);
+    reply('').header('Content-Type', 'image/gif').code(204);
   }
 };
