@@ -1,11 +1,14 @@
 app:
   build: .
-  command: 'nodemon'
+  command: 'nodemon index.js'
   volumes:
     - '.:/app/server'
-  external_links:
-    - mongo
+  links:
+    - 'db:mongo'
   environment:
     PORT: 8081
   ports:
     - '8081:8081'
+db:
+  image: 'mongo'
+  command: 'mongod --quiet'
