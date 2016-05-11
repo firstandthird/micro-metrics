@@ -1,4 +1,4 @@
 mongo:
-  host: "10.0.0.199"
+  host: "mongo"
   port: "27017"
   db: "micrometrics"
