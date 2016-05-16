@@ -25,7 +25,7 @@ module.exports = {
 
     const validation = Joi.object().keys({
       type: Joi.string().required(),
-      tags: Joi.array(),
+      tags: Joi.object(),
       value: Joi.any().default(1),
       data: Joi.any(),
       userId: Joi.string()
