@@ -13,7 +13,14 @@ module.exports = {
     const server = this;
 
     if (payload.tags && _.isString(payload.tags)) {
-      payload.tags = payload.tags.split(',');
+      const allTags = payload.tags.split(',');
+      _.each(allTags, (tag) => {
+        const tagArr = tag.split('=');
+        if (tagArr.length === 1) {
+          tagArr.push(1);
+        }
+        payload.tags[tagArr[0]] = tagArr[1];
+      });
     }
 
     const validation = Joi.object().keys({
