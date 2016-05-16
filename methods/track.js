@@ -13,12 +13,21 @@ module.exports = {
     const server = this;
 
     if (payload.tags && _.isString(payload.tags)) {
-      payload.tags = payload.tags.split(',');
+      const allTags = payload.tags.split(',');
+      payload.tags = {};
+
+      _.each(allTags, (tag) => {
+        const tagArr = tag.split('=');
+        if (tagArr.length === 1) {
+          tagArr.push(1);
+        }
+        payload.tags[tagArr[0]] = tagArr[1];
+      });
     }
 
     const validation = Joi.object().keys({
       type: Joi.string().required(),
-      tags: Joi.array(),
+      tags: Joi.object(),
       value: Joi.any().default(1),
       data: Joi.any(),
       userId: Joi.string()
