@@ -14,6 +14,8 @@ module.exports = {
 
     if (payload.tags && _.isString(payload.tags)) {
       const allTags = payload.tags.split(',');
+      payload.tags = {};
+
       _.each(allTags, (tag) => {
         const tagArr = tag.split('=');
         if (tagArr.length === 1) {
