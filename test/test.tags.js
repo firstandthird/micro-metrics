@@ -4,28 +4,28 @@ const lab = exports.lab = require('lab').script();
 const setup = require('../lib/setup.test.js');
 const tagsRoute = require('../routes/api/tags.js').tags;
 const _ = require('lodash');
-/*
+
 lab.test('can use the tags method to get a list of tags used in the db', (done) => {
   setup({}, (server) => {
     server.route(tagsRoute);
     // add a couple of fake metrics:
     server.plugins['hapi-mongodb'].collection('tracks').insertMany([{
       type: 'BankAccount',
-      tags: [{currency: 'dollars'}],
+      tags: { currency: 'dollars' },
       value: 142000000,
       data: 'liquid Assets only',
       userId: 'Montgomery Burns'
     },
     {
       type: 'BankAccount',
-      tags: [{currency: 'dollars'}, {units: 'cents'}],
+      tags: { currency: 'dollars', units: 'cents' },
       value: 0.15,
       data: 'liquid assets only',
       userId: 'Barney'
     },
     {
       type: 'Radish',
-      tags: [{animalVegetableMineral: 'vegetable'}],
+      tags: { animalVegetableMineral: 'vegetable' },
       value: 1,
       data: 'radishes are a good source of electrolytes and minerals ',
       userId: 'user1234'
@@ -47,29 +47,28 @@ lab.test('can use the tags method to get a list of tags used in the db', (done) 
     });
   });
 });
-*/
+
 lab.test('can use the tags method with the optional type parameter', (done) => {
   setup({}, (server) => {
     server.route(tagsRoute);
     // add a couple of fake metrics:
-    server.plugins['hapi-mongodb'].collection('tracks').insertMany([
-    {
+    server.plugins['hapi-mongodb'].collection('tracks').insertMany([{
       type: 'BankAccount',
-      tags: [{ currency: 'yen'}],
+      tags: { currency: 'yen' },
       value: 142000000,
       data: 'liquid Assets only',
       userId: 'Montgomery Burns'
     },
     {
       type: 'BankAccount',
-      tags: [{ currency: 'dollars'}, { units: 'cents'}],
+      tags: { currency: 'dollars', units: 'cents' },
       value: 0.15,
       data: 'liquid assets only',
       userId: 'Barney'
     },
     {
       type: 'Radish',
-      tags: [ {animalVegetableMineral: 'vegetable'}],
+      tags: { animalVegetableMineral: 'vegetable' },
       value: 1,
       data: 'radishes are a good source of electrolytes and minerals ',
       userId: 'user1234'

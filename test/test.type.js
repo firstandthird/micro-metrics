@@ -9,28 +9,28 @@ lab.test('can use the get method to get a metric from the db', (done) => {
     // add a few fake metrics:
     server.plugins['hapi-mongodb'].collection('tracks').insertMany([{
       type: 'BankAccount',
-      tags: ['dollars'],
+      tags: { currency: 'yen' },
       value: 142000000,
       data: 'liquid Assets only',
       userId: 'Montgomery Burns'
     },
     {
       type: 'BankAccount',
-      tags: ['dollars', 'cents'],
+      tags: { currency: 'dollars', units: 'cents' },
       value: 0.15,
       data: 'liquid assets only',
       userId: 'Barney'
     },
     {
       type: 'WebPage',
-      tags: ['accesses'],
+      tags: { accesses: 123 },
       value: 23,
       data: 'validated accesses only',
       userId: 'Barney'
     },
     {
       type: 'Radish',
-      tags: ['vegetable'],
+      tags: { animalVegetableMineral: 'vegetable' },
       value: 1,
       data: 'radishes are a good source of electrolytes and minerals ',
       userId: 'user1234'
