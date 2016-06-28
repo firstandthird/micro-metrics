@@ -1,0 +1,10 @@
+
+host: 'http://localhost'
+connection:
+  port: '8080'
+mongo:
+  db: "test-micrometrics"
+
+plugins:
+  hapi-mongodb:
+    url: "mongodb://localhost:27017/{{mongo.db}}"

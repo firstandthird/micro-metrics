@@ -1,13 +1,22 @@
 'use strict';
 const code = require('code');
 const lab = exports.lab = require('lab').script();
-const setup = require('../lib/setup.test.js');
-const typeRoute = require('../routes/api/types.js').types;
-lab.test('can use the get method to get a metric from the db', (done) => {
-  setup({}, (server) => {
-    server.route(typeRoute);
+const setup = require('./setup.test.js').withRapptor;
+
+lab.experiment('tags', { timeout: 5000 }, (alldone) => {
+  let server;
+  lab.beforeEach({ timeout: 5000 }, (done) => {
+    setup({}, (result) => {
+      server = result;
+      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
+      done();
+    });
+  });
+
+  lab.test('can use the get method to get a metric from the db', { timeout: 5000 }, (done) => {
+    code.expect(server).to.not.equal(null);
     // add a few fake metrics:
-    server.plugins['hapi-mongodb'].collection('tracks').insertMany([{
+    server.plugins['hapi-mongodb'].db.collection('tracks').insertMany([{
       type: 'BankAccount',
       tags: { currency: 'yen' },
       value: 142000000,

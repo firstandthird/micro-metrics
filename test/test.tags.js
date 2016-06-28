@@ -1,15 +1,22 @@
 'use strict';
 const code = require('code');
 const lab = exports.lab = require('lab').script();
-const setup = require('../lib/setup.test.js');
-const tagsRoute = require('../routes/api/tags.js').tags;
+const setup = require('./setup.test.js').withRapptor;
 const _ = require('lodash');
 
-lab.test('can use the tags method to get a list of tags used in the db', (done) => {
-  setup({}, (server) => {
-    server.route(tagsRoute);
+lab.experiment('tags', { timeout: 5000 }, (alldone) => {
+  let server;
+  lab.beforeEach({ timeout: 5000 }, (done) => {
+    setup({}, (result) => {
+      server = result;
+      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
+      done();
+    });
+  });
+  lab.test('can use the tags method to get a list of tags used in the db', (done) => {
+    code.expect(server).to.not.equal(null);
     // add a couple of fake metrics:
-    server.plugins['hapi-mongodb'].collection('tracks').insertMany([{
+    server.plugins['hapi-mongodb'].db.collection('tracks').insertMany([{
       type: 'BankAccount',
       tags: { currency: 'dollars' },
       value: 142000000,
@@ -31,6 +38,7 @@ lab.test('can use the tags method to get a list of tags used in the db', (done) 
       userId: 'user1234'
     },
   ], () => {
+    console.log('inject');
       server.inject({
         url: '/api/tags',
         method: 'GET'
@@ -39,6 +47,7 @@ lab.test('can use the tags method to get a list of tags used in the db', (done) 
         code.expect(typeof response.result).to.equal('object');
         code.expect(_.keys(response.result).length).to.equal(3);
         code.expect(_.keys(response.result)).to.include('currency');
+        code.expect(_.keys(response.result)).to.include('units');
         code.expect(response.result.currency).to.include('dollars');
         server.stop(() => {
           done();
@@ -46,13 +55,11 @@ lab.test('can use the tags method to get a list of tags used in the db', (done) 
       });
     });
   });
-});
+  lab.test('can use the tags method with the optional type parameter', { timeout: 5000 }, (done) => {
+    code.expect(server).to.not.equal(null);
 
-lab.test('can use the tags method with the optional type parameter', (done) => {
-  setup({}, (server) => {
-    server.route(tagsRoute);
     // add a couple of fake metrics:
-    server.plugins['hapi-mongodb'].collection('tracks').insertMany([{
+    server.plugins['hapi-mongodb'].db.collection('tracks').insertMany([{
       type: 'BankAccount',
       tags: { currency: 'yen' },
       value: 142000000,
