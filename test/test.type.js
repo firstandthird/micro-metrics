@@ -3,7 +3,7 @@ const code = require('code');
 const lab = exports.lab = require('lab').script();
 const setup = require('./setup.test.js').withRapptor;
 
-lab.experiment('tags', { timeout: 5000 }, (alldone) => {
+lab.experiment('tags', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
     setup({}, (result) => {

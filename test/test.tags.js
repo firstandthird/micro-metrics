@@ -4,7 +4,7 @@ const lab = exports.lab = require('lab').script();
 const setup = require('./setup.test.js').withRapptor;
 const _ = require('lodash');
 
-lab.experiment('tags', { timeout: 5000 }, (alldone) => {
+lab.experiment('tags', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
     setup({}, (result) => {
@@ -38,7 +38,6 @@ lab.experiment('tags', { timeout: 5000 }, (alldone) => {
       userId: 'user1234'
     },
   ], () => {
-    console.log('inject');
       server.inject({
         url: '/api/tags',
         method: 'GET'
