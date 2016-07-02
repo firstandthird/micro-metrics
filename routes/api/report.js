@@ -2,7 +2,7 @@
 
 exports.track = {
   method: 'GET',
-  path: '/api/get',
+  path: '/api/report',
   handler(request, reply) {
     request.server.methods.get(request.query, (err, results) => {
       reply({
