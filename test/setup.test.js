@@ -4,16 +4,9 @@
 const Rapptor = require('rapptor');
 
 module.exports.withRapptor = (options, callback) => {
-  const cwd = process.cwd();
   const rapptor = new Rapptor({
-    configPath: `${cwd}/test/conf`,
-    cwd,
   });
-  rapptor.start((err, server) => {
-    if (err) {
-      callback(null);
-    } else {
-      callback(server);
-    }
+  rapptor.start((err, server, config) => {
+    callback(err, server);
   });
 };

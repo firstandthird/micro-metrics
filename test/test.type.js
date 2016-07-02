@@ -3,10 +3,13 @@ const code = require('code');
 const lab = exports.lab = require('lab').script();
 const setup = require('./setup.test.js').withRapptor;
 
-lab.experiment('tags', { timeout: 5000 }, () => {
+lab.experiment('type', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup({}, (result) => {
+    setup({}, (err, result) => {
+      if (err) {
+        return done(err);
+      }
       server = result;
       server.plugins['hapi-mongodb'].db.collection('tracks').drop();
       done();

@@ -5,7 +5,7 @@
   "scripts": {
     "start": "./node_modules/.bin/rapptor",
     "lint": "./node_modules/.bin/eslint .",
-    "test": "lab -e test/"
+    "test": "PORT=8099 lab -e test"
   },
   "repository": {
     "type": "git",

@@ -7,7 +7,10 @@ const _ = require('lodash');
 lab.experiment('tags', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup({}, (result) => {
+    setup({}, (err, result) => {
+      if (err) {
+        return done(err);
+      }
       server = result;
       server.plugins['hapi-mongodb'].db.collection('tracks').drop();
       done();
