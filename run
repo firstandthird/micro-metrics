@@ -1,0 +1,33 @@
+#!/bin/bash
+
+
+CMD=$1
+
+if [[ -z "$CMD" ]]; then
+  docker-compose up
+fi
+
+if [[ "$CMD" == "shell" ]]; then
+  docker-compose run --rm app sh
+fi
+
+if [[ "$CMD" == "enter" ]]; then
+  docker exec -it micrometrics_app_1 sh
+fi
+
+if [[ "$CMD" == "npm" ]]; then
+  docker exec -it micrometrics_app_1 npm install
+  touch conf/default.yaml
+fi
+
+if [[ "$CMD" == "lint" ]]; then
+  docker exec -it micrometrics_app_1 npm run lint
+fi
+
+if [[ "$CMD" == "test" ]]; then
+  docker exec -it micrometrics_app_1 npm test
+fi
+
+if [[ "$CMD" == "build" ]]; then
+  docker-compose build
+fi
