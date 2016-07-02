@@ -3,8 +3,6 @@ host: 'http://localhost'
 connection:
   port: '8080'
 mongo:
-  db: "test-micrometrics"
+  db: "micrometrics-test"
+  host: "{{ENV.MONGO_PORT_27017_TCP_ADDR || localhost}}"
 
-plugins:
-  hapi-mongodb:
-    url: "mongodb://localhost:27017/{{mongo.db}}"
