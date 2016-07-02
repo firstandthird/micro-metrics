@@ -10,4 +10,4 @@ mongo:
 
 plugins:
   hapi-mongodb:
-    url: "mongodb://{{mongo.host}}:{{mongo.port}}/{{mongo.db}}"
+    url: "{{mongo.url}}"

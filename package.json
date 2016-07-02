@@ -5,7 +5,7 @@
   "scripts": {
     "start": "./node_modules/.bin/rapptor",
     "lint": "./node_modules/.bin/eslint .",
-    "test": "lab -e test/"
+    "test": "PORT=8099 lab -e test"
   },
   "repository": {
     "type": "git",
@@ -39,9 +39,6 @@
     "eslint-plugin-import": "^1.5.0",
     "eslint-plugin-jsx-a11y": "^1.0.2",
     "eslint-plugin-react": "^4.0.0",
-    "hapi": "^13.4.1",
-    "lab": "^10.8.2",
-    "mockgo": "^1.1.5",
-    "mongodb": "^2.1.18"
+    "lab": "^10.8.2"
   }
 }
