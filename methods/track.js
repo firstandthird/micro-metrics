@@ -38,7 +38,7 @@ module.exports = {
         server.log(['track', 'validation-error'], { err, message: 'payload failed validation' });
         return done(err);
       }
-
+      val.tagKeys = Object.keys(val.tags);
       val.createdOn = new Date();
 
       const db = server.plugins['hapi-mongodb'].db;
