@@ -1,4 +1,11 @@
 
+0.4.0 / 2016-09-17
+==================
+
+  * removed unneeded yaml file
+  * updated tags to store/use the tagKeys field
+  * Create README.md
+
 0.3.0 / 2016-07-01
 ==================
 
