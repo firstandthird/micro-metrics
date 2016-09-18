@@ -1,4 +1,6 @@
+connection:
+  port: 8080
 mongo:
-  host: "mongo"
+  host: "localhost"
   port: "27017"
   db: "micrometrics"
