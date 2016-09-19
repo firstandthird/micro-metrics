@@ -1,0 +1,23 @@
+@import "default.css";
+
+ul {
+  padding-left: 10px;
+  & li {
+    list-style: none;
+    & a {
+      padding-left: 5px;
+    }
+    &:before {
+      @mixin icon ios-arrow-right, 10px;
+      content: '';
+    }
+  }
+}
+
+.selected {
+  font-weight: bold;
+}
+
+a {
+  @mixin fancy-underline var(--color-background-default), var(--color-link), var(--color-link-hover);
+}

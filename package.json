@@ -4,7 +4,9 @@
   "description": "micro email api",
   "scripts": {
     "start": "rapptor",
-    "dev": "nodemon ./node_modules/.bin/rapptor",
+    "dev:server": "nodemon ./node_modules/.bin/rapptor",
+    "clientkit": "clientkit --env dev",
+    "dev": "concurrently -r 'npm run dev:server' 'npm run clientkit'",
     "lint": "eslint .",
     "test": "PORT=8099 lab -e test"
   },
@@ -26,14 +28,21 @@
   },
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
+    "handlebar-helpers": "git+https://github.com/firstandthird/handlebar-helpers.git",
+    "handlebars": "^4.0.5",
     "hapi-mongodb": "6.0.0",
+    "inert": "^4.0.2",
     "joi": "9.0.4",
     "lodash": "4.15.0",
     "logr": "1.13.0",
-    "rapptor": "1.2.0"
+    "metrics-graphics": "^2.10.1",
+    "rapptor": "1.2.0",
+    "vision": "^4.1.0"
   },
   "devDependencies": {
+    "clientkit": "^0.15.0",
     "code": "3.0.2",
+    "concurrently": "^2.2.0",
     "eslint": "3.5.0",
     "eslint-config-firstandthird": "3.0.2",
     "eslint-plugin-import": "1.15.0",

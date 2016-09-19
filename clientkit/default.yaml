@@ -1,0 +1,28 @@
+core:
+  assetPath: 'public'
+  dist: '{{core.assetPath}}/_dist'
+  fontParsingWhitelist: 'common.css'
+  globalBabel: false
+
+stylesheets:
+  'common.css': '{{core.assetPath}}/global/common.css'
+scripts:
+  'report.js': '{{core.assetPath}}/pages/report/script.js'
+
+vars:
+  font:
+    primary: '"Open Sans"'
+    secondary: '"Open Sans"'
+    heading: '"Open Sans"'
+  heading:
+    font-weight: 300
+    1-size: 30px
+    2-size: 24px
+    3-size: 20px
+
+color:
+  link: '#009688'
+  link-hover: '#00796B'
+  border: '#f0f0f0'
+  icons: '{{color.link}}'
+

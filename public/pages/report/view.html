@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Metrics Report</title>
+    <link rel="stylesheet" href="/ui/common.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.10.1/metricsgraphics.min.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row padding-yaxis-lg">
+        <div class="col-3">
+          <div class="margin-bottom-md">
+            <h2 class="heading-2 border-bottom margin-bottom-sm">Types</h2>
+            <ul>
+              {{#each types}}
+              <li class="padding-bottom-xs {{#ifequal @root.selectedType this}}selected{{/ifequal}}"><a href="/ui?type={{this}}">{{this}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+          <div>
+            <h2 class="heading-2 border-bottom margin-bottom-sm">Tags</h2>
+            <ul>
+              {{#each tags}}
+                <li class="padding-bottom-xs"><a href="">{{this}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div class="col-9">
+          {{#if selectedType}}
+          <div class="heading-2 border-bottom margin-bottom-md">
+            <a href="/ui" class="pull-right">&times;</a>
+            Type: {{selectedType}}
+          </div>
+          {{/if}}
+          <div id="report"></div>
+          <pre class="hide">{{stringify report}}</pre>
+        </div>
+      </div>
+    </div>
+    <script>
+      window._data = {{stringify report}};
+    </script>
+    <script src="/ui/report.js"></script>
+  </body>
+</html>

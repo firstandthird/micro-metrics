@@ -9,5 +9,19 @@ mongo:
   url: "mongodb://{{mongo.host}}:{{mongo.port}}/{{mongo.db}}"
 
 plugins:
+  vision:
+  inert:
   hapi-mongodb:
     url: "{{mongo.url}}"
+
+views:
+  engines:
+    html: 'handlebars'
+  path: 'public/pages'
+  helpersPath:
+    - 'node_modules/handlebar-helpers'
+    - 'helpers'
+
+assets:
+  path: 'public/_dist'
+  endpoint: '/ui'
