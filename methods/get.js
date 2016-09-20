@@ -25,11 +25,15 @@ module.exports = {
         findObj[`tags.${tagArr[0]}`] = tagArr[1];
       });
     }
-
     if (filter.startDate && filter.endDate) {
       findObj.createdOn = {
         $gte: new Date(filter.startDate),
         $lte: new Date(filter.endDate)
+      };
+    // if only startDate is specified:
+    } else if (filter.startDate) {
+      findObj.createdOn = {
+        $gte: new Date(filter.startDate)
       };
     }
 
