@@ -31,10 +31,6 @@ module.exports = {
         $lte: new Date(filter.endDate)
       };
     // if only startDate is specified:
-    } else if (filter.startDate) {
-      findObj.createdOn = {
-        $gte: new Date(filter.startDate)
-      };
     }
 
     if (filter.value) {
