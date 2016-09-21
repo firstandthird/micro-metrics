@@ -15,11 +15,11 @@ const getDaysAndHours = (paramString) => {
 
 exports.report = {
   method: 'GET',
-  path: '/api/report/{last?}',
+  path: '/api/report',
   handler(request, reply) {
     const query = request.query;
-    if (request.params.last) {
-      const obj = getDaysAndHours(request.params.last);
+    if (request.query.last) {
+      const obj = getDaysAndHours(request.query.last);
       let thresholdTime = new Date().getTime();
       if (obj.day) {
         thresholdTime -= (obj.day * 86400000);
@@ -29,6 +29,7 @@ exports.report = {
       }
       query.startDate = thresholdTime;
       query.endDate = new Date().getTime();
+      delete query.last;
     }
     request.server.methods.get(query, (err, results) => {
       if (err) {

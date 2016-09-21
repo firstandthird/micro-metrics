@@ -7,30 +7,6 @@ const twoDays = 1000 * 60 * 60 * 24 * 2;
 const threeHours = 1000 * 60 * 60 * 3;
 const current = new Date().getTime();
 
-const payloads = [
-  {
-    type: 'BankAccount',
-    tags: { currency: 'dollars' },
-    value: 142000000,
-    data: 'liquid Assets only',
-    userId: 'Montgomery Burns',
-  },
-  {
-    type: 'BankAccount',
-    tags: { currency: 'dollars', units: 'cents' },
-    value: 0.15,
-    data: 'liquid assets only',
-    userId: 'Barney',
-  },
-  {
-    type: 'Radish',
-    tags: { animalVegetableMineral: 'vegetable' },
-    value: 1,
-    data: 'radishes are a good source of electrolytes and minerals ',
-    userId: 'user1234',
-  }
-];
-
 lab.experiment('type', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
@@ -96,7 +72,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
     code.expect(true).to.equal(true);
     server.inject({
       method: 'GET',
-      url: '/api/report/3h'
+      url: '/api/report?last=3h'
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
       code.expect(response.result.count).to.equal(1);
@@ -107,7 +83,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
     code.expect(true).to.equal(true);
     server.inject({
       method: 'GET',
-      url: '/api/report/2d'
+      url: '/api/report?last=2d'
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
       code.expect(response.result.count).to.equal(2);
@@ -118,7 +94,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
     code.expect(true).to.equal(true);
     server.inject({
       method: 'GET',
-      url: '/api/report/2d1h'
+      url: '/api/report?last=2d1h'
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
       code.expect(response.result.count).to.equal(3);
@@ -129,7 +105,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
     code.expect(true).to.equal(true);
     server.inject({
       method: 'GET',
-      url: '/api/report/4h1d'
+      url: '/api/report?last=4h1d'
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
       code.expect(response.result.count).to.equal(2);
