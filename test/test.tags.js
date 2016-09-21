@@ -134,3 +134,62 @@ lab.experiment('tags', { timeout: 5000 }, () => {
     });
   });
 });
+
+lab.experiment('tag', { timeout: 5000 }, () => {
+  let server;
+  lab.beforeEach({ timeout: 5000 }, (done) => {
+    setup({}, (err, result) => {
+      if (err) {
+        return done(err);
+      }
+      server = result;
+      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
+      // add a few fake metrics:
+      server.plugins['hapi-mongodb'].db.collection('tracks').insertMany([{
+        type: 'BankAccount',
+        tags: { currency: 'yen' },
+        value: 'one',
+        data: 'liquid Assets only',
+        userId: 'Montgomery Burns'
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 'two',
+        data: 'liquid assets only',
+        userId: 'Barney'
+      },
+      {
+        type: 'BankAccount',
+        tags: { },
+        value: 'blah',
+        data: 'stuff',
+        userId: 'Barney'
+      },
+      {
+        type: 'WebPage',
+        tags: { currency: 'hi', accesses: 123 },
+        value: 'two',
+        data: 'validated accesses only',
+        userId: 'Barney'
+      }], () => {
+        done();
+      });
+    });
+  });
+  lab.afterEach({ timeout: 5000 }, (done) => {
+    server.stop(() => {
+      done();
+    });
+  });
+  lab.test('can use the /api/tag/{tagKey} route to get a list of distinct keys', { timeout: 5000 }, (done) => {
+    server.inject({
+      url: '/api/tag/currency',
+      method: 'GET'
+    }, (response) => {
+      code.expect(response.statusCode).to.equal(200);
+      code.expect(response.result.length).to.equal(2);
+      done();
+    });
+  });
+});
