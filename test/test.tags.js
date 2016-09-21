@@ -182,13 +182,24 @@ lab.experiment('tag', { timeout: 5000 }, () => {
       done();
     });
   });
-  lab.test('can use the /api/tag/{tagKey} route to get a list of distinct keys', { timeout: 5000 }, (done) => {
+  lab.test('can use the /api/tag-values?tag={tagKey} to get a list of distinct keys', { timeout: 5000 }, (done) => {
     server.inject({
-      url: '/api/tag/currency',
+      url: '/api/tag-values?tag=currency',
       method: 'GET'
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
-      code.expect(response.result.length).to.equal(2);
+      code.expect(response.result.length).to.equal(3);
+      done();
+    });
+  });
+  lab.test('can use the /api/tag-values?type={typeName}&tag={tagKey} to get a list of distinct keys by type', { timeout: 5000 }, (done) => {
+    server.inject({
+      url: '/api/tag-values?tag=currency&type=WebPage',
+      method: 'GET'
+    }, (response) => {
+      code.expect(response.statusCode).to.equal(200);
+      console.log(response.result)
+      code.expect(response.result.length).to.equal(1);
       done();
     });
   });
