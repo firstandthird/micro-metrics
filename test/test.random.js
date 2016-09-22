@@ -22,8 +22,8 @@ lab.experiment('random data', { timeout: 5000 }, () => {
       done();
     });
   });
-  lab.test('can use the randomize method to generate a random db for testing', (done) => {
-    server.methods.randomize(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10, (err, result) => {
+  lab.test('can use the generate method to generate a random db for testing', (done) => {
+    server.methods.generate(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10, (err, result) => {
       code.expect(err).to.equal(null);
       code.expect(result.ops.length).to.equal(10);
       // confirm they were put in the db:
@@ -34,10 +34,10 @@ lab.experiment('random data', { timeout: 5000 }, () => {
       });
     });
   });
-  lab.test('can use the randomize route to generate a random db for testing', (done) => {
+  lab.test('can use the generate route to generate a random db for testing', (done) => {
     server.inject({
       method: 'POST',
-      url: `/api/randomize?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
+      url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
       code.expect(response.result.ops.length).to.equal(10);
@@ -49,11 +49,11 @@ lab.experiment('random data', { timeout: 5000 }, () => {
       });
     });
   });
-  lab.test('disallow randomize route when allowTesting is falsey', (done) => {
-    server.settings.app.allowTesting = undefined;
+  lab.test('disallow generate route when allowTesting is falsey', (done) => {
+    server.settings.app.allowGeneratedData = undefined;
     server.inject({
       method: 'POST',
-      url: `/api/randomize?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
+      url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
     }, (response) => {
       code.expect(response.statusCode).to.equal(401);
       done();
