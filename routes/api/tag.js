@@ -11,7 +11,7 @@ exports.tag = {
     }
     request.server.methods.tag(request.query.tag, filter, (err, results) => {
       if (err) {
-        return reply('Error').code(500);
+        return reply(err);
       }
       reply(results);
     });

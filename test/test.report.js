@@ -1,7 +1,7 @@
 'use strict';
 const code = require('code');
 const lab = exports.lab = require('lab').script();
-const setup = require('./setup.test.js').withRapptor;
+const setup = require('./setup.test.js');
 
 const twoDays = 1000 * 60 * 60 * 24 * 2;
 const threeHours = 1000 * 60 * 60 * 3;
@@ -10,12 +10,12 @@ const current = new Date().getTime();
 lab.experiment('type', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup({}, (err, result) => {
+    setup.withRapptor({}, (err, result) => {
       if (err) {
         return done(err);
       }
       server = result;
-      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
+      setup.cleanupDb(server);
       server.plugins['hapi-mongodb'].db.collection('tracks').insertMany([{
         type: 'BankAccount',
         tags: { currency: 'yen' },

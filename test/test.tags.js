@@ -1,18 +1,18 @@
 'use strict';
 const code = require('code');
 const lab = exports.lab = require('lab').script();
-const setup = require('./setup.test.js').withRapptor;
+const setup = require('./setup.test.js');
 const _ = require('lodash');
 
 lab.experiment('tags', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup({}, (err, result) => {
+    setup.withRapptor({}, (err, result) => {
       if (err) {
         return done(err);
       }
       server = result;
-      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
+      setup.cleanupDb(server);
       done();
     });
   });
@@ -138,12 +138,12 @@ lab.experiment('tags', { timeout: 5000 }, () => {
 lab.experiment('tag', { timeout: 5000 }, () => {
   let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup({}, (err, result) => {
+    setup.withRapptor({}, (err, result) => {
       if (err) {
         return done(err);
       }
       server = result;
-      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
+      setup.cleanupDb(server);
       // add a few fake metrics:
       server.plugins['hapi-mongodb'].db.collection('tracks').insertMany([{
         type: 'BankAccount',

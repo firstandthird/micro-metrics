@@ -6,7 +6,11 @@ const Rapptor = require('rapptor');
 module.exports.withRapptor = (options, callback) => {
   const rapptor = new Rapptor({
   });
-  rapptor.start((err, server, config) => {
+  rapptor.start((err, server) => {
     callback(err, server);
   });
+};
+
+module.exports.cleanupDb = (server) => {
+  server.plugins['hapi-mongodb'].db.collection('tracks').drop();
 };
