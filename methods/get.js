@@ -30,7 +30,6 @@ module.exports = {
         $gte: new Date(filter.startDate),
         $lte: new Date(filter.endDate)
       };
-    // if only startDate is specified:
     }
 
     if (filter.value) {
