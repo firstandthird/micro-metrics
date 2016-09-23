@@ -77,6 +77,51 @@ lab.experiment('type', { timeout: 5000 }, () => {
       done();
     });
   });
+  lab.test('can use the report method to get a list of metrics from the db by hour', { timeout: 5000 }, (done) => {
+    code.expect(true).to.equal(true);
+    setup.server.inject({
+      method: 'GET',
+      url: '/api/report?last=3h'
+    }, (response) => {
+      code.expect(response.statusCode).to.equal(200);
+      code.expect(response.result.count).to.equal(1);
+      done();
+    });
+  });
+  lab.test('can use the report method to get a list of metrics from the db by day', { timeout: 5000 }, (done) => {
+    code.expect(true).to.equal(true);
+    setup.server.inject({
+      method: 'GET',
+      url: '/api/report?last=2d'
+    }, (response) => {
+      code.expect(response.statusCode).to.equal(200);
+      code.expect(response.result.count).to.equal(2);
+      done();
+    });
+  });
+  lab.test('can use the report method to get a list of metrics from the db by day and hour', { timeout: 5000 }, (done) => {
+    code.expect(true).to.equal(true);
+    setup.server.inject({
+      method: 'GET',
+      url: '/api/report?last=2d1h'
+    }, (response) => {
+      code.expect(response.statusCode).to.equal(200);
+      code.expect(response.result.count).to.equal(3);
+      done();
+    });
+  });
+  lab.test('can use the report method to get a list of metrics from the db by hour and day', { timeout: 5000 }, (done) => {
+    code.expect(true).to.equal(true);
+    setup.server.inject({
+      method: 'GET',
+      url: '/api/report?last=4h1d'
+    }, (response) => {
+      code.expect(response.statusCode).to.equal(200);
+      code.expect(response.result.count).to.equal(2);
+      done();
+    });
+  });
+
   lab.test('can look up a report by type', {timeout: 5000}, (done) => {
     setup.server.inject({
       method: 'GET',

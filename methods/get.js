@@ -20,7 +20,6 @@ module.exports = {
         findObj[`tags.${tagArr[0]}`] = { $exists: 1 };
       });
     }
-
     if (filter.startDate && filter.endDate) {
       findObj.createdOn = {
         $gte: new Date(filter.startDate),

@@ -1,33 +1,21 @@
 'use strict';
 const code = require('code');
 const lab = exports.lab = require('lab').script();
-const setup = require('./setup.test.js').withRapptor;
-const _ = require('lodash');
+const setup = require('./setup.test.js');
 
 lab.experiment('random data', { timeout: 5000 }, () => {
-  let server;
   lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup({}, (err, result) => {
-      if (err) {
-        return done(err);
-      }
-      server = result;
-      server.plugins['hapi-mongodb'].db.collection('tracks').drop();
-      done();
-    });
+    setup.withRapptor({}, [], done);
   });
   lab.afterEach({ timeout: 5000 }, (done) => {
-    server.plugins['hapi-mongodb'].db.collection('tracks').drop();
-    server.stop(() => {
-      done();
-    });
+    setup.stop(done);
   });
   lab.test('can use the generate method to generate a random db for testing', (done) => {
-    server.methods.generate(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10, (err, result) => {
+    setup.server.methods.generate(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10, (err, result) => {
       code.expect(err).to.equal(null);
       code.expect(result.ops.length).to.equal(10);
       // confirm they were put in the db:
-      server.plugins['hapi-mongodb'].db.collection('tracks').find({}).toArray((err2, result) => {
+      setup.server.plugins['hapi-mongodb'].db.collection('tracks').find({}).toArray((err2, result) => {
         code.expect(err2).to.equal(null);
         code.expect(result.length).to.equal(10);
         done();
@@ -35,14 +23,14 @@ lab.experiment('random data', { timeout: 5000 }, () => {
     });
   });
   lab.test('can use the generate route to generate a random db for testing', (done) => {
-    server.inject({
+    setup.server.inject({
       method: 'POST',
       url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
     }, (response) => {
       code.expect(response.statusCode).to.equal(200);
       code.expect(response.result.ops.length).to.equal(10);
       // confirm they were put in the db:
-      server.plugins['hapi-mongodb'].db.collection('tracks').find({}).toArray((err2, result) => {
+      setup.server.plugins['hapi-mongodb'].db.collection('tracks').find({}).toArray((err2, result) => {
         code.expect(err2).to.equal(null);
         code.expect(result.length).to.equal(10);
         done();
@@ -50,8 +38,8 @@ lab.experiment('random data', { timeout: 5000 }, () => {
     });
   });
   lab.test('disallow generate route when allowTesting is falsey', (done) => {
-    server.settings.app.allowGeneratedData = undefined;
-    server.inject({
+    setup.server.settings.app.allowGeneratedData = undefined;
+    setup.server.inject({
       method: 'POST',
       url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
     }, (response) => {
