@@ -12,8 +12,7 @@ exports.report = {
     }
     request.server.methods.get(query, (err, results) => {
       if (err) {
-        request.server.log(err);
-        return reply(err).code(404);
+        return reply(err);
       }
       reply({
         count: results.length,
