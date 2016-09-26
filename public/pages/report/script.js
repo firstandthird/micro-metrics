@@ -3,7 +3,7 @@ const MG = require('metrics-graphics');
 
 const data = window._data.map((item) => ({ // eslint-disable-line no-underscore-dangle
   date: new Date(item.createdOn),
-  value: item.value
+  value: item.value || 1
 }));
 
 MG.data_graphic({
