@@ -19,7 +19,6 @@ views:
     html: 'handlebars'
   path: 'public/pages'
   helpersPath:
-    - 'node_modules/handlebar-helpers'
     - 'helpers'
 
 assets:

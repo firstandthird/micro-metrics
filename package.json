@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
-    "handlebar-helpers": "git+https://github.com/firstandthird/handlebar-helpers.git",
     "handlebars": "^4.0.5",
     "hapi-mongodb": "6.0.0",
     "inert": "^4.0.2",
