@@ -4,6 +4,14 @@ exports.report = {
   method: 'get',
   config: {
     pre: [
+      {
+        method: (request, reply) => {
+          if (!request.query.last) {
+            request.query.last = '24h';
+          }
+          reply();
+        }
+      },
       [
         { assign: 'types', method: 'types()' },
         { assign: 'tags', method: (request, reply) => {
