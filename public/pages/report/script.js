@@ -11,6 +11,7 @@ MG.data_graphic({
   data,
   full_width: true,
   height: 400,
+  colors: ['#009688'],
   target: '#report', // the html element that the graphic is inserted in
   x_accessor: 'date',  // the key that accesses the x value
   y_accessor: 'value' // the key that accesses the y value
