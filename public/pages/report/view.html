@@ -15,7 +15,9 @@
             <h2 class="heading-2 border-bottom margin-bottom-sm">Types</h2>
             <ul>
               {{#each types}}
-              <li class="padding-bottom-xs {{#ifequal @root.selectedType this}}selected{{/ifequal}}"><a href="/ui?type={{this}}">{{this}}</a></li>
+              <li class="padding-bottom-xs {{#ifequal @root.selectedType this}}selected{{/ifequal}}">
+                <a href="{{urlbuilder type=this tag=""}}">{{this}}</a>
+              </li>
               {{/each}}
             </ul>
           </div>
@@ -23,18 +25,22 @@
             <h2 class="heading-2 border-bottom margin-bottom-sm">Tags</h2>
             <ul>
               {{#each tags}}
-                <li class="padding-bottom-xs"><a href="">{{this}}</a></li>
+                <li class="padding-bottom-xs"><a href="{{urlbuilder type=@root.current.type tag=this}}">{{this}}</a></li>
               {{/each}}
             </ul>
           </div>
         </div>
         <div class="col-9">
-          {{#if selectedType}}
-          <div class="heading-2 border-bottom margin-bottom-md">
-            <a href="/ui" class="pull-right">&times;</a>
-            Type: {{selectedType}}
+          <div class="heading-3 border-bottom margin-bottom-md">
+            {{#if current.type}}
+              <strong>Type:</strong> {{current.type}}
+              <a href="/ui">&times;</a>
+            {{/if}}
+            {{#if current.tag}}
+              <strong>Tag:</strong> {{current.tag}}
+              <a href="{{urlbuilder type=current.type tag=""}}">&times;</a>
+            {{/if}}
           </div>
-          {{/if}}
           <div id="report"></div>
           <pre class="hide">{{stringify report}}</pre>
         </div>

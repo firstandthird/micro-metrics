@@ -15,7 +15,11 @@ exports.report = {
       selectedType: request.query.type,
       types: request.pre.types,
       tags: request.pre.tags,
-      report: request.pre.report
+      report: request.pre.report,
+      current: {
+        type: request.query.type,
+        tag: request.query.tag
+      }
     });
   }
 };
