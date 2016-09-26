@@ -3,4 +3,4 @@ connection:
 mongo:
   db: "micrometrics-test"
   host: "{{ENV.MONGO_PORT_27017_TCP_ADDR || localhost}}"
-
+allowGeneratedData: true
