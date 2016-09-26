@@ -5,6 +5,7 @@
     "routes/**/*.js",
     "methods/**/*.js",
     "plugins/**/*.js",
+    "helpers/**/*.js",
     "conf/*.yaml",
     "public/**/*.html"
   ],
