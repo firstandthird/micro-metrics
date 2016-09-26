@@ -17,9 +17,6 @@ module.exports = function(startDate, numEntries, callback) {
     links: ['blah', 'hey'],
     request: ['blah'],
     refreshes: 10000,
-    created: [getRandomDate(), getRandomDate(), getRandomDate()],
-    edited: [getRandomDate(), getRandomDate(), getRandomDate()],
-    deleted: [getRandomDate(), getRandomDate(), getRandomDate()],
     new: 1000,
     existing: 100000,
     banned: 200,
@@ -41,6 +38,9 @@ module.exports = function(startDate, numEntries, callback) {
       // each tag value is either one item randomly picked from a list or a random number:
       cur.tags[key] = typeof randomValues[key] === 'number' ? _.random(randomValues[key]) : _.sample(randomValues[key]);
     }
+    cur.value = _.random(1, 10);
+    cur.createdOn = getRandomDate();
+    cur.tagKeys = Object.keys(cur.tags);
     entries.push(cur);
   }
   // now add them to db:
