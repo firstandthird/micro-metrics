@@ -24331,11 +24331,15 @@ return MG;
 /* global window */
 var MG = require('metrics-graphics');
 
-var data = window._data.map(function (item) {
-  return { // eslint-disable-line no-underscore-dangle
-    date: new Date(item.createdOn),
-    value: item.value || 1
-  };
+var data = [];
+window._data.forEach(function (dataSet) {
+  // eslint-disable-line no-underscore-dangle
+  data.push(dataSet.map(function (item) {
+    return {
+      date: new Date(item.createdOn),
+      value: item.value || 1
+    };
+  }));
 });
 
 MG.data_graphic({
@@ -24346,7 +24350,8 @@ MG.data_graphic({
   colors: ['#009688'],
   target: '#report', // the html element that the graphic is inserted in
   x_accessor: 'date', // the key that accesses the x value
-  y_accessor: 'value' // the key that accesses the y value
+  y_accessor: 'value',
+  legend: window._legend //eslint-disable-line no-underscore-dangle
 });
 
 },{"metrics-graphics":2}]},{},[3])
