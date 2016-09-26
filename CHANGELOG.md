@@ -1,4 +1,13 @@
 
+0.5.0 / 2016-09-25
+==================
+
+  * allows /api/generate
+  * /api/report/?last=
+  * report ui
+  * update dev config
+  * updated depedencies
+
 0.4.0 / 2016-09-17
 ==================
 
