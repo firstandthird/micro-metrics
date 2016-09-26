@@ -9,6 +9,11 @@ module.exports = {
 
     const findObj = {};
 
+    if (filter.last) {
+      filter.startDate = server.methods.extractStartDate(filter.last);
+      filter.endDate = new Date().getTime();
+    }
+
     if (filter.type) {
       findObj.type = filter.type;
     }

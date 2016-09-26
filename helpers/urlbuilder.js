@@ -8,6 +8,9 @@ module.exports = function(options) {
   if (obj.tag) {
     urlObj.tag = obj.tag;
   }
+  if (obj.last) {
+    urlObj.last = obj.last;
+  }
   const qs = querystring.stringify(urlObj);
   return `/ui?${qs}`;
 };
