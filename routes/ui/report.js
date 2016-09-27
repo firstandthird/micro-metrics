@@ -1,4 +1,3 @@
-const _ = require('lodash');
 exports.report = {
   path: '/ui',
   method: 'get',
@@ -25,25 +24,11 @@ exports.report = {
     ]
   },
   handler(request, reply) {
-    const report = [];
-    const legend = [];
-    //if tag is set, then graph by values
-    if (request.query.tags) {
-      const grouped = _.groupBy(request.pre.report, `tags.${request.query.tags}`);
-      Object.keys(grouped).forEach((key) => {
-        legend.push(key);
-        report.push(grouped[key]);
-      });
-    } else {
-      report.push(request.pre.report);
-      legend.push(request.query.type);
-    }
     reply.view('report/view', {
       selectedType: request.query.type,
       types: request.pre.types,
       tags: request.pre.tags,
-      report,
-      legend,
+      report: request.pre.report,
       current: {
         type: request.query.type,
         tags: request.query.tags,

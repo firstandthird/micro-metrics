@@ -1,13 +1,11 @@
 /* global window */
 const MG = require('metrics-graphics');
+const d3 = require('d3');
 
-const data = [];
-window._data.forEach((dataSet) => { // eslint-disable-line no-underscore-dangle
-  data.push(dataSet.map((item) => ({
-    date: new Date(item.createdOn),
-    value: item.value || 1
-  })));
-});
+const data = window._data.map((item) => ({ // eslint-disable-line no-underscore-dangle
+  date: new Date(item.createdOn),
+  value: item.value || 1
+}));
 
 MG.data_graphic({
   title: 'Report',
@@ -18,6 +16,8 @@ MG.data_graphic({
   target: '#report', // the html element that the graphic is inserted in
   x_accessor: 'date',  // the key that accesses the x value
   y_accessor: 'value',
+  interpolate: d3.curveLinear,
+  area: false,
   missing_is_zero: true,
   legend: window._legend //eslint-disable-line no-underscore-dangle
 });
