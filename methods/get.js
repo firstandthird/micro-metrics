@@ -22,7 +22,7 @@ module.exports = {
       const allTags = filter.tags.split(',');
       _.each(allTags, (tag) => {
         const tagArr = tag.split('=');
-        findObj[`tags.${tagArr[0]}`] = { $exists: 1 };
+        findObj[`tags.${tagArr[0]}`] = (tagArr.length === 1) ? { $exists: 1 } : tagArr[1];
       });
     }
     if (filter.startDate && filter.endDate) {
