@@ -8,6 +8,15 @@ exports.report = {
           if (!request.query.last) {
             request.query.last = '24h';
           }
+          const aggMap = {
+            '1h': 'm',
+            '6h': 'h',
+            '12h': 'h',
+            '24h': 'h',
+            '7d': 'd',
+            '14d': 'd'
+          };
+          request.query.aggregate = aggMap[request.query.last] || 'h';
           reply();
         }
       },
