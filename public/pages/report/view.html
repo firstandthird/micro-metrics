@@ -55,6 +55,29 @@
             <h3 class="heading-3">No Report Data</h3>
           {{/ifequal}}
           <div id="report"></div>
+          <h3 class="heading-3 border-bottom margin-top-md margin-bottom-sm">Data Set</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Tags</th>
+                <th>Value</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each report}}
+                <tr>
+                  <td>{{type}}</td>
+                  <td>{{createdOn}}</td>
+                  <td>{{stringify tags}}</td>
+                  <td>{{value}}</td>
+                  <td>{{stringify data}}</td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
           <pre class="hide">{{stringify report}}</pre>
         </div>
       </div>
