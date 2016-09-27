@@ -24328,7 +24328,7 @@ return MG;
 },{"d3":1}],3:[function(require,module,exports){
 'use strict';
 
-/* global window */
+/* global window, document */
 var MG = require('metrics-graphics');
 var d3 = require('d3');
 
@@ -24352,6 +24352,14 @@ MG.data_graphic({
   area: false,
   missing_is_zero: true
 });
+
+var el = document.querySelector('[data-action="selectTagValue"]');
+if (el) {
+  el.addEventListener('change', function (e) {
+    var url = e.target.value;
+    window.location = url;
+  });
+}
 
 },{"d3":1,"metrics-graphics":2}]},{},[3])
 //# sourceMappingURL=report.js.map
