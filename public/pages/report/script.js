@@ -18,6 +18,5 @@ MG.data_graphic({
   y_accessor: 'value',
   interpolate: d3.curveLinear,
   area: false,
-  missing_is_zero: true,
-  legend: window._legend //eslint-disable-line no-underscore-dangle
+  missing_is_zero: true
 });
