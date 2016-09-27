@@ -36,6 +36,14 @@ module.exports = {
       findObj.value = (isNaN(filter.value / 1)) ? filter.value : filter.value / 1;
     }
 
-    db.collection('tracks').find(findObj).toArray(done);
+    db.collection('tracks').find(findObj).sort({ createdOn: 1 }).toArray((err, results) => {
+      if (err) {
+        return done(err);
+      }
+      if (filter.aggregate) {
+        return server.methods.aggregate(results, filter.aggregate, done);
+      }
+      done(null, results);
+    });
   }
 };
