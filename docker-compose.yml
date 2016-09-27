@@ -3,6 +3,7 @@ app:
   command: "nodemon ../node_modules/.bin/rapptor"
   volumes:
     - '.:/app/server'
+    - '/app/node_modules'
   links:
     - 'db:mongo'
   environment:
