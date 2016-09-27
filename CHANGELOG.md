@@ -1,4 +1,16 @@
 
+0.6.0 / 2016-09-27
+==================
+
+  * support for filtering by tag values
+  * auto aggregate based on last query duration
+  * added datatable
+  * removed multiple lines on a single chart
+  * aggregate support
+  * stringify helper - if no input, just return blank string
+  * report endpoint support for querying by tag values
+  * fixed tags in report. set 0 if no data
+
 0.5.1 / 2016-09-26
 ==================
 
