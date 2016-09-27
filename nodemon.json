@@ -1,12 +1,13 @@
 {
-  "verbose": true,
-  "legacyWatch": true,
+  "verbose": false,
   "watch": [
     "index.js",
     "routes/**/*.js",
     "methods/**/*.js",
     "plugins/**/*.js",
-    "conf/*.yaml"
+    "helpers/**/*.js",
+    "conf/*.yaml",
+    "public/**/*.html"
   ],
-  "ext": "js yaml"
+  "ext": "js yaml html"
 }

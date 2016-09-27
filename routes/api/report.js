@@ -1,10 +1,14 @@
 'use strict';
 
-exports.track = {
+exports.report = {
   method: 'GET',
   path: '/api/report',
   handler(request, reply) {
-    request.server.methods.get(request.query, (err, results) => {
+    const query = request.query;
+    request.server.methods.get(query, (err, results) => {
+      if (err) {
+        return reply(err);
+      }
       reply({
         count: results.length,
         results

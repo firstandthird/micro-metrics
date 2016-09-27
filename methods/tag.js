@@ -1,6 +1,10 @@
 'use strict';
 module.exports = {
-  method: function(tagKey, filter, done) {
+  method(tagKey, filter, done) {
+    if (typeof filter === 'function') {
+      done = filter;
+      filter = {};
+    }
     this.plugins['hapi-mongodb'].db.collection('tracks').distinct(`tags.${tagKey}`, filter, done);
   }
 };

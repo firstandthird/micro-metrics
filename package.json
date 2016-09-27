@@ -1,10 +1,13 @@
 {
   "name": "micro-metrics",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "micro email api",
   "scripts": {
-    "start": "./node_modules/.bin/rapptor",
-    "lint": "./node_modules/.bin/eslint .",
+    "start": "rapptor",
+    "dev:server": "nodemon ./node_modules/.bin/rapptor",
+    "clientkit": "clientkit --env dev",
+    "dev": "concurrently -r 'npm run dev:server' 'npm run clientkit'",
+    "lint": "eslint .",
     "test": "PORT=8099 lab -e test"
   },
   "repository": {
@@ -25,20 +28,23 @@
   },
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
-    "hapi-mongodb": "^6.0.0",
-    "joi": "^8.1.0",
-    "lodash": "^4.12.0",
-    "logr": "^1.8.0",
-    "rapptor": "firstandthird/rapptor#e1b04d6d8dd"
+    "handlebars": "^4.0.5",
+    "hapi-mongodb": "6.0.0",
+    "inert": "^4.0.2",
+    "joi": "9.0.4",
+    "lodash": "4.15.0",
+    "logr": "1.13.0",
+    "metrics-graphics": "^2.10.1",
+    "rapptor": "1.2.0",
+    "vision": "^4.1.0"
   },
   "devDependencies": {
-    "code": "^3.0.1",
-    "eslint": "^2.2.0",
-    "eslint-config-airbnb": "^6.0.2",
-    "eslint-config-firstandthird": "^1.7.0",
-    "eslint-plugin-import": "^1.5.0",
-    "eslint-plugin-jsx-a11y": "^1.0.2",
-    "eslint-plugin-react": "^4.0.0",
-    "lab": "^10.8.2"
+    "clientkit": "^0.15.0",
+    "code": "3.0.2",
+    "concurrently": "^2.2.0",
+    "eslint": "3.5.0",
+    "eslint-config-firstandthird": "3.0.2",
+    "eslint-plugin-import": "1.15.0",
+    "lab": "11.0.1"
   }
 }

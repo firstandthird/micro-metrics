@@ -9,6 +9,11 @@ module.exports = {
 
     const findObj = {};
 
+    if (filter.last) {
+      filter.startDate = server.methods.extractStartDate(filter.last);
+      filter.endDate = new Date().getTime();
+    }
+
     if (filter.type) {
       findObj.type = filter.type;
     }
@@ -17,10 +22,9 @@ module.exports = {
       const allTags = filter.tags.split(',');
       _.each(allTags, (tag) => {
         const tagArr = tag.split('=');
-        findObj[`tags.${tagArr[0]}`] = { $exists: 1 };
+        findObj[`tags.${tagArr[0]}`] = (tagArr.length === 1) ? { $exists: 1 } : tagArr[1];
       });
     }
-
     if (filter.startDate && filter.endDate) {
       findObj.createdOn = {
         $gte: new Date(filter.startDate),
@@ -32,6 +36,14 @@ module.exports = {
       findObj.value = (isNaN(filter.value / 1)) ? filter.value : filter.value / 1;
     }
 
-    db.collection('tracks').find(findObj).toArray(done);
+    db.collection('tracks').find(findObj).sort({ createdOn: 1 }).toArray((err, results) => {
+      if (err) {
+        return done(err);
+      }
+      if (filter.aggregate) {
+        return server.methods.aggregate(results, filter.aggregate, done);
+      }
+      done(null, results);
+    });
   }
 };
