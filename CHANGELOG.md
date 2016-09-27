@@ -1,4 +1,10 @@
 
+0.7.0 / 2016-09-27
+==================
+
+  * updates to use docker locally
+  * update to use node 6
+
 0.6.0 / 2016-09-27
 ==================
 
