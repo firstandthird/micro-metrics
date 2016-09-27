@@ -24330,16 +24330,13 @@ return MG;
 
 /* global window */
 var MG = require('metrics-graphics');
+var d3 = require('d3');
 
-var data = [];
-window._data.forEach(function (dataSet) {
-  // eslint-disable-line no-underscore-dangle
-  data.push(dataSet.map(function (item) {
-    return {
-      date: new Date(item.createdOn),
-      value: item.value || 1
-    };
-  }));
+var data = window._data.map(function (item) {
+  return { // eslint-disable-line no-underscore-dangle
+    date: new Date(item.createdOn),
+    value: item.value || 1
+  };
 });
 
 MG.data_graphic({
@@ -24351,9 +24348,10 @@ MG.data_graphic({
   target: '#report', // the html element that the graphic is inserted in
   x_accessor: 'date', // the key that accesses the x value
   y_accessor: 'value',
-  missing_is_zero: true,
-  legend: window._legend //eslint-disable-line no-underscore-dangle
+  interpolate: d3.curveLinear,
+  area: false,
+  missing_is_zero: true
 });
 
-},{"metrics-graphics":2}]},{},[3])
+},{"d3":1,"metrics-graphics":2}]},{},[3])
 //# sourceMappingURL=report.js.map
