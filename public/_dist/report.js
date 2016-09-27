@@ -24351,6 +24351,7 @@ MG.data_graphic({
   target: '#report', // the html element that the graphic is inserted in
   x_accessor: 'date', // the key that accesses the x value
   y_accessor: 'value',
+  missing_is_zero: true,
   legend: window._legend //eslint-disable-line no-underscore-dangle
 });
 

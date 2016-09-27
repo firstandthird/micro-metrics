@@ -28,8 +28,8 @@ exports.report = {
     const report = [];
     const legend = [];
     //if tag is set, then graph by values
-    if (request.query.tag) {
-      const grouped = _.groupBy(request.pre.report, `tags.${request.query.tag}`);
+    if (request.query.tags) {
+      const grouped = _.groupBy(request.pre.report, `tags.${request.query.tags}`);
       Object.keys(grouped).forEach((key) => {
         legend.push(key);
         report.push(grouped[key]);
@@ -46,7 +46,7 @@ exports.report = {
       legend,
       current: {
         type: request.query.type,
-        tag: request.query.tag,
+        tags: request.query.tags,
         last: request.query.last
       }
     });

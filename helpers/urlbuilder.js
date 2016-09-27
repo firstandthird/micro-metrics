@@ -5,8 +5,8 @@ module.exports = function(options) {
   if (obj.type) {
     urlObj.type = obj.type;
   }
-  if (obj.tag) {
-    urlObj.tag = obj.tag;
+  if (obj.tags) {
+    urlObj.tags = obj.tags;
   }
   if (obj.last) {
     urlObj.last = obj.last;

@@ -16,7 +16,7 @@
             <ul>
               {{#each types}}
               <li class="padding-bottom-xs {{#ifequal @root.selectedType this}}selected{{/ifequal}}">
-                <a href="{{urlbuilder type=this tag="" last=@root.current.last}}">{{this}}</a>
+                <a href="{{urlbuilder type=this tags="" last=@root.current.last}}">{{this}}</a>
               </li>
               {{/each}}
             </ul>
@@ -25,7 +25,7 @@
             <h2 class="heading-2 border-bottom margin-bottom-sm">Tags</h2>
             <ul>
               {{#each tags}}
-                <li class="padding-bottom-xs"><a href="{{urlbuilder type=@root.current.type tag=this last=@root.current.last}}">{{this}}</a></li>
+                <li class="padding-bottom-xs"><a href="{{urlbuilder type=@root.current.type tags=this last=@root.current.last}}">{{this}}</a></li>
               {{/each}}
             </ul>
           </div>
@@ -33,12 +33,12 @@
         <div class="col-9">
           <div class="heading-3 border-bottom margin-bottom-md">
             <div class="font-body pull-right">
-              <a class="{{#ifequal current.last "1h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tag=current.tag last="1h"}}">1hr</a>
-              <a class="{{#ifequal current.last "6h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tag=current.tag last="6h"}}">6hr</a>
-              <a class="{{#ifequal current.last "12h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tag=current.tag last="12h"}}">12hr</a>
-              <a class="{{#ifequal current.last "24h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tag=current.tag last="24h"}}">24hr</a>
-              <a class="{{#ifequal current.last "7d"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tag=current.tag last="7d"}}">7d</a>
-              <a class="{{#ifequal current.last "14d"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tag=current.tag last="14d"}}">14d</a>
+              <a class="{{#ifequal current.last "1h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tags=current.tags last="1h"}}">1hr</a>
+              <a class="{{#ifequal current.last "6h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tags=current.tags last="6h"}}">6hr</a>
+              <a class="{{#ifequal current.last "12h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tags=current.tags last="12h"}}">12hr</a>
+              <a class="{{#ifequal current.last "24h"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tags=current.tags last="24h"}}">24hr</a>
+              <a class="{{#ifequal current.last "7d"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tags=current.tags last="7d"}}">7d</a>
+              <a class="{{#ifequal current.last "14d"}}font-bold{{/ifequal}}" href="{{urlbuilder type=current.type tags=current.tags last="14d"}}">14d</a>
             </div>
             {{#if current.type}}
               <strong>Type:</strong> {{current.type}}
@@ -46,9 +46,9 @@
             {{else}}
               <strong>All Types</strong>
             {{/if}}
-            {{#if current.tag}}
-              <strong>Tag:</strong> {{current.tag}}
-              <a href="{{urlbuilder type=current.type tag="" last=current.last}}">&times;</a>
+            {{#if current.tags}}
+              <strong>Tag:</strong> {{current.tags}}
+              <a href="{{urlbuilder type=current.type tags="" last=current.last}}">&times;</a>
             {{/if}}
           </div>
           {{#ifequal report.length 0}}
