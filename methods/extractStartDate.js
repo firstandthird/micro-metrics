@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = (paramString) => {
-
   const day = new RegExp('(\\d+)(d)').exec(paramString);
   const hour = new RegExp('(\\d+)(h)').exec(paramString);
   const minute = new RegExp('(\\d+)(m)').exec(paramString);

@@ -142,7 +142,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
     });
   });
 
-  lab.test('can look up a report by type', {timeout: 5000}, (done) => {
+  lab.test('can look up a report by type', { timeout: 5000 }, (done) => {
     setup.server.inject({
       method: 'GET',
       url: '/api/report?type=BankAccount'
@@ -152,7 +152,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
       done();
     });
   });
-  lab.test('can look up a report by tags', {timeout: 5000}, (done) => {
+  lab.test('can look up a report by tags', { timeout: 5000 }, (done) => {
     setup.server.inject({
       method: 'GET',
       url: '/api/report?tags=animalVegetableMineral'
@@ -162,7 +162,7 @@ lab.experiment('type', { timeout: 5000 }, () => {
       done();
     });
   });
-  lab.test('can look up a report by type and tags', {timeout: 5000}, (done) => {
+  lab.test('can look up a report by type and tags', { timeout: 5000 }, (done) => {
     setup.server.inject({
       method: 'GET',
       url: '/api/report?type=StockAccount&tags=currency'
