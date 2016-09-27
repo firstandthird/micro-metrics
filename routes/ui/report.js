@@ -28,6 +28,7 @@ exports.report = {
           }
           request.server.methods.tags({ type: request.query.type }, reply);
         } },
+        { assign: 'tagValues', method: 'tag(query.tags)' },
         { assign: 'report', method: 'get(query)' }
       ]
     ]
@@ -37,6 +38,7 @@ exports.report = {
       selectedType: request.query.type,
       types: request.pre.types,
       tags: request.pre.tags,
+      tagValues: request.pre.tagValues,
       report: request.pre.report,
       current: {
         type: request.query.type,

@@ -48,6 +48,12 @@
             {{/if}}
             {{#if current.tags}}
               <strong>Tag:</strong> {{current.tags}}
+              <select data-action="selectTagValue">
+                <option value="{{urlbuilder type=../current.type tags=../current.tags last=../current.last}}">Any</option>
+                {{#each tagValues}}
+                <option value="{{urlbuilder type=../current.type tags=../current.tags tagValue=this last=../current.last}}">{{this}}</option>
+                {{/each}}
+              </select>
               <a href="{{urlbuilder type=current.type tags="" last=current.last}}">&times;</a>
             {{/if}}
           </div>
@@ -59,21 +65,15 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Type</th>
                 <th>Date</th>
-                <th>Tags</th>
                 <th>Value</th>
-                <th>Data</th>
               </tr>
             </thead>
             <tbody>
               {{#each report}}
                 <tr>
-                  <td>{{type}}</td>
                   <td>{{createdOn}}</td>
-                  <td>{{stringify tags}}</td>
                   <td>{{value}}</td>
-                  <td>{{stringify data}}</td>
                 </tr>
               {{/each}}
             </tbody>

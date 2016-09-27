@@ -11,6 +11,9 @@ module.exports = function(options) {
   if (obj.last) {
     urlObj.last = obj.last;
   }
+  if (obj.tagValue) {
+    urlObj.tags = `${urlObj.tags}=${obj.tagValue}`;
+  }
   const qs = querystring.stringify(urlObj);
   return `/ui?${qs}`;
 };

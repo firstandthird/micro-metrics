@@ -1,4 +1,4 @@
-/* global window */
+/* global window, document */
 const MG = require('metrics-graphics');
 const d3 = require('d3');
 
@@ -20,3 +20,11 @@ MG.data_graphic({
   area: false,
   missing_is_zero: true
 });
+
+const el = document.querySelector('[data-action="selectTagValue"]');
+if (el) {
+  el.addEventListener('change', (e) => {
+    const url = e.target.value;
+    window.location = url;
+  });
+}
