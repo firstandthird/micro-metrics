@@ -15,9 +15,9 @@ lab.experiment('random data', { timeout: 5000 }, () => {
       code.expect(err).to.equal(null);
       code.expect(result.ops.length).to.equal(10);
       // confirm they were put in the db:
-      setup.server.plugins['hapi-mongodb'].db.collection('tracks').find({}).toArray((err2, result) => {
+      setup.server.plugins['hapi-mongodb'].db.collection('tracks').find({}).toArray((err2, result2) => {
         code.expect(err2).to.equal(null);
-        code.expect(result.length).to.equal(10);
+        code.expect(result2.length).to.equal(10);
         done();
       });
     });
