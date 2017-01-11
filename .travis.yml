@@ -1,0 +1,9 @@
+env:
+- localhost=127.0.0.1 MONGO_PORT_27017_TCP_ADDR=localhost MONGO_PORT_27017_TCP_PORT=27017
+services:
+  - mongodb
+language: node_js
+node_js:
+  - "6"
+  - "5"
+  - "4"
