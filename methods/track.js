@@ -30,7 +30,8 @@ module.exports = {
       tags: Joi.object(),
       value: Joi.any().default(1),
       data: Joi.any(),
-      userId: Joi.string()
+      userId: Joi.string(),
+      sessionId: Joi.string()
     });
 
     Joi.validate(payload, validation, (err, val) => {
@@ -38,7 +39,9 @@ module.exports = {
         server.log(['track', 'validation-error'], { err, message: 'payload failed validation' });
         return done(err);
       }
-      val.tagKeys = Object.keys(val.tags);
+      if (val.tags) {
+        val.tagKeys = Object.keys(val.tags);
+      }
       val.createdOn = new Date();
 
       const db = server.plugins['hapi-mongodb'].db;
