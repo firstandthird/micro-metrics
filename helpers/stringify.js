@@ -1,3 +1,4 @@
+'use strict';
 const Handlebars = require('handlebars');
 module.exports = function(input, pretty) {
   if (typeof input === 'undefined') {

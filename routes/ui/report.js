@@ -1,3 +1,4 @@
+'use strict';
 exports.report = {
   path: '/ui',
   method: 'get',

@@ -1,3 +1,4 @@
+'use strict';
 const _ = require('lodash');
 
 // generates numEntries of random data, having between 0 and 3 tags and dating from present back to startDate:

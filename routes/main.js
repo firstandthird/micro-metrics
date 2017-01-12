@@ -1,3 +1,4 @@
+'use strict';
 exports.main = {
   method: 'GET',
   path: '/',
