@@ -1,3 +1,4 @@
+'use strict';
 module.exports = function (val1, val2, options) {
   var context = (options.fn.contexts && options.fn.contexts[0]) || this;
   if(val1 && typeof val1 === 'object') {

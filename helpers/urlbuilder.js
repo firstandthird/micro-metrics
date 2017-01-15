@@ -1,3 +1,4 @@
+'use strict';
 const querystring = require('querystring');
 module.exports = function(options) {
   const obj = options.hash;
