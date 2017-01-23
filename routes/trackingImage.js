@@ -10,6 +10,7 @@ exports.main = {
 
     const data = request.server.methods.extractInfo(request);
     payload.data = data;
+    
     request.server.methods.track(payload);
 
     reply(emptyGifBuffer)

@@ -34,4 +34,19 @@
 
 - **_/api/types_** (GET)
 
-Returns a list of all the metric types in the database.  
+Returns a list of all the metric types in the database. 
+
+
+#### Tracking Pixel
+
+To track via tracking pixel, you can set an image into an app / email that you would like to track with the data appended as a query string.
+
+```
+<img src="/t.gif?type=pageview&tags=tag1,tag2&userId=99" />
+```
+
+To use tags with a `var` `val` notation, structure the tags portion of the string like this.
+
+```
+tags=var1=val1,var2=val2,var3=val3
+```
