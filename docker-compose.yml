@@ -1,16 +1,16 @@
 app:
   build: .
-  command: "nodemon ../node_modules/.bin/rapptor"
+  dockerfile: 'DockerfileDev'
+  command: "npm run dev:server" #if you don't want clientkit
   volumes:
-    - '.:/app/server'
-    - '/app/node_modules'
+    - '.:/app'
   links:
     - 'db:mongo'
   environment:
-    PORT: 8081
+    PORT: 8080
     VIRTUAL_HOST: 'micro-metrics.*'
   ports:
-    - '8081:8081'
+    - '8080'
 db:
   image: 'mongo'
-  command: 'mongod --quiet'
+  command: 'mongod --smallfiles --quiet'

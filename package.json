@@ -1,25 +1,26 @@
 {
   "name": "micro-metrics",
   "version": "0.7.0",
-  "description": "micro email api",
+  "description": "micro metrics",
   "scripts": {
     "start": "rapptor",
-    "dev:server": "nodemon ./node_modules/.bin/rapptor",
-    "clientkit": "clientkit --env dev",
-    "dev": "concurrently -r 'npm run dev:server' 'npm run clientkit'",
+    "dev:server": "npm install && nodemon -x 'npm start'",
     "lint": "eslint .",
     "test": "PORT=8099 lab -e test"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/firstandthird/micro-metrics.git"
   },
   "keywords": [
-    "email",
-    "mail",
     "hapi",
     "micro",
-    "microservice"
+    "microservice",
+    "metrics",
+    "stats"
   ],
   "author": "First+Third",
   "license": "MIT",
