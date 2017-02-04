@@ -4,6 +4,8 @@ NAME=micrometrics_app_1
 CMD=$1
 
 if [[ -z "$CMD" ]]; then
+  npm install &&
+  npm prune &&
   docker-compose build &&
   docker-compose up
   exit
