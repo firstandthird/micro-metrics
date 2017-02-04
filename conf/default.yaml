@@ -9,18 +9,9 @@ mongo:
   url: "mongodb://{{mongo.host}}:{{mongo.port}}/{{mongo.db}}"
 
 plugins:
-  vision:
-  inert:
+  hapi-logr:
+    renderOptions:
+      console:
+        timestamp: false
   hapi-mongodb:
     url: "{{mongo.url}}"
-
-views:
-  engines:
-    html: 'handlebars'
-  path: 'public/pages'
-  helpersPath:
-    - 'helpers'
-
-assets:
-  path: 'public/_dist'
-  endpoint: '/ui'
