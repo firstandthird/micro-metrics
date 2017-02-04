@@ -1,4 +1,4 @@
-# micro-metrics
+# micro-metrics [![Build Status](https://travis-ci.org/firstandthird/micro-metrics.svg?branch=master)](https://travis-ci.org/firstandthird/micro-metrics)
 ## a microservice metrics api server using docker
 
 #### API Routes
