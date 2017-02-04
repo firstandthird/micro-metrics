@@ -45,7 +45,7 @@ module.exports = function(startDate, numEntries, callback) {
     entries.push(cur);
   }
   // now add them to db:
-  this.plugins['hapi-mongodb'].db.collection('tracks').insertMany(entries, (err, result) => {
+  this.db.tracks.insertMany(entries, (err, result) => {
     return callback(err, result);
   });
 };

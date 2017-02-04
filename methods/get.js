@@ -5,7 +5,6 @@ const _ = require('lodash');
 module.exports = {
   method(filter, done) {
     const server = this;
-    const db = server.plugins['hapi-mongodb'].db;
 
     const findObj = {};
 
@@ -36,7 +35,7 @@ module.exports = {
       findObj.value = (isNaN(filter.value / 1)) ? filter.value : filter.value / 1;
     }
 
-    db.collection('tracks').find(findObj).sort({ createdOn: 1 }).toArray((err, results) => {
+    server.db.tracks.find(findObj).sort({ createdOn: 1 }).toArray((err, results) => {
       if (err) {
         return done(err);
       }

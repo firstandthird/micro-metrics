@@ -9,9 +9,17 @@ mongo:
   url: "mongodb://{{mongo.host}}:{{mongo.port}}/{{mongo.db}}"
 
 plugins:
+  hapi-auto-handler:
+
   hapi-logr:
     renderOptions:
       console:
         timestamp: false
   hapi-mongodb:
+    _priority: -5
     url: "{{mongo.url}}"
+  hapi-mongodb-collections:
+    _priority: -4
+    namespace: 'db'
+    collections: 
+      - 'tracks'

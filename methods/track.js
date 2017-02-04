@@ -44,8 +44,7 @@ module.exports = {
       }
       val.createdOn = new Date();
 
-      const db = server.plugins['hapi-mongodb'].db;
-      db.collection('tracks').insertOne(val, (dbErr, data) => {
+      server.db.tracks.insertOne(val, (dbErr, data) => {
         if (dbErr) {
           server.log(['track', 'dbError'], {
             err,

@@ -2,15 +2,15 @@
   "verbose": false,
   "ignore": [
     ".git",
-    "node_modules",
-    "public/_dist"
+    "node_modules"
   ],
   "watch": [
     "index.js",
+    "package.json",
     "routes/**/*.js",
     "methods/**/*.js",
     "plugins/**/*.js",
     "conf/*.yaml"
   ],
-  "ext": "js yaml html"
+  "ext": "js yaml"
 }
