@@ -39,7 +39,7 @@
     "vision": "^4.1.0"
   },
   "devDependencies": {
-    "clientkit": "^0.21.0",
+    "clientkit": "^1.0.0",
     "code": "4.0.0",
     "concurrently": "^3.1.0",
     "eslint": "3.12.2",
