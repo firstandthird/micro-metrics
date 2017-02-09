@@ -31,7 +31,7 @@
     "handlebars": "^4.0.5",
     "hapi-mongodb": "6.2.0",
     "inert": "^4.0.2",
-    "joi": "10.1.0",
+    "joi": "10.2.2",
     "lodash": "4.17.2",
     "logr": "1.16.0",
     "metrics-graphics": "^2.10.1",
