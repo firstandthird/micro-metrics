@@ -29,7 +29,7 @@
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
     "handlebars": "^4.0.5",
-    "hapi-mongodb": "6.2.0",
+    "hapi-mongodb": "6.2.1",
     "inert": "^4.0.2",
     "joi": "10.1.0",
     "lodash": "4.17.2",
