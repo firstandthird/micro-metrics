@@ -20,7 +20,7 @@ module.exports = {
     if (filter.tags) {
       const allTags = filter.tags.split(',');
       _.each(allTags, (tag) => {
-        const tagArr = tag.split('=');
+        const tagArr = tag.split(':');
         findObj[`tags.${tagArr[0]}`] = (tagArr.length === 1) ? { $exists: 1 } : tagArr[1];
       });
     }
