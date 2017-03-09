@@ -12,18 +12,7 @@ module.exports = {
 
     const server = this;
 
-    if (payload.tags && _.isString(payload.tags)) {
-      const allTags = payload.tags.split(',');
-      payload.tags = {};
-
-      _.each(allTags, (tag) => {
-        const tagArr = tag.split('=');
-        if (tagArr.length === 1) {
-          tagArr.push(1);
-        }
-        payload.tags[tagArr[0]] = tagArr[1];
-      });
-    }
+    payload.tags = server.methods.stringToKeyValue(payload.tags);
 
     const validation = Joi.object().keys({
       type: Joi.string().required(),
