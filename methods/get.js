@@ -18,10 +18,10 @@ module.exports = {
     }
 
     if (filter.tags) {
-      const allTags = filter.tags.split(',');
-      _.each(allTags, (tag) => {
-        const tagArr = tag.split(':');
-        findObj[`tags.${tagArr[0]}`] = (tagArr.length === 1) ? { $exists: 1 } : tagArr[1];
+      const tagObj = server.methods.stringToKeyValue(filter.tags);
+      Object.keys(tagObj).forEach((tag) => {
+        const value = tagObj[tag];
+        findObj[`tags.${tag}`] = (value === true) ? { $exists: 1 } : value;
       });
     }
     if (filter.startDate && filter.endDate) {
