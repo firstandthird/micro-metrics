@@ -10,11 +10,6 @@ mongo:
 
 plugins:
   hapi-auto-handler:
-
-  hapi-logr:
-    renderOptions:
-      console:
-        timestamp: false
   hapi-mongodb:
     _priority: -5
     url: "{{mongo.url}}"

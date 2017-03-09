@@ -8,6 +8,7 @@ app:
   environment:
     PORT: 8080
     VIRTUAL_HOST: 'micro-metrics.*'
+    FORCE_COLOR: 1
   ports:
     - '8080'
 db:
