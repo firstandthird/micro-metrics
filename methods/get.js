@@ -24,6 +24,15 @@ module.exports = {
         findObj[`tags.${tag}`] = (value === true) ? { $exists: 1 } : value;
       });
     }
+
+    if (filter.fields) {
+      const fields = server.methods.stringToKeyValue(filter.fields);
+      Object.keys(fields).forEach((field) => {
+        const value = fields[field];
+        findObj[`fields.${field}`] = (value === true) ? { $exists: 1 } : value;
+      });
+    }
+
     if (filter.startDate && filter.endDate) {
       findObj.createdOn = {
         $gte: new Date(filter.startDate),
