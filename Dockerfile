@@ -1,1 +1,1 @@
-FROM firstandthird/node:prod-6.7-1
+FROM firstandthird/node:6.10-3-onbuild

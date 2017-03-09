@@ -4,9 +4,6 @@ NAME=micrometrics_app_1
 CMD=$1
 
 if [[ -z "$CMD" ]]; then
-  npm install &&
-  npm prune &&
-  docker-compose build &&
   docker-compose up
   exit
 fi
@@ -21,30 +18,18 @@ if [[ "$CMD" == "enter" ]]; then
   exit
 fi
 
-if [[ "$CMD" == "npmi" ]]; then
-  docker exec -it $NAME npm prune
-  docker exec -it $NAME npm install
-  touch conf/default.yaml
-  exit
-fi
-
 if [[ "$CMD" == "lint" ]]; then
   docker-compose run --rm app npm run lint
   exit
 fi
 
 if [[ "$CMD" == "test" ]]; then
-  docker exec -it $NAME npm test
-  exit
-fi
-
-if [[ "$CMD" == "build" ]]; then
-  docker-compose build
+  docker-compose run --rm app npm test
   exit
 fi
 
 if [[ "$CMD" == "mongo" ]]; then
-  docker run -it --link micrometrics_db_1:mongo --rm mongo sh -c 'exec mongo "$MONGO_PORT_27017_TCP_ADDR:$MONGO_PORT_27017_TCP_PORT/test"'
+  docker-compose exec db mongo micrometrics
   exit
 fi
 

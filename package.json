@@ -4,7 +4,7 @@
   "description": "micro metrics",
   "scripts": {
     "start": "rapptor",
-    "dev:server": "nodemon -x 'npm start'",
+    "dev:server": "npm install && npm prune && nodemon -x 'npm start'",
     "lint": "eslint .",
     "test": "PORT=8099 lab -e test"
   },

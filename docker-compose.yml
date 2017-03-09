@@ -1,9 +1,8 @@
 app:
-  build: .
-  dockerfile: 'DockerfileDev'
+  image: 'firstandthird/node:6.10-3-nobuild'
   command: "npm run dev:server" #if you don't want clientkit
   volumes:
-    - '.:/app'
+    - '.:/home/app/src'
   links:
     - 'db:mongo'
   environment:
