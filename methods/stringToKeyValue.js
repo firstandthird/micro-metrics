@@ -9,7 +9,7 @@ module.exports = {
     split.forEach((item) => {
       const arr = item.split(':');
       if (arr.length === 1) {
-        arr.push(1);
+        arr.push(true);
       }
       obj[arr[0]] = arr[1];
     });
