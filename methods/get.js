@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 module.exports = {
   method(filter, done) {
     const server = this;
