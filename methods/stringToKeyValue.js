@@ -3,6 +3,10 @@ module.exports = {
     if (!str) {
       return {};
     }
+    //already an object?
+    if (typeof str === 'object') {
+      return str;
+    }
     const split = str.split(',');
     const obj = {};
 
