@@ -24,7 +24,7 @@ if [[ "$CMD" == "lint" ]]; then
 fi
 
 if [[ "$CMD" == "test" ]]; then
-  docker-compose run --rm app npm test
+  docker-compose run --rm app npm test -- $@
   exit
 fi
 
