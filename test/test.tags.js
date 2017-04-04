@@ -39,6 +39,7 @@ tap.test('can use the tags method to get a list of tags used in the db', (t) => 
     url: '/api/track',
     payload: payloads[0]
   }, (err) => {
+    t.notEqual(err);
     setup.server.inject({
       method: 'POST',
       url: '/api/track',
@@ -96,6 +97,9 @@ tap.test('can use the tags method with the optional type parameter', (t) => {
     url: '/api/track',
     payload: payloads[0]
   }, (err) => {
+    if (err) {
+      t.equal(err, null);
+    }
     setup.server.inject({
       method: 'POST',
       url: '/api/track',
