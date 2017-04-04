@@ -1,50 +1,51 @@
 'use strict';
-const code = require('code');
-const lab = exports.lab = require('lab').script();
+const tap = require('tap');
 const setup = require('./setup.test.js');
 
-lab.experiment('random data', { timeout: 5000 }, () => {
-  lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup.withRapptor({}, [], done);
-  });
-  lab.afterEach({ timeout: 5000 }, (done) => {
-    setup.stop(done);
-  });
-  lab.test('can use the generate method to generate a random db for testing', (done) => {
-    setup.server.methods.generate(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10, (err, result) => {
-      code.expect(err).to.equal(null);
-      code.expect(result.ops.length).to.equal(10);
-      // confirm they were put in the db:
-      setup.server.db.tracks.find({}).toArray((err2, result2) => {
-        code.expect(err2).to.equal(null);
-        code.expect(result2.length).to.equal(10);
-        done();
-      });
+tap.beforeEach((done) => {
+  setup.withRapptor({}, [], done);
+});
+
+tap.afterEach((done) => {
+  setup.stop(done);
+});
+
+tap.test('can use the generate method to generate a random db for testing', (t) => {
+  setup.server.methods.generate(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10, (err, result) => {
+    t.equal(err, null, 'does not error');
+    t.equal(result.ops.length, 10, 'generates the right number of result.ops in the db');
+    // confirm they were put in the db:
+    setup.server.db.tracks.find({}).toArray((err2, result2) => {
+      t.equal(err2, null);
+      t.equal(result2.length, 10, 'all of the ops actually are stored in the db');
+      t.end();
     });
   });
-  lab.test('can use the generate route to generate a random db for testing', (done) => {
-    setup.server.inject({
-      method: 'POST',
-      url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
-    }, (response) => {
-      code.expect(response.statusCode).to.equal(200);
-      code.expect(response.result.ops.length).to.equal(10);
-      // confirm they were put in the db:
-      setup.server.db.tracks.find({}).toArray((err2, result) => {
-        code.expect(err2).to.equal(null);
-        code.expect(result.length).to.equal(10);
-        done();
-      });
+});
+
+tap.test('can use the generate route to generate a random db for testing', (t) => {
+  setup.server.inject({
+    method: 'POST',
+    url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
+  }, (response) => {
+    t.equal(response.statusCode, 200, 'route returns HTTP OK');
+    t.equal(response.result.ops.length, 10, 'route returns right number of db objects');
+    // confirm they were put in the db:
+    setup.server.db.tracks.find({}).toArray((err2, result) => {
+      t.equal(err2, null);
+      t.equal(result.length, 10, 'route stored all of the objects in the db');
+      t.end();
     });
   });
-  lab.test('disallow generate route when allowTesting is falsey', (done) => {
-    setup.server.settings.app.allowGeneratedData = undefined;
-    setup.server.inject({
-      method: 'POST',
-      url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
-    }, (response) => {
-      code.expect(response.statusCode).to.equal(401);
-      done();
-    });
+});
+
+tap.test('disallow generate route when allowTesting is falsey', (t) => {
+  setup.server.settings.app.allowGeneratedData = undefined;
+  setup.server.inject({
+    method: 'POST',
+    url: `/api/generate?numEntries=10&startDate=${new Date().getTime() - (60 * 60 * 1000 * 24 * 30)}`
+  }, (response) => {
+    t.equal(response.statusCode, 401, 'returns HTTP 401');
+    t.end();
   });
 });
