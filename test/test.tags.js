@@ -59,7 +59,7 @@ tap.test('can use the tags method to get a list of tags used in the db', (t) => 
           t.equal(response.result.length, 3);
           t.notEqual(response.result.indexOf('currency'), -1);
           t.notEqual(response.result.indexOf('units'), -1);
-          setup.stop(t.end);
+          t.end();
         });
       });
     });
@@ -120,7 +120,7 @@ tap.test('can use the tags method with the optional type parameter', (t) => {
           t.notEqual(response.result.indexOf('currency'), -1, 'added new tags');
           t.notEqual(response.result.indexOf('units'), -1, 'added new tags');
           t.equal(response.result.indexOf('animalVegetableMineral'), -1, 'removed old tag');
-          setup.stop(t.end);
+          t.end();
         });
       });
     });
