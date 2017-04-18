@@ -1,13 +1,16 @@
 {
   "verbose": false,
+  "ignore": [
+    ".git",
+    "node_modules"
+  ],
   "watch": [
     "index.js",
+    "package.json",
     "routes/**/*.js",
     "methods/**/*.js",
     "plugins/**/*.js",
-    "helpers/**/*.js",
-    "conf/*.yaml",
-    "public/**/*.html"
+    "conf/*.yaml"
   ],
-  "ext": "js yaml html"
+  "ext": "js yaml"
 }

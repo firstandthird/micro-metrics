@@ -1,33 +1,37 @@
 #!/bin/bash
 
-
+NAME=micrometrics_app_1
 CMD=$1
 
 if [[ -z "$CMD" ]]; then
   docker-compose up
+  exit
 fi
 
 if [[ "$CMD" == "shell" ]]; then
   docker-compose run --rm app sh
+  exit
 fi
 
 if [[ "$CMD" == "enter" ]]; then
-  docker exec -it micrometrics_app_1 sh
-fi
-
-if [[ "$CMD" == "npm" ]]; then
-  docker exec -it micrometrics_app_1 npm install
-  touch conf/default.yaml
+  docker exec -it $NAME sh
+  exit
 fi
 
 if [[ "$CMD" == "lint" ]]; then
-  docker exec -it micrometrics_app_1 npm run lint
+  docker-compose run --rm app npm run lint
+  exit
 fi
 
 if [[ "$CMD" == "test" ]]; then
-  docker exec -it micrometrics_app_1 npm test
+  docker-compose run --rm app npm test -- $@
+  exit
 fi
 
-if [[ "$CMD" == "build" ]]; then
-  docker-compose build
+if [[ "$CMD" == "mongo" ]]; then
+  docker-compose exec db mongo micrometrics
+  exit
 fi
+
+
+docker-compose $@

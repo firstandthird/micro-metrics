@@ -12,16 +12,20 @@ module.exports.withRapptor = (options, dataSet, callback) => {
     if (err) {
       return callback(err);
     }
-    module.exports.server.plugins['hapi-mongodb'].db.collection('tracks').drop();
-    if (dataSet.length > 0) {
-      module.exports.server.plugins['hapi-mongodb'].db.collection('tracks').insertMany(dataSet, callback);
-    } else {
-      return callback();
-    }
+    module.exports.server.db.tracks.drop(() => {
+      if (dataSet.length > 0) {
+        module.exports.server.db.tracks.insertMany(dataSet, callback);
+      } else {
+        return callback();
+      }
+    });
   });
 };
 
 module.exports.stop = (callback) => {
-  module.exports.server.plugins['hapi-mongodb'].db.collection('tracks').drop();
-  module.exports.server.stop((err) => { callback(err); });
+  module.exports.server.db.tracks.drop(() => {
+    module.exports.server.stop((err) => {
+      callback(err);
+    });
+  });
 };

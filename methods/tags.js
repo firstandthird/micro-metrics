@@ -5,6 +5,6 @@ module.exports = {
       done = filter;
       filter = {};
     }
-    this.plugins['hapi-mongodb'].db.collection('tracks').distinct('tagKeys', filter, done);
+    this.db.tracks.distinct('tagKeys', filter, done);
   }
 };
