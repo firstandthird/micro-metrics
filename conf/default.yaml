@@ -3,10 +3,7 @@ host: 'http://{{ENV.VIRTUAL_HOST}}'
 connection:
   port: '{{ENV.PORT}}'
 mongo:
-  host: "{{ENV.MONGO_PORT_27017_TCP_ADDR}}"
-  port: "{{ENV.MONGO_PORT_27017_TCP_PORT}}"
-  db: "micrometrics"
-  url: "mongodb://{{mongo.host}}:{{mongo.port}}/{{mongo.db}}"
+  url: "{{ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics'}}"
 
 plugins:
   hapi-auto-handler:

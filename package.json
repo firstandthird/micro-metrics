@@ -28,11 +28,11 @@
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
     "hapi-auto-handler": "^1.2.2",
-    "hapi-mongodb": "6.2.0",
+    "hapi-mongodb": "6.2.1",
     "hapi-mongodb-collections": "^1.1.0",
-    "joi": "10.1.0",
-    "lodash": "4.17.2",
-    "rapptor": "1.8.2"
+    "joi": "10.4.1",
+    "lodash": "4.17.4",
+    "rapptor": "1.13.0"
   },
   "devDependencies": {
     "code": "4.0.0",
