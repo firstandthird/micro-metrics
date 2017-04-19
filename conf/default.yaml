@@ -7,11 +7,16 @@ mongo:
 
 plugins:
   hapi-auto-handler:
+    _priority: -1
+  hapi-req:
+    _priority: -2
   hapi-mongodb:
-    _priority: -5
+    _priority: -3
     url: "{{mongo.url}}"
+  hapi-method-loader:
+    _priority: -2
   hapi-mongodb-collections:
-    _priority: -4
+    _priority: -3
     namespace: 'db'
     collections: 
       - 'tracks'
