@@ -17,6 +17,7 @@ module.exports = {
 
     const validation = Joi.object().keys({
       type: Joi.string().required(),
+      createdOn: Joi.number().default(new Date()),
       tags: Joi.object(),
       fields: Joi.object(),
       value: Joi.any().default(1),
@@ -33,7 +34,6 @@ module.exports = {
       if (val.tags) {
         val.tagKeys = Object.keys(val.tags);
       }
-      val.createdOn = new Date();
 
       server.db.tracks.insertOne(val, (dbErr, data) => {
         if (dbErr) {
