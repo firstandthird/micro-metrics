@@ -1,8 +1,7 @@
 connection:
   port: '8099'
 mongo:
-  db: "micrometrics-test"
-  host: "{{ENV.MONGO_PORT_27017_TCP_ADDR || localhost}}"
+  url: "mongodb://mongo:27017/micrometrics-test"
 allowGeneratedData: true
 plugins:
   hapi-logr:
