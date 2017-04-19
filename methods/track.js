@@ -14,10 +14,10 @@ module.exports = {
 
     payload.tags = server.methods.stringToKeyValue(payload.tags);
     payload.fields = server.methods.stringToKeyValue(payload.fields);
-
     const validation = Joi.object().keys({
       type: Joi.string().required(),
       tags: Joi.object(),
+      // createdOn: Joi.date().timestamp().raw().default(Date.now.getTime()),
       fields: Joi.object(),
       value: Joi.any().default(1),
       data: Joi.any(),
