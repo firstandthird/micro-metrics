@@ -1,5 +1,5 @@
 env:
-- localhost=127.0.0.1 MONGO_PORT_27017_TCP_ADDR=localhost MONGO_PORT_27017_TCP_PORT=27017
+  - localhost=127.0.0.1 MONGO_URL="mongodb://localhost:27017/micrometrics-test"
 services:
   - mongodb
 language: node_js
