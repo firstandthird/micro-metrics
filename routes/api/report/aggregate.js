@@ -1,11 +1,11 @@
 const _ = require('lodash');
 exports.aggregate = {
-  path: '/api/report/aggregate',
+  path: 'aggregate',
   method: 'get',
   handler: {
     autoInject: {
       results(server, request, done) {
-        server.req.get('/api/report', request.query, done);
+        server.req.get('/api/report', { query: request.query }, done);
       },
       aggregate(server, request, results, done) {
         const period = request.query.aggregate;

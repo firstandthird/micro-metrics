@@ -2,7 +2,6 @@
 
 exports.report = {
   method: 'GET',
-  path: '/api/report',
   handler: {
     autoInject: {
       query(server, request, done) {
