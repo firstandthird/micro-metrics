@@ -6,13 +6,11 @@ exports.aggregate = {
   config: {
     validate: {
       query: {
-        period: Joi.string().default('h').allow(['h', 'm', 'd']),
-        last: Joi.string().default('30d'),
+        period: Joi.string().default('d').allow(['h', 'm', 'd']),
+        last: Joi.string(),
         type: Joi.string(),
         tags: Joi.string(),
         fields: Joi.string(),
-        startDate: Joi.string(),
-        endDate: Joi.string(),
         value: Joi.number()
       }
     }
@@ -20,6 +18,14 @@ exports.aggregate = {
   handler: {
     autoInject: {
       query(server, request, done) {
+        if (!request.query.last) {
+          const defaultLast = {
+            d: '30d',
+            h: '1d',
+            m: '1h'
+          };
+          request.query.last = defaultLast[request.query.period];
+        }
         const query = server.methods.getReportQuery(request.query);
         done(null, query);
       },
@@ -73,7 +79,8 @@ exports.aggregate = {
           const timestamp = date.getTime();
           dataset[timestamp] = item.total;
         });
-        done(null, dataset);
+        const arr = Object.keys(dataset).map((key) => ({ date: key, value: dataset[key] }));
+        done(null, arr);
       },
       reply(map, done) {
         done(null, map);
