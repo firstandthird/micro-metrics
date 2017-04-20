@@ -1,29 +1,65 @@
 'use strict';
-const _ = require('lodash');
+const Joi = require('joi');
 exports.aggregate = {
   path: 'aggregate',
   method: 'get',
+  config: {
+    validate: {
+      query: {
+        period: Joi.string().default('h').allow(['h', 'm', 'd']),
+        last: Joi.string().default('30d'),
+        type: Joi.string(),
+        tags: Joi.string(),
+        fields: Joi.string(),
+        startDate: Joi.string(),
+        endDate: Joi.string(),
+        value: Joi.number()
+      }
+    }
+  },
   handler: {
     autoInject: {
-      results(server, request, done) {
-        server.req.get('/api/report', { query: request.query }, done);
+      query(server, request, done) {
+        const query = server.methods.getReportQuery(request.query);
+        done(null, query);
       },
-      aggregate(server, request, results, done) {
-        const period = request.query.aggregate;
-        const dataset = results.results;
-        let grouped = _.groupBy(dataset, (item) => server.methods.processPeriod(item.createdOn, period));
-        grouped = _.mapValues(grouped, (items) => _.sumBy(items, 'value'));
-        const out = [];
-        _.forIn(grouped, (value, date) => {
-          out.push({
-            createdOn: date,
-            value
-          });
+      aggregate(server, request, query, done) {
+        const id = {
+          day: { $dayOfMonth: '$createdOn' },
+          month: { $month: '$createdOn' },
+          year: { $year: '$createdOn' },
+        };
+        if (request.query.period === 'h' || request.query.period === 'm') {
+          id.hour = { $hour: '$createdOn' };
+        }
+        if (request.query.period === 'm') {
+          id.minute = { $minute: '$createdOn' };
+        }
+
+        server.db.tracks.aggregate([
+          { $match: query },
+          {
+            $group: {
+              _id: id,
+              total: { $sum: '$value' },
+              avg: { $avg: '$value' },
+              max: { $max: '$value' },
+              min: { $min: '$value' }
+            }
+          }
+        ], done);
+      },
+      map(aggregate, done) {
+        const out = aggregate.map((item) => {
+          item.date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
+          item.timestamp = item.date.getTime();
+          delete item._id; //eslint-disable-line no-underscore-dangle
+          return item;
         });
         done(null, out);
       },
-      reply(aggregate, done) {
-        done(null, aggregate);
+      reply(map, done) {
+        done(null, map);
       }
     }
   }
