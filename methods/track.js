@@ -19,7 +19,7 @@ module.exports = {
       tags: Joi.object(),
       createdOn: Joi.date().default(() => new Date(), 'current timestamp'),
       fields: Joi.object(),
-      value: Joi.any().default(1),
+      value: Joi.number().default(1),
       data: Joi.any(),
       userId: Joi.string(),
       sessionId: Joi.string()
