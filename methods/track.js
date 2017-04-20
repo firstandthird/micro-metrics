@@ -14,10 +14,10 @@ module.exports = {
 
     payload.tags = server.methods.stringToKeyValue(payload.tags);
     payload.fields = server.methods.stringToKeyValue(payload.fields);
-
     const validation = Joi.object().keys({
       type: Joi.string().required(),
       tags: Joi.object(),
+      createdOn: Joi.date().default(() => new Date(), 'current timestamp'),
       fields: Joi.object(),
       value: Joi.any().default(1),
       data: Joi.any(),
@@ -33,7 +33,6 @@ module.exports = {
       if (val.tags) {
         val.tagKeys = Object.keys(val.tags);
       }
-      val.createdOn = new Date();
 
       server.db.tracks.insertOne(val, (dbErr, data) => {
         if (dbErr) {

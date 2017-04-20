@@ -24,6 +24,20 @@ lab.experiment('tags', { timeout: 5000 }, () => {
     });
   });
 
+  lab.test('can pass in a custom timestamp for createdOn', (done) => {
+    code.expect(setup.server).to.not.equal(null);
+    const val = new Date().getTime() - 1000;
+    setup.server.methods.track({
+      type: 'aType',
+      createdOn: new Date(val)
+    }, (err, data) => {
+      code.expect(err).to.equal(null);
+      code.expect(data.value).to.equal(1);
+      code.expect(data.type).to.equal('aType');
+      code.expect(data.createdOn.getTime()).to.equal(val);
+      done();
+    });
+  });
   lab.test('can use /t.gif route to get a tracking pixel', (done) => {
     setup.server.inject({
       url: '/t.gif?type=thisType',

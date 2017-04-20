@@ -1,7 +1,7 @@
 connection:
   port: '8099'
 mongo:
-  url: "mongodb://mongo:27017/micrometrics-test"
+  url: "{{ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics-test'}}"
 allowGeneratedData: true
 plugins:
   hapi-logr:
