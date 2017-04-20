@@ -1,3 +1,4 @@
+'use strict';
 exports.datatable = {
   path: 'datatable',
   method: 'get',
