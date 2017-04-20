@@ -21,7 +21,7 @@ tap.test('can use /r route to do a tracked redirect', (t) => {
     url: '/r/?to=/detour&type=thatType',
     method: 'GET',
   }, (response) => {
-    t.equal(response.statusCode).to.equal(302);
+    t.equal(response.statusCode, 302);
     setup.server.db.tracks.findOne({ type: 'thatType' }, (err, track) => {
       t.equal(err, null);
       t.equal(track.type, 'thatType');
