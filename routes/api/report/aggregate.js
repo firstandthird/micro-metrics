@@ -42,7 +42,13 @@ exports.aggregate = {
         let current = start;
         const obj = {};
         while (current < end) {
-          obj[current] = 0;
+          obj[current] = {
+            dateString: new Date(current),
+            sum: 0,
+            avg: 0,
+            max: 0,
+            min: 0
+          };
           current += period;
         }
         done(null, obj);
@@ -65,7 +71,7 @@ exports.aggregate = {
           {
             $group: {
               _id: id,
-              total: { $sum: '$value' },
+              sum: { $sum: '$value' },
               avg: { $avg: '$value' },
               max: { $max: '$value' },
               min: { $min: '$value' }
@@ -77,9 +83,15 @@ exports.aggregate = {
         aggregate.forEach((item) => {
           const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
           const timestamp = date.getTime();
-          dataset[timestamp] = item.total;
+          item.dateString = date;
+          delete item._id; //eslint-disable-line no-underscore-dangle
+          dataset[timestamp] = item;
         });
-        const arr = Object.keys(dataset).map((key) => ({ date: key, value: dataset[key] }));
+        const arr = Object.keys(dataset).map((key) => {
+          const item = dataset[key];
+          item.date = key;
+          return item;
+        });
         done(null, arr);
       },
       reply(map, done) {
