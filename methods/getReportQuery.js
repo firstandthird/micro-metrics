@@ -5,7 +5,7 @@ module.exports = function(query) {
   if (query.last) {
     query.startDate = server.methods.extractStartDate(query.last);
     const end = new Date();
-    end.setHours(24, 0, 0, 0);
+    end.setSeconds(0, 0);
     query.endDate = end.getTime();
   }
 

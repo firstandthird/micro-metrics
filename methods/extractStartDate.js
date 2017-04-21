@@ -8,7 +8,11 @@ module.exports = (paramString) => {
   const dayValue = day ? day[1] : 0;
   const minuteValue = minute ? minute[1] : 0;
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  if (hourValue === 0 && minuteValue === 0) {
+    today.setHours(0, 0, 0, 0);
+  } else {
+    today.setSeconds(0, 0);
+  }
   const thresholdTime = today.getTime();
   return thresholdTime - ((minuteValue * 60 * 1000) + (dayValue * 86400000) + (hourValue * 3600000));
 };
