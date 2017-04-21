@@ -117,8 +117,7 @@ tap.test('can use the report method to get a list of metrics from the db by day 
   });
 });
 tap.test('can use the report method to get a list of metrics from the db by hour and day', (t) => {
-  t.equal(true, true);
-    setup.server.inject({
+  setup.server.inject({
     method: 'GET',
     url: '/api/report?last=4h1d'
   }, (response) => {

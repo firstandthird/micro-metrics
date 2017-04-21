@@ -6,7 +6,7 @@
     "start": "rapptor",
     "dev:server": "npm install && npm prune && nodemon -x 'npm start'",
     "lint": "eslint .",
-    "test": "PORT=8099 tap test | tap-spec"
+    "test": "PORT=8099 npm run lint && tap test | tap-spec"
   },
   "pre-commit": [],
   "repository": {
