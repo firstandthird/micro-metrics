@@ -9,19 +9,6 @@ tap.afterEach((done) => {
   setup.stop(done);
 });
 
-tap.test('can use the track method to store a value in the db', (t) => {
-  t.notEqual(setup.server, null, 'server not null');
-  setup.server.methods.track({
-    type: 'aType'
-  }, (err, data) => {
-    t.equal(err, null, 'does not error');
-    t.equal(data.value, 1, 'sets value');
-    t.equal(data.type, 'aType', 'sets type');
-    t.notEqual(data.createdOn, null, 'sets createdOn date');
-    t.end();
-  });
-});
-
 tap.test('can use /t.gif route to get a tracking pixel', (t) => {
   setup.server.inject({
     url: '/t.gif?type=thisType',

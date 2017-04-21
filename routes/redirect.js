@@ -14,8 +14,15 @@ exports.main = {
     delete payload.to;
 
     payload.data = request.server.methods.extractInfo(request);
-    request.server.methods.track(payload);
-
-    reply.redirect(to);
+    request.server.inject({
+      method: 'POST',
+      url: '/api/track',
+      payload
+    }, (response) => {
+      if (response.statusCode === 200) {
+        return reply.redirect(to);
+      }
+      return reply({ statusCode: response.statusCode, message: response.statusMessage });
+    });
   }
 };
