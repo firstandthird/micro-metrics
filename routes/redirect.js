@@ -22,7 +22,7 @@ exports.main = {
       if (response.statusCode === 200) {
         return reply.redirect(to);
       }
-      return reply({ statusCode: response.statusCode, message: response.statusMessage });
+      reply({ statusMessage: response.statusMessage }).code(response.statusCode);
     });
   }
 };
