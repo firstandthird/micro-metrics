@@ -10,7 +10,7 @@ exports.tags = {
     }
     request.server.methods.tags(filter, (err, results) => {
       if (err) {
-        request.server.log(err);
+        return reply(err);
       }
       // results will be an object in which the keys are the tag names
       // and the values are each a list of the values for those names
