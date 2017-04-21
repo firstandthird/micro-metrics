@@ -3,15 +3,14 @@
 exports.types = {
   method: 'GET',
   path: '/api/types',
-  handler(request, reply) {
-    request.server.methods.types((err, results) => {
-      if (err) {
-        return reply(err);
+  handler: {
+    autoInject: {
+      types(server, done) {
+        server.db.tracks.distinct('type', done);
+      },
+      reply(types, done) {
+        return done(null, { results: types });
       }
-      reply({
-        count: results.length,
-        results
-      });
-    });
+    }
   }
 };
