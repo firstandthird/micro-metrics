@@ -3,9 +3,7 @@ const _ = require('lodash');
 
 // generates numEntries of random data, having between 0 and 3 tags and dating from present back to startDate:
 module.exports = function(startDate, numEntries, callback) {
-  const getRandomDate = () => {
-    return new Date(_.random(startDate, new Date().getTime()));
-  };
+  const getRandomDate = () => new Date(_.random(startDate, new Date().getTime()));
   const randomTypes = ['Views', 'Posts', 'Users', 'Responses', 'Horses'];
   const randomTags = {
     Views: ['links', 'requests', 'refreshes'],
@@ -30,11 +28,11 @@ module.exports = function(startDate, numEntries, callback) {
   };
 
   const entries = [];
-  for (var i = 0; i < numEntries; i++) {
+  for (let i = 0; i < numEntries; i++) {
     // random type:
     const cur = { type: _.sample(randomTypes), tags: {} };
     // up to 3 keys, may override a previous key:
-    for (var j = 0; j < _.random(3); j++) {
+    for (let j = 0; j < _.random(3); j++) {
       const key = _.sample(randomTags[cur.type]);
       // each tag value is either one item randomly picked from a list or a random number:
       cur.tags[key] = typeof randomValues[key] === 'number' ? _.random(randomValues[key]) : _.sample(randomValues[key]);
@@ -45,7 +43,5 @@ module.exports = function(startDate, numEntries, callback) {
     entries.push(cur);
   }
   // now add them to db:
-  this.db.tracks.insertMany(entries, (err, result) => {
-    return callback(err, result);
-  });
+  this.db.tracks.insertMany(entries, (err, result) => callback(err, result));
 };

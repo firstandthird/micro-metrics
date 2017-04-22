@@ -1,53 +1,50 @@
 'use strict';
-const code = require('code');
-const lab = exports.lab = require('lab').script();
+const tap = require('tap');
 const setup = require('./setup.test.js');
 
-lab.experiment('type', { timeout: 5000 }, () => {
-  lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup.withRapptor({}, [{
-      type: 'BankAccount',
-      tags: { currency: 'yen' },
-      value: 142000000,
-      data: 'liquid Assets only',
-      userId: 'Montgomery Burns'
-    },
-    {
-      type: 'BankAccount',
-      tags: { currency: 'dollars', units: 'cents' },
-      value: 0.15,
-      data: 'liquid assets only',
-      userId: 'Barney'
-    },
-    {
-      type: 'WebPage',
-      tags: { accesses: 123 },
-      value: 23,
-      data: 'validated accesses only',
-      userId: 'Barney'
-    },
-    {
-      type: 'Radish',
-      tags: { animalVegetableMineral: 'vegetable' },
-      value: 1,
-      data: 'radishes are a good source of electrolytes and minerals ',
-      userId: 'user1234'
-    }], done);
-  });
-  lab.afterEach({ timeout: 5000 }, (done) => {
-    setup.stop(done);
-  });
+tap.beforeEach((done) => {
+  setup.withRapptor({}, [{
+    type: 'BankAccount',
+    tags: { currency: 'yen' },
+    value: 142000000,
+    data: 'liquid Assets only',
+    userId: 'Montgomery Burns'
+  },
+  {
+    type: 'BankAccount',
+    tags: { currency: 'dollars', units: 'cents' },
+    value: 0.15,
+    data: 'liquid assets only',
+    userId: 'Barney'
+  },
+  {
+    type: 'WebPage',
+    tags: { accesses: 123 },
+    value: 23,
+    data: 'validated accesses only',
+    userId: 'Barney'
+  },
+  {
+    type: 'Radish',
+    tags: { animalVegetableMineral: 'vegetable' },
+    value: 1,
+    data: 'radishes are a good source of electrolytes and minerals ',
+    userId: 'user1234'
+  }], done);
+});
+tap.afterEach((done) => {
+  setup.stop(done);
+});
 
-  lab.test('can use the get method to get a metric from the db', { timeout: 5000 }, (done) => {
-    setup.server.inject({
-      url: '/api/types',
-      method: 'GET'
-    }, (response) => {
-      code.expect(response.statusCode).to.equal(200);
-      code.expect(response.result.results.length).to.equal(3);
-      code.expect(response.result.results).to.include('BankAccount');
-      code.expect(response.result.results).to.include('Radish');
-      setup.stop(done);
-    });
+tap.test('can use the get method to get a metric from the db', (t) => {
+  setup.server.inject({
+    url: '/api/types',
+    method: 'GET'
+  }, (response) => {
+    t.equal(response.statusCode, 200);
+    t.equal(response.result.results.length, 3);
+    t.notEqual(response.result.results.indexOf('BankAccount'), -1);
+    t.notEqual(response.result.results.indexOf('Radish'), -1);
+    setup.stop(t.end);
   });
 });

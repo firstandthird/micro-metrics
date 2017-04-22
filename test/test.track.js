@@ -1,57 +1,54 @@
 'use strict';
-const code = require('code');
-const lab = exports.lab = require('lab').script();
+const tap = require('tap');
 const setup = require('./setup.test.js');
 
-lab.experiment('tags', { timeout: 5000 }, () => {
-  lab.beforeEach({ timeout: 5000 }, (done) => {
-    setup.withRapptor({}, [], done);
-  });
-  lab.afterEach({ timeout: 5000 }, (done) => {
-    setup.stop(done);
-  });
+tap.beforeEach((done) => {
+  setup.withRapptor({}, [], done);
+});
+tap.afterEach((done) => {
+  setup.stop(done);
+});
 
-  lab.test('can use the track method to store a value in the db', (done) => {
-    code.expect(setup.server).to.not.equal(null);
-    setup.server.methods.track({
-      type: 'aType'
-    }, (err, data) => {
-      code.expect(err).to.equal(null);
-      code.expect(data.value).to.equal(1);
-      code.expect(data.type).to.equal('aType');
-      code.expect(data.createdOn).to.not.equal(null);
-      done();
-    });
+tap.test('can use the track method to store a value in the db', (t) => {
+  t.notEqual(setup.server, null, 'server not null');
+  setup.server.methods.track({
+    type: 'aType'
+  }, (err, data) => {
+    t.equal(err, null, 'does not error');
+    t.equal(data.value, 1, 'sets value');
+    t.equal(data.type, 'aType', 'sets type');
+    t.notEqual(data.createdOn, null, 'sets createdOn date');
+    t.end();
   });
+});
 
-  lab.test('can pass in a custom timestamp for createdOn', (done) => {
-    code.expect(setup.server).to.not.equal(null);
-    const val = new Date().getTime() - 1000;
-    setup.server.methods.track({
-      type: 'aType',
-      createdOn: new Date(val)
-    }, (err, data) => {
-      code.expect(err).to.equal(null);
-      code.expect(data.value).to.equal(1);
-      code.expect(data.type).to.equal('aType');
-      code.expect(data.createdOn.getTime()).to.equal(val);
-      done();
-    });
+tap.test('can pass in a custom timestamp for createdOn', (t) => {
+  code.expect(setup.server).to.not.equal(null);
+  const val = new Date().getTime() - 1000;
+  setup.server.methods.track({
+    type: 'aType',
+    createdOn: new Date(val)
+  }, (err, data) => {
+    t.equal(err, null);
+    t.equal(data.value, 1);
+    t.equal(data.type, 'aType');
+    t.equal(data.createdOn.getTime(), val);
+    t.end();
   });
-  lab.test('can use /t.gif route to get a tracking pixel', (done) => {
-    setup.server.inject({
-      url: '/t.gif?type=thisType',
-      method: 'GET',
-    }, (response) => {
-      code.expect(response.statusCode).to.equal(200);
-      code.expect(response.headers['content-type']).to.equal('image/gif');
-      setup.server.db.tracks.findOne({ type: 'thisType' }, (err, track) => {
-        code.expect(err).to.equal(null);
-        code.expect(track.type).to.equal('thisType');
-        code.expect(track.data.ip).to.equal('127.0.0.1');
-        code.expect(track.data.userAgent).to.equal('shot');
-        done();
-      });
+});
+tap.test('can use /t.gif route to get a tracking pixel', (t) => {
+  setup.server.inject({
+    url: '/t.gif?type=thisType',
+    method: 'GET',
+  }, (response) => {
+    t.equal(response.statusCode, 200);
+    t.equal(response.headers['content-type'], 'image/gif');
+    setup.server.db.tracks.findOne({ type: 'thisType' }, (err, track) => {
+      t.equal(err, null);
+      t.equal(track.type, 'thisType');
+      t.equal(track.data.ip, '127.0.0.1');
+      t.equal(track.data.userAgent, 'shot');
+      t.end();
     });
   });
 });

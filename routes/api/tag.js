@@ -5,7 +5,7 @@ exports.tag = {
   path: '/api/tag-values',
   handler(request, reply) {
     const filter = {};
-    filter[`tags.${request.query.tag}`] = { '$exists': 1 };
+    filter[`tags.${request.query.tag}`] = { $exists: 1 };
     if (request.query.type) {
       filter.type = request.query.type;
     }
