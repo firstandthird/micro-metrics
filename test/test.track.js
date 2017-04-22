@@ -23,7 +23,7 @@ tap.test('can use the track method to store a value in the db', (t) => {
 });
 
 tap.test('can pass in a custom timestamp for createdOn', (t) => {
-  code.expect(setup.server).to.not.equal(null);
+  t.notEqual(setup.server, null);
   const val = new Date().getTime() - 1000;
   setup.server.methods.track({
     type: 'aType',
