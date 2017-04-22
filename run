@@ -2,6 +2,7 @@
 
 NAME=micrometrics_app_1
 CMD=$1
+shift
 
 if [[ -z "$CMD" ]]; then
   docker-compose up --build
@@ -24,7 +25,11 @@ if [[ "$CMD" == "lint" ]]; then
 fi
 
 if [[ "$CMD" == "test" ]]; then
-  docker-compose run --rm app npm test -- $@
+  if [[ -z "$@" ]];  then
+    docker-compose run --rm app npm test -- test
+  else
+    docker-compose run --rm app npm test -- $@
+  fi
   exit
 fi
 

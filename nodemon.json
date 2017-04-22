@@ -10,7 +10,8 @@
     "routes/**/*.js",
     "methods/**/*.js",
     "plugins/**/*.js",
+    "test/**/*.js",
     "conf/*.yaml"
   ],
-  "ext": "js yaml"
+  "ext": "js yaml json"
 }
