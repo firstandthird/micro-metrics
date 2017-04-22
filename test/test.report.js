@@ -74,13 +74,13 @@ tap.beforeEach((done) => {
 tap.afterEach((done) => {
   setup.stop(done);
 });
-tap.test('can use the report method to get a list of metrics from the db', (t) => {
+tap.test('can use the report method to get a list of metrics from the db - defaults to hourly', (t) => {
   setup.server.inject({
     method: 'GET',
     url: '/api/report'
   }, (response) => {
     t.equal(response.statusCode, 200, 'returns HTTP 200');
-    t.equal(response.result.count, 8, 'returns the right number of metrics');
+    t.equal(response.result.count, 4, 'returns the right number of metrics');
     t.end();
   });
 });
@@ -95,24 +95,22 @@ tap.test('can use the report method to get a list of metrics from the db by hour
   });
 });
 tap.test('can use the report method to get a list of metrics from the db by day', (t) => {
-  t.equal(true, true);
   setup.server.inject({
     method: 'GET',
     url: '/api/report?last=2d'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 3);
+    t.equal(response.result.count, 4);
     t.end();
   });
 });
 tap.test('can use the report method to get a list of metrics from the db by day and hour', (t) => {
-  t.equal(true, true);
   setup.server.inject({
     method: 'GET',
     url: '/api/report?last=2d1h'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 4);
+    t.equal(response.result.count, 3);
     t.end();
   });
 });
@@ -122,18 +120,17 @@ tap.test('can use the report method to get a list of metrics from the db by hour
     url: '/api/report?last=4h1d'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 3);
+    t.equal(response.result.count, 2);
     t.end();
   });
 });
 tap.test('can use the report method to get a list of metrics from the db by hour and day and minute', (t) => {
-  t.equal(true, true);
   setup.server.inject({
     method: 'GET',
     url: '/api/report?last=25m'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 2);
+    t.equal(response.result.count, 1);
     t.end();
   });
 });
@@ -144,7 +141,7 @@ tap.test('can look up a report by type', (t) => {
     url: '/api/report?type=BankAccount'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 5);
+    t.equal(response.result.count, 4);
     t.end();
   });
 });
@@ -154,7 +151,7 @@ tap.test('can look up a report by tags', (t) => {
     url: '/api/report?tags=animalVegetableMineral'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 1);
+    t.equal(response.result.count, 0);
     t.end();
   });
 });
@@ -164,7 +161,7 @@ tap.test('can look up a report by type and tags', (t) => {
     url: '/api/report?type=StockAccount&tags=currency'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 1);
+    t.equal(response.result.count, 0);
     t.end();
   });
 });
