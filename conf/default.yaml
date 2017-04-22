@@ -20,3 +20,11 @@ plugins:
     namespace: 'db'
     collections: 
       - 'tracks'
+  hapi-swaggered:
+    requiredTags: []
+    info:
+      title: 'Micro Metrics'
+      version: '1.0'
+    schemes:
+      - 'http'
+      - 'https'
