@@ -6,7 +6,8 @@
     "start": "rapptor",
     "dev:server": "npm install && npm prune && nodemon -x 'npm start'",
     "lint": "eslint .",
-    "test": "PORT=8099 npm run lint && tap --reporter=spec"
+    "test": "PORT=8099 npm run lint && tap test --reporter=spec",
+    "docker-test": "PORT=8099 npm run lint && tap --reporter=spec"
   },
   "pre-commit": [],
   "repository": {
