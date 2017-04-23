@@ -26,9 +26,9 @@ fi
 
 if [[ "$CMD" == "test" ]]; then
   if [[ -z "$@" ]];  then
-    docker-compose run --rm app npm test -- test
+    docker-compose run --rm app npm run docker-test -- test
   else
-    docker-compose run --rm app npm test -- $@
+    docker-compose run --rm app npm run docker-test -- $@
   fi
   exit
 fi
