@@ -14,15 +14,11 @@ exports.main = {
     delete payload.to;
 
     payload.data = request.server.methods.extractInfo(request);
-    request.server.inject({
-      method: 'POST',
-      url: '/api/track',
-      payload
-    }, (response) => {
-      if (response.statusCode === 200) {
+    request.server.req.post('/api/track', { payload }, (err, result) => {
+      if (err === null) {
         return reply.redirect(to);
       }
-      reply({ statusMessage: response.statusMessage }).code(response.statusCode);
+      reply(err);
     });
   }
 };

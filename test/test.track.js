@@ -11,17 +11,15 @@ tap.afterEach((done) => {
 
 tap.test('can call the track route', (t) => {
   t.notEqual(setup.server, null);
-  setup.server.inject({
-    url: '/api/track',
-    method: 'POST',
+  setup.server.req.post('/api/track', {
     payload: {
       type: 'aType'
     }
-  }, (response) => {
-    t.equal(response.statusCode, 200);
-    t.equal(response.result.value, 1);
-    t.equal(response.result.type, 'aType');
-    t.equal(typeof response.result.createdOn.getTime(), 'number');
+  }, (err, result) => {
+    t.equal(err, null);
+    t.equal(result.value, 1);
+    t.equal(result.type, 'aType');
+    t.equal(typeof new Date(result.createdOn).getTime(), 'number');
     t.end();
   });
 });
@@ -29,18 +27,16 @@ tap.test('can call the track route', (t) => {
 tap.test('can pass in a custom timestamp for createdOn', (t) => {
   t.notEqual(setup.server, null);
   const val = new Date().getTime() - 1000;
-  setup.server.inject({
-    url: '/api/track',
-    method: 'POST',
+  setup.server.req.post('/api/track', {
     payload: {
       type: 'aType',
       createdOn: new Date(val)
     }
-  }, (response) => {
-    t.equal(response.statusCode, 200);
-    t.equal(response.result.value, 1);
-    t.equal(response.result.type, 'aType');
-    t.equal(response.result.createdOn.getTime(), val);
+  }, (err, result) => {
+    t.equal(err, null);
+    t.equal(result.value, 1);
+    t.equal(result.type, 'aType');
+    t.equal(new Date(result.createdOn).getTime(), val);
     t.end();
   });
 });

@@ -24,12 +24,12 @@ exports.track = {
         const validated = request.payload;
         validated.tags = server.methods.stringToKeyValue(validated.tags);
         validated.fields = server.methods.stringToKeyValue(validated.fields);
-        return done(null, validated);
-      },
-      insert(server, validated, done) {
         if (validated.tags) {
           validated.tagKeys = Object.keys(validated.tags);
         }
+        return done(null, validated);
+      },
+      insert(server, validated, done) {
         server.db.tracks.insertOne(validated, done);
       },
       verify(insert, done) {
