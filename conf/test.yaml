@@ -4,8 +4,6 @@ mongo:
   url: "{{ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics-test'}}"
 allowGeneratedData: true
 plugins:
-  hapi-req:
-    _priority: -2
   hapi-logr:
     filter:
       - 'error'
