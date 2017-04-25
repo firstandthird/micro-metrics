@@ -1,6 +1,7 @@
 'use strict';
 const tap = require('tap');
 const setup = require('./setup.test.js');
+const async = require('async');
 
 tap.beforeEach((done) => {
   setup.withRapptor({}, [], done);
@@ -50,5 +51,59 @@ tap.test('can use /t.gif route to get a tracking pixel', (t) => {
       t.equal(track.data.userAgent, 'shot');
       t.end();
     });
+  });
+});
+
+tap.test('will expire a tracked object if ttl is specified', (t) => {
+  async.autoInject({
+    nonExpiring(done) {
+      setup.server.inject({
+        url: '/api/track',
+        method: 'POST',
+        payload: {
+          type: 'nonExpiringType',
+        }
+      }, () => done());
+    },
+    expiring(done) {
+      setup.server.inject({
+        url: '/api/track',
+        method: 'POST',
+        payload: {
+          type: 'anExpiringType',
+          ttl: 10
+        }
+      }, () => done());
+    },
+    expiringLater(done) {
+      setup.server.inject({
+        url: '/api/track',
+        method: 'POST',
+        payload: {
+          type: 'expiringLater',
+          ttl: 1000000
+        }
+      }, () => done());
+    },
+    doExpire(nonExpiring, expiring, expiringLater, done) {
+      setTimeout(() => {
+        setup.server.methods.expire(done);
+      });
+    },
+    verify(doExpire, done) {
+      setup.server.inject({
+        method: 'GET',
+        url: '/api/report?last=3h'
+      }, (response2) => {
+        t.equal(response2.statusCode, 200);
+        // should be two left:
+        t.equal(response2.result.count, 2, 'deletes the ttl-field containing track');
+        t.equal(response2.result.results[0].type, 'nonExpiringType', 'does not delete non-ttl fields');
+        t.equal(response2.result.results[1].type, 'expiringLater', 'does not delete if ttl is not met');
+        done();
+      });
+    }
+  }, () => {
+    t.end();
   });
 });
