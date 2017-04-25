@@ -37,6 +37,7 @@ tap.test('can pass in a custom timestamp for createdOn', (t) => {
     t.end();
   });
 });
+
 tap.test('can use /t.gif route to get a tracking pixel', (t) => {
   setup.server.inject({
     url: '/t.gif?type=thisType',
@@ -88,18 +89,15 @@ tap.test('will expire a tracked object if ttl is specified', (t) => {
     doExpire(nonExpiring, expiring, expiringLater, done) {
       setTimeout(() => {
         setup.server.methods.expire(done);
-      });
+      }, 1000);
     },
     verify(doExpire, done) {
-      setup.server.inject({
-        method: 'GET',
-        url: '/api/report?last=3h'
-      }, (response2) => {
-        t.equal(response2.statusCode, 200);
+      setup.server.db.tracks.find({}).toArray((err, response2) => {
+        t.equal(err, null);
         // should be two left:
-        t.equal(response2.result.count, 2, 'deletes the ttl-field containing track');
-        t.equal(response2.result.results[0].type, 'nonExpiringType', 'does not delete non-ttl fields');
-        t.equal(response2.result.results[1].type, 'expiringLater', 'does not delete if ttl is not met');
+        t.equal(response2.length, 2, 'deletes the ttl-field containing track');
+        t.equal(response2[0].type, 'nonExpiringType', 'does not delete non-ttl fields');
+        t.equal(response2[1].type, 'expiringLater', 'does not delete if ttl is not met');
         done();
       });
     }

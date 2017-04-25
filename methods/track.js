@@ -17,6 +17,7 @@ module.exports = {
     const validation = Joi.object().keys({
       type: Joi.string().required(),
       tags: Joi.object(),
+      expiresOn: Joi.date(),
       createdOn: Joi.date().default(() => new Date(), 'current timestamp'),
       fields: Joi.object(),
       value: Joi.number().default(1),
@@ -33,7 +34,6 @@ module.exports = {
       if (val.tags) {
         val.tagKeys = Object.keys(val.tags);
       }
-
       server.db.tracks.insertOne(val, (dbErr, data) => {
         if (dbErr) {
           server.log(['track', 'dbError'], {
