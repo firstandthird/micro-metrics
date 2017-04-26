@@ -4,10 +4,7 @@
 module.exports = {
   method(callback) {
     this.db.tracks.remove({
-      $and: [
-        { expiresOn: { $lte: new Date() } },
-        { expiresOn: { $exists: true } }
-      ]
+      expiresOn: { $lte: new Date() }
     }, callback);
   }
 };

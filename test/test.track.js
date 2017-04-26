@@ -72,7 +72,9 @@ tap.test('will expire a tracked object if ttl is specified', (t) => {
         method: 'POST',
         payload: {
           type: 'anExpiringType',
-          ttl: 10
+          data: {
+            ttl: 10
+          }
         }
       }, () => done());
     },
@@ -82,7 +84,9 @@ tap.test('will expire a tracked object if ttl is specified', (t) => {
         method: 'POST',
         payload: {
           type: 'expiringLater',
-          ttl: 1000000
+          data: {
+            ttl: 1000000
+          }
         }
       }, () => done());
     },
