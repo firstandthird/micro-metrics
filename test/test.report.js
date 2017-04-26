@@ -171,7 +171,7 @@ tap.test('can look up the count of the items tracked', (t) => {
     url: '/api/report/count'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result, 8);
+    t.equal(response.result.count, 8);
     t.end();
   });
 });
@@ -181,7 +181,7 @@ tap.test('can pass query params to count', (t) => {
     url: '/api/report/count?type=BankAccount'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result, 5);
+    t.equal(response.result.count, 5);
     t.end();
   });
 });

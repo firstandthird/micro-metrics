@@ -7,7 +7,7 @@ exports.count = {
       if (err) {
         return reply(err);
       }
-      return reply(result);
+      return reply(null, { count: result });
     });
   }
 };
