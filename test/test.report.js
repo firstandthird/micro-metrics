@@ -100,7 +100,7 @@ tap.test('can use the report method to get a list of metrics from the db by day'
     url: '/api/report?last=2d'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 3);
+    t.equal(response.result.count, 4);
     t.end();
   });
 });
