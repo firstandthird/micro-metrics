@@ -165,3 +165,23 @@ tap.test('can look up a report by type and tags', (t) => {
     t.end();
   });
 });
+tap.test('can look up the count of the items tracked', (t) => {
+  setup.server.inject({
+    method: 'GET',
+    url: '/api/report/count'
+  }, (response) => {
+    t.equal(response.statusCode, 200);
+    t.equal(response.result.count, 8);
+    t.end();
+  });
+});
+tap.test('can pass query params to count', (t) => {
+  setup.server.inject({
+    method: 'GET',
+    url: '/api/report/count?type=BankAccount'
+  }, (response) => {
+    t.equal(response.statusCode, 200);
+    t.equal(response.result.count, 5);
+    t.end();
+  });
+});
