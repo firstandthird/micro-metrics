@@ -74,16 +74,7 @@ tap.beforeEach((done) => {
 tap.afterEach((done) => {
   setup.stop(done);
 });
-tap.test('can use the report method to get a list of metrics from the db - defaults to hourly', (t) => {
-  setup.server.inject({
-    method: 'GET',
-    url: '/api/report'
-  }, (response) => {
-    t.equal(response.statusCode, 200, 'returns HTTP 200');
-    t.equal(response.result.count, 4, 'returns the right number of metrics');
-    t.end();
-  });
-});
+
 tap.test('can use the report method to get a list of metrics from the db by hour', (t) => {
   setup.server.inject({
     method: 'GET',
@@ -182,6 +173,30 @@ tap.test('can pass query params to count', (t) => {
   }, (response) => {
     t.equal(response.statusCode, 200);
     t.equal(response.result.count, 5);
+    t.end();
+  });
+});
+
+tap.test('can use the report method to get a list of metrics from the db in csv format', (t) => {
+  setup.server.inject({
+    method: 'GET',
+    url: '/api/report.csv'
+  }, (response) => {
+    t.equal(response.statusCode, 200, 'returns HTTP 200');
+    t.equal(typeof response.result, 'string');
+    // t.equal(response.headers['content-type'], 'application/csv');
+    t.end();
+  });
+});
+
+tap.test('can use the report method to get an aggregate list of metrics from the db in csv format', (t) => {
+  setup.server.inject({
+    method: 'GET',
+    url: '/api/report/aggregate.csv'
+  }, (response) => {
+    t.equal(response.statusCode, 200, 'returns HTTP 200');
+    t.equal(typeof response.result, 'string');
+    // t.equal(response.headers['content-type'], 'application/csv');
     t.end();
   });
 });

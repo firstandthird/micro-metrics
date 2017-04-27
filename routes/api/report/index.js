@@ -1,7 +1,8 @@
 'use strict';
 const Joi = require('joi');
-
+const csv = require('../../../methods/csv.js');
 exports.report = {
+  path: '/api/report{type?}',
   method: 'GET',
   config: {
     validate: {
@@ -27,7 +28,10 @@ exports.report = {
       find(query, server, done) {
         server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
       },
-      reply(find, done) {
+      reply(request, server, find, done) {
+        if (request.params.type === '.csv') {
+          return done(null, server.methods.csv(find));
+        }
         done(null, {
           count: find.length,
           results: find

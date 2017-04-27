@@ -1,7 +1,7 @@
 'use strict';
 const Joi = require('joi');
 exports.aggregate = {
-  path: 'aggregate',
+  path: '/api/report/aggregate{type?}',
   method: 'get',
   config: {
     validate: {
@@ -94,7 +94,10 @@ exports.aggregate = {
         });
         done(null, arr);
       },
-      reply(map, done) {
+      reply(server, request, map, done) {
+        if (request.params.type === '.csv') {
+          return done(null, server.methods.csv(map));
+        }
         done(null, map);
       }
     }
