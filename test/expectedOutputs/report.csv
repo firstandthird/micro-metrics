@@ -1,5 +1,5 @@
 "type","tags.currency","tags.units","value","data","userId","createdOn","tagKeys.currency","fields"
-"BankAccount","dollars","cents",0.15,"liquid assets only","2d3h","'2017-04-26T12:17:25.458Z'",,
-"BankAccount","yen",,142000000,"liquid Assets only","2d","'2017-04-26T15:17:25.458Z'","yen","['wc','strawberry']"
-"BankAccount","dollars","cents",0.15,"liquid assets only","3h","'2017-04-28T12:17:25.458Z'",,
-"BankAccount","dollars","cents",0.15,"liquid assets only","20m","'2017-04-28T14:57:25.458Z'",,
+"BankAccount","dollars","cents",0.15,"liquid assets only","2d3h","2017-04-26T12:17:25.458Z",,
+"BankAccount","yen",,142000000,"liquid Assets only","2d","2017-04-26T15:17:25.458Z","yen","['wc','strawberry']"
+"BankAccount","dollars","cents",0.15,"liquid assets only","3h","2017-04-28T12:17:25.458Z",,
+"BankAccount","dollars","cents",0.15,"liquid assets only","20m","2017-04-28T14:57:25.458Z",,

@@ -35,6 +35,7 @@ exports.report = {
         if (request.params.type === '.csv') {
           find.forEach((record) => {
             delete record._id; // eslint-disable-line no-underscore-dangle
+            record.createdOn = record.createdOn.toISOString();
             if (typeof record.fields === 'object') {
               record.fields = JSON.stringify(record.fields).replace('{', '').replace('}', '');
             }

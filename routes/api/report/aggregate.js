@@ -43,7 +43,7 @@ exports.aggregate = {
         const obj = {};
         while (current < end) {
           obj[current] = {
-            dateString: new Date(current),
+            dateString: new Date(current).toISOString(),
             sum: 0,
             avg: 0,
             max: 0,
@@ -83,7 +83,7 @@ exports.aggregate = {
         aggregate.forEach((item) => {
           const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
           const timestamp = date.getTime();
-          item.dateString = date;
+          item.dateString = date.toISOString();
           delete item._id; //eslint-disable-line no-underscore-dangle
           dataset[timestamp] = item;
         });
