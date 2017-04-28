@@ -3,6 +3,7 @@ const tap = require('tap');
 const setup = require('./setup.test.js');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 const twentyMinutes = 1000 * 60 * 20;
 const twoDays = 1000 * 60 * 60 * 24 * 2;
@@ -191,8 +192,10 @@ tap.test('can use the report method to get a list of metrics from the db in csv 
     t.equal(response.statusCode, 200, 'returns HTTP 200');
     t.equal(typeof response.result, 'string');
     t.equal(response.headers['content-type'], 'application/csv');
-    fs.writeFileSync(path.join(__dirname, 'expectedOutputs', 'report.csv'), response.result);
-    t.equal(response.result, fs.readFileSync(path.join(__dirname, 'expectedOutputs', 'report.csv')).toString());
+    // timestamps will be different, just check top row:
+    const contents = response.result.split(os.EOL)[0];
+    t.equal(contents, '"type","tags.currency","tags.units","value","data","userId","createdOn","tagKeys.currency","fields"');
+    t.equal();
     t.end();
   });
 });
