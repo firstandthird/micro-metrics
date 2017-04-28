@@ -11,6 +11,8 @@ tap.beforeEach((done) => {
   setup.withRapptor({}, [{
     type: 'BankAccount',
     tags: { currency: 'yen' },
+    tagKeys: { currency: 'yen' },
+    fields: ['wc', 'strawberry'],
     value: 142000000,
     data: 'liquid Assets only',
     userId: '2d',
@@ -92,6 +94,8 @@ tap.test('can use the report method to get a list of metrics from the db by day'
   }, (response) => {
     t.equal(response.statusCode, 200);
     t.equal(response.result.count, 4);
+    // verify it didn't return this in csv format:
+    t.notEqual(response.headers['content-type'], 'application/csv');
     t.end();
   });
 });
@@ -184,7 +188,6 @@ tap.test('can use the report method to get a list of metrics from the db in csv 
   }, (response) => {
     t.equal(response.statusCode, 200, 'returns HTTP 200');
     t.equal(typeof response.result, 'string');
-    console.log(response.result);
     t.equal(response.headers['content-type'], 'application/csv');
     t.end();
   });
