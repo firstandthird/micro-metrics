@@ -9,11 +9,7 @@ exports.main = {
     const payload = request.query;
     const data = request.server.methods.extractInfo(request);
     payload.data = data;
-    request.server.inject({
-      method: 'POST',
-      url: '/api/track',
-      payload
-    }, (response) => {
+    request.server.req.post('/api/track', { payload }, (response) => {
       reply(emptyGifBuffer)
         .header('Content-Type', 'image/gif')
         .code(200);

@@ -15,10 +15,10 @@ exports.main = {
 
     payload.data = request.server.methods.extractInfo(request);
     request.server.req.post('/api/track', { payload }, (err, result) => {
-      if (err === null) {
-        return reply.redirect(to);
+      if (err) {
+        reply(err);
       }
-      reply(err);
+      return reply.redirect(to);
     });
   }
 };
