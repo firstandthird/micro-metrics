@@ -1,7 +1,7 @@
 'use strict';
 const Joi = require('joi');
 exports.aggregate = {
-  path: 'aggregate',
+  path: 'aggregate{type?}',
   method: 'get',
   config: {
     validate: {
@@ -94,7 +94,16 @@ exports.aggregate = {
         });
         done(null, arr);
       },
-      reply(map, done) {
+      setHeaders: (request, done) => {
+        done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
+      },
+      reply(server, request, map, setHeaders, done) {
+        if (request.params.type === '.csv') {
+          map.forEach((record) => {
+            delete record.date;
+          });
+          return done(null, server.methods.csv(map));
+        }
         done(null, map);
       }
     }

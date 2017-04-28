@@ -2,6 +2,7 @@
 const Joi = require('joi');
 
 exports.report = {
+  path: '/api/report{type?}',
   method: 'GET',
   config: {
     validate: {
@@ -27,7 +28,22 @@ exports.report = {
       find(query, server, done) {
         server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
       },
-      reply(find, done) {
+      setHeaders: (request, done) => {
+        done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
+      },
+      reply(request, server, find, setHeaders, done) {
+        if (request.params.type === '.csv') {
+          find.forEach((record) => {
+            delete record._id; // eslint-disable-line no-underscore-dangle
+            if (typeof record.fields === 'object') {
+              record.fields = JSON.stringify(record.fields).replace('{', '').replace('}', '');
+            }
+            if (Array.isArray(record.tagKeys)) {
+              record.tagKeys = record.tagKeys.join(',');
+            }
+          });
+          return done(null, server.methods.csv(find));
+        }
         done(null, {
           count: find.length,
           results: find
