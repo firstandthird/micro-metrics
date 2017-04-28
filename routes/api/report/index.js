@@ -1,6 +1,6 @@
 'use strict';
 const Joi = require('joi');
-const csv = require('../../../methods/csv.js');
+
 exports.report = {
   path: '/api/report{type?}',
   method: 'GET',
@@ -28,8 +28,12 @@ exports.report = {
       find(query, server, done) {
         server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
       },
-      reply(request, server, find, done) {
+      setHeaders: done => done(null, { 'content-type': 'application/csv' }),
+      reply(request, server, find, setHeaders, done) {
         if (request.params.type === '.csv') {
+          find.forEach((record) => {
+            delete record._id; // eslint-disable-line no-underscore-dangle
+          });
           return done(null, server.methods.csv(find));
         }
         done(null, {

@@ -94,8 +94,12 @@ exports.aggregate = {
         });
         done(null, arr);
       },
-      reply(server, request, map, done) {
+      setHeaders: done => done(null, { 'content-type': 'application/csv' }),
+      reply(server, request, map, setHeaders, done) {
         if (request.params.type === '.csv') {
+          map.forEach((record) => {
+            delete record.date;
+          });
           return done(null, server.methods.csv(map));
         }
         done(null, map);
