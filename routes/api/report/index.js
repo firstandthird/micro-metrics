@@ -33,6 +33,7 @@ exports.report = {
         if (request.params.type === '.csv') {
           find.forEach((record) => {
             delete record._id; // eslint-disable-line no-underscore-dangle
+            record.tags = JSON.stringify(record.tags).replace('{', '').replace('}', '');
           });
           return done(null, server.methods.csv(find));
         }

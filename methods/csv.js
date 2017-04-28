@@ -3,6 +3,6 @@ const csv = require('json2csv');
 
 module.exports = {
   method(content) {
-    return csv({ data: content, doubleQuotes: '"' });
+    return csv({ data: content, doubleQuotes: "'" });
   }
 };
