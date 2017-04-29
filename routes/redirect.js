@@ -16,7 +16,7 @@ exports.main = {
     payload.data = request.server.methods.extractInfo(request);
     request.server.req.post('/api/track', { payload }, (err, result) => {
       if (err) {
-        reply(err);
+        return reply(err);
       }
       return reply.redirect(to);
     });
