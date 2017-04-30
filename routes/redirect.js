@@ -14,8 +14,11 @@ exports.main = {
     delete payload.to;
 
     payload.data = request.server.methods.extractInfo(request);
-    request.server.methods.track(payload);
-
-    reply.redirect(to);
+    request.server.req.post('/api/track', { payload }, (err, result) => {
+      if (err) {
+        return reply(err);
+      }
+      return reply.redirect(to);
+    });
   }
 };

@@ -7,12 +7,12 @@ exports.main = {
   path: '/t.gif',
   handler: (request, reply) => {
     const payload = request.query;
-
     const data = request.server.methods.extractInfo(request);
     payload.data = data;
-    request.server.methods.track(payload);
-    reply(emptyGifBuffer)
-      .header('Content-Type', 'image/gif')
-      .code(200);
+    request.server.req.post('/api/track', { payload }, (response) => {
+      reply(emptyGifBuffer)
+        .header('Content-Type', 'image/gif')
+        .code(200);
+    });
   }
 };

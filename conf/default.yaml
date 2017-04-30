@@ -18,7 +18,7 @@ plugins:
   hapi-mongodb-collections:
     _priority: -3
     namespace: 'db'
-    collections: 
+    collections:
       - 'tracks'
   hapi-swaggered:
     requiredTags: []

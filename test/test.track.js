@@ -9,15 +9,17 @@ tap.afterEach((done) => {
   setup.stop(done);
 });
 
-tap.test('can use the track method to store a value in the db', (t) => {
-  t.notEqual(setup.server, null, 'server not null');
-  setup.server.methods.track({
-    type: 'aType'
-  }, (err, data) => {
-    t.equal(err, null, 'does not error');
-    t.equal(data.value, 1, 'sets value');
-    t.equal(data.type, 'aType', 'sets type');
-    t.notEqual(data.createdOn, null, 'sets createdOn date');
+tap.test('can call the track route', (t) => {
+  t.notEqual(setup.server, null);
+  setup.server.req.post('/api/track', {
+    payload: {
+      type: 'aType'
+    }
+  }, (err, result) => {
+    t.equal(err, null);
+    t.equal(result.value, 1);
+    t.equal(result.type, 'aType');
+    t.equal(typeof new Date(result.createdOn).getTime(), 'number');
     t.end();
   });
 });
@@ -25,14 +27,16 @@ tap.test('can use the track method to store a value in the db', (t) => {
 tap.test('can pass in a custom timestamp for createdOn', (t) => {
   t.notEqual(setup.server, null);
   const val = new Date().getTime() - 1000;
-  setup.server.methods.track({
-    type: 'aType',
-    createdOn: new Date(val)
-  }, (err, data) => {
+  setup.server.req.post('/api/track', {
+    payload: {
+      type: 'aType',
+      createdOn: new Date(val)
+    }
+  }, (err, result) => {
     t.equal(err, null);
-    t.equal(data.value, 1);
-    t.equal(data.type, 'aType');
-    t.equal(data.createdOn.getTime(), val);
+    t.equal(result.value, 1);
+    t.equal(result.type, 'aType');
+    t.equal(new Date(result.createdOn).getTime(), val);
     t.end();
   });
 });
