@@ -20,6 +20,12 @@ plugins:
     namespace: 'db'
     collections: 
       - 'tracks'
+  hapi-mongo-indexes:
+    collections:
+      tracks:
+        keys:
+          - type: 1
+            createdOn: 1
   hapi-swaggered:
     requiredTags: []
     info:
