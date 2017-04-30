@@ -6,7 +6,7 @@ module.exports = function(query) {
     query.startDate = server.methods.extractStartDate(query.last);
     const end = new Date();
     end.setSeconds(0, 0);
-    query.endDate = end.getTime();
+    query.endDate = end.getTime() + (1000 * 60);
   }
 
   if (query.type) {
