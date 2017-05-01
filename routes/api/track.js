@@ -10,7 +10,7 @@ exports.track = {
         type: Joi.string().required(),
         tags: Joi.any(),
         fields: Joi.any(),
-        value: Joi.any().default(1),
+        value: Joi.number().default(1),
         data: Joi.any(),
         createdOn: Joi.date().default(() => new Date(), 'default to current date if not specified'),
         userId: Joi.string(),
