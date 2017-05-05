@@ -67,11 +67,12 @@ tap.beforeEach((done) => {
     userId: 'user1234',
   },
   {
-    type: 'Tomato',
-    tags: { animalVegetableMineral: 'vegetable' },
-    value: 2,
-    data: 'its a vegetable i swear it is ',
-    userId: 'user1234',
+    type: 'BankAccount',
+    tags: { currency: 'dollars', units: 'cents' },
+    value: 0.15,
+    data: 'liquid assets only',
+    userId: '2d3h',
+    createdOn: new Date(current - twoDays - threeHours)
   }],
   done);
 });
@@ -85,7 +86,7 @@ tap.test('can use the report method to get a list of metrics from the db - defau
     url: '/api/report'
   }, (response) => {
     t.equal(response.statusCode, 200, 'returns HTTP 200');
-    t.equal(response.result.count, 4, 'returns the right number of metrics');
+    t.equal(response.result.count, 5, 'returns the right number of metrics');
     t.end();
   });
 });
@@ -106,7 +107,7 @@ tap.test('can use the report method to get a list of metrics from the db by day'
     url: '/api/report?last=2d'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 4);
+    t.equal(response.result.count, 5);
     // verify it didn't return this in csv format:
     t.equal(response.headers['content-type'], 'application/json; charset=utf-8');
     t.end();
@@ -149,7 +150,7 @@ tap.test('can look up a report by type', (t) => {
     url: '/api/report?type=BankAccount'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 4);
+    t.equal(response.result.count, 5);
     t.end();
   });
 });
@@ -190,7 +191,7 @@ tap.test('can pass query params to count', (t) => {
     url: '/api/report/count?type=BankAccount'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 4);
+    t.equal(response.result.count, 5);
     t.end();
   });
 });
@@ -205,7 +206,7 @@ tap.test('can use the report method to get a list of metrics from the db in csv 
     t.equal(response.headers['content-type'], 'application/csv');
     // timestamps will be different, just check top row:
     const contents = response.result.split(os.EOL)[0];
-    t.equal(contents, '"type","tags.currency","tagKeys.currency","fields","value","data","userId","createdOn","tags.units"');
+    t.equal(contents, '"type","tags.currency","tags.units","value","data","userId","createdOn","tagKeys.currency","fields"');
     t.equal();
     t.end();
   });
