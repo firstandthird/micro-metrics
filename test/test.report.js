@@ -86,7 +86,7 @@ tap.test('can use the report method to get a list of metrics from the db - defau
     url: '/api/report'
   }, (response) => {
     t.equal(response.statusCode, 200, 'returns HTTP 200');
-    t.equal(response.result.count, 4, 'returns the right number of metrics');
+    t.equal(response.result.count, 5, 'returns the right number of metrics');
     t.end();
   });
 });
@@ -97,7 +97,7 @@ tap.test('can use the report method to get a list of metrics from the db by hour
     url: '/api/report?last=3h'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 2);
+    t.equal(response.result.count, 3);
     t.end();
   });
 });
@@ -107,7 +107,7 @@ tap.test('can use the report method to get a list of metrics from the db by day'
     url: '/api/report?last=2d'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 4);
+    t.equal(response.result.count, 5);
     // verify it didn't return this in csv format:
     t.equal(response.headers['content-type'], 'application/json; charset=utf-8');
     t.end();
@@ -119,7 +119,7 @@ tap.test('can use the report method to get a list of metrics from the db by day 
     url: '/api/report?last=2d1h'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 3);
+    t.equal(response.result.count, 4);
     t.end();
   });
 });
@@ -129,7 +129,7 @@ tap.test('can use the report method to get a list of metrics from the db by hour
     url: '/api/report?last=4h1d'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 2);
+    t.equal(response.result.count, 3);
     t.end();
   });
 });
@@ -139,7 +139,7 @@ tap.test('can use the report method to get a list of metrics from the db by hour
     url: '/api/report?last=25m'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 1);
+    t.equal(response.result.count, 2);
     t.end();
   });
 });
@@ -150,7 +150,7 @@ tap.test('can look up a report by type', (t) => {
     url: '/api/report?type=BankAccount'
   }, (response) => {
     t.equal(response.statusCode, 200);
-    t.equal(response.result.count, 4);
+    t.equal(response.result.count, 5);
     t.end();
   });
 });
@@ -184,6 +184,7 @@ tap.test('can look up the count of the items tracked', (t) => {
     t.end();
   });
 });
+
 tap.test('can pass query params to count', (t) => {
   setup.server.inject({
     method: 'GET',
@@ -230,7 +231,11 @@ tap.test('can use the report method to get an aggregate list of metrics from the
   }, (response) => {
     t.equal(response.statusCode, 200, 'returns HTTP 200');
     t.equal(typeof response.result, 'string');
-    t.equal(response.result, fs.readFileSync(path.join(__dirname, 'expectedOutputs', 'aggregate.csv')).toString());
+    const compareString = fs.readFileSync(path.join(__dirname, 'expectedOutputs', 'aggregate.csv')).toString();
+    const topRow = compareString.split(os.EOL)[0];
+    t.equal(topRow, response.result.split(os.EOL)[0]);
+    // make sure # of cells on next row is same:
+    t.equal(topRow.split(',').length, response.result.split(os.EOL)[1].split(',').length);
     t.equal(response.headers['content-type'], 'application/csv');
     t.end();
   });
