@@ -1,14 +1,14 @@
 'use strict';
 const tap = require('tap');
 const setup = require('./setup.test.js');
-
+const async = require('async');
 tap.beforeEach((done) => {
   setup.withRapptor({}, [], done);
 });
 tap.afterEach((done) => {
   setup.stop(done);
 });
-
+/*
 tap.test('can call the track route', (t) => {
   t.notEqual(setup.server, null);
   setup.server.req.post('/api/track', {
@@ -54,5 +54,59 @@ tap.test('can use /t.gif route to get a tracking pixel', (t) => {
       t.equal(track.data.userAgent, 'shot');
       t.end();
     });
+  });
+});
+*/
+tap.test('will expire a tracked object if ttl is specified', (t) => {
+  async.autoInject({
+    nonExpiring(done) {
+      setup.server.inject({
+        url: '/api/track',
+        method: 'POST',
+        payload: {
+          type: 'nonExpiringType',
+        }
+      }, () => done());
+    },
+    expiring(done) {
+      setup.server.inject({
+        url: '/api/track',
+        method: 'POST',
+        payload: {
+          type: 'anExpiringType',
+          data: {
+            ttl: 1000
+          }
+        }
+      }, () => done());
+    },
+    expiringLater(done) {
+      setup.server.inject({
+        url: '/api/track',
+        method: 'POST',
+        payload: {
+          type: 'expiringLater',
+          data: {
+            ttl: 1000000
+          }
+        }
+      }, () => done());
+    },
+    doExpire(nonExpiring, expiring, expiringLater, done) {
+      console.log('waiting');
+      setTimeout(done, 5 * 60000);
+    },
+    verify(doExpire, done) {
+      setup.server.db.tracks.find({}).toArray((err, response2) => {
+        t.equal(err, null);
+        // should be two left:
+        t.equal(response2.length, 2, 'deletes the ttl-field containing track');
+        t.equal(response2[0].type, 'nonExpiringType', 'does not delete non-ttl fields');
+        t.equal(response2[1].type, 'expiringLater', 'does not delete if ttl is not met');
+        done();
+      });
+    }
+  }, () => {
+    t.end();
   });
 });
