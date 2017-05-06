@@ -94,7 +94,7 @@ tap.test('will expire a tracked object if ttl is specified', (t) => {
     },
     doExpire(nonExpiring, expiring, expiringLater, done) {
       console.log('waiting');
-      setTimeout(done, 5 * 60000);
+      setTimeout(done, 2 * 60000);
     },
     verify(doExpire, done) {
       setup.server.db.tracks.find({}).toArray((err, response2) => {
