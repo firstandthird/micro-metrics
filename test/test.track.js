@@ -8,7 +8,7 @@ tap.beforeEach((done) => {
 tap.afterEach((done) => {
   setup.stop(done);
 });
-/*
+
 tap.test('can call the track route', (t) => {
   t.notEqual(setup.server, null);
   setup.server.req.post('/api/track', {
@@ -56,7 +56,7 @@ tap.test('can use /t.gif route to get a tracking pixel', (t) => {
     });
   });
 });
-*/
+
 tap.test('will expire a tracked object if ttl is specified', (t) => {
   async.autoInject({
     nonExpiring(done) {
