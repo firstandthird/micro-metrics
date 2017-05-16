@@ -102,7 +102,24 @@ exports.aggregate = {
           map.forEach((record) => {
             delete record.date;
           });
-          return done(null, server.methods.csv(map));
+          return done(null, server.methods.csv(map, [
+            {
+              label: 'Date',
+              value: 'dateString'
+            },
+            {
+              label: 'Avg',
+              value: 'avg'
+            },
+            {
+              label: 'Max',
+              value: 'max'
+            },
+            {
+              label: 'Min',
+              value: 'min'
+            },
+          ]));
         }
         done(null, map);
       }
