@@ -9,6 +9,7 @@ exports.aggregate = {
         period: Joi.string().default('d').allow(['h', 'm', 'd']),
         last: Joi.string(),
         type: Joi.string(),
+        groupby: Joi.string(),
         tags: Joi.string(),
         fields: Joi.string(),
         value: Joi.number()
@@ -65,18 +66,19 @@ exports.aggregate = {
         if (request.query.period === 'm') {
           id.minute = { $minute: '$createdOn' };
         }
-
+        const $group = {
+          _id: id,
+          sum: { $sum: '$value' },
+          avg: { $avg: '$value' },
+          max: { $max: '$value' },
+          min: { $min: '$value' },
+        };
+        if (request.query.groupby) {
+          $group.tag = { $tag: '$value' };
+        }
         server.db.tracks.aggregate([
           { $match: query },
-          {
-            $group: {
-              _id: id,
-              sum: { $sum: '$value' },
-              avg: { $avg: '$value' },
-              max: { $max: '$value' },
-              min: { $min: '$value' }
-            }
-          }
+          { $group }
         ], done);
       },
       map(dataset, aggregate, done) {

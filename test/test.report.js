@@ -1,7 +1,7 @@
 'use strict';
 const tap = require('tap');
 const setup = require('./setup.test.js');
-const os = require('os');
+// const os = require('os');
 const async = require('async');
 
 const twentyMinutes = 1000 * 60 * 20;
@@ -713,6 +713,89 @@ tap.test('can use the report method to get an aggregate list of metrics from the
         t.equal(typeof response.result, 'string');
         t.equal(response.result.split(os.EOL)[0], '"Date","Avg","Max","Min"');
         t.equal(response.headers['content-type'], 'application/csv');
+        t.end();
+      });
+    }
+  });
+});
+
+tap.test('can use the report method to get an aggregate list of metrics grouped by values for a given', (t) => {
+  async.autoInject({
+    init(done) {
+      setup.withRapptor({}, [{
+        type: 'BankAccount',
+        tags: { currency: 'yen' },
+        tagKeys: { currency: 'yen' },
+        fields: ['wc', 'strawberry'],
+        value: 142000000,
+        data: 'liquid Assets only',
+        userId: '2d',
+        createdOn: new Date(current - twoDays)
+      },
+      {
+        type: 'StockAccount',
+        tags: { currency: 'dollars' },
+        value: 142000000,
+        data: 'purchasing account',
+        userId: 'Montgomery Burns',
+      },
+      {
+        type: 'StockAccount',
+        tags: { transactionNumber: '1234', currency: 'yen' },
+        value: 142000000,
+        data: 'purchasing account',
+        userId: 'Montgomery Burns',
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 0.15,
+        data: 'liquid assets only',
+        userId: '20m',
+        createdOn: new Date(current - twentyMinutes)
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 0.15,
+        data: 'liquid assets only',
+        userId: '3h',
+        createdOn: new Date(current - threeHours)
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'euros', units: 'cents' },
+        value: 0.15,
+        data: 'liquid assets only',
+        userId: 'current',
+        createdOn: new Date(current)
+      },
+      {
+        type: 'Radish',
+        tags: { animalVegetableMineral: 'vegetable' },
+        value: 1,
+        data: 'radishes are a good source of electrolytes and minerals ',
+        userId: 'user1234',
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 0.15,
+        data: 'liquid assets only',
+        userId: '2d3h',
+        createdOn: new Date(current - twoDays - threeHours)
+      }],
+      done);
+    },
+    test(init, done) {
+      setup.server.inject({
+        method: 'GET',
+        url: '/api/report/aggregate?groupby=currency'
+      }, (response) => {
+        // console.log(response.result);
+        t.equal(response.statusCode, 200, 'returns HTTP 200');
+        t.equal(typeof response.result, 'object');
+        t.equal(response.headers['content-type'], 'application/json; charset=utf-8');
         t.end();
       });
     }
