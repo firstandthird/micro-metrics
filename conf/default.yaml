@@ -25,7 +25,7 @@ plugins:
       tracks:
         -
           options:
-            expireAfterSeconds: 10
+            expireAfterSeconds: 0
           keys:
             expiresAt: 1
   hapi-swaggered:
