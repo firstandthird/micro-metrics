@@ -12,7 +12,7 @@ const current = new Date().getTime();
 tap.afterEach((done) => {
   setup.stop(done);
 });
-
+/*
 tap.test('can use the report method to get a list of metrics from the db - defaults to hourly', (t) => {
   async.autoInject({
     init(done) {
@@ -718,7 +718,7 @@ tap.test('can use the report method to get an aggregate list of metrics from the
     }
   });
 });
-
+*/
 tap.test('can use the report method to get an aggregate list of metrics grouped by values for a given', (t) => {
   async.autoInject({
     init(done) {

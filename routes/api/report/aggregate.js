@@ -9,7 +9,6 @@ exports.aggregate = {
         period: Joi.string().default('d').allow(['h', 'm', 'd']),
         last: Joi.string(),
         type: Joi.string(),
-        groupby: Joi.string(),
         tags: Joi.string(),
         fields: Joi.string(),
         value: Joi.number()
@@ -54,7 +53,21 @@ exports.aggregate = {
         }
         done(null, obj);
       },
-      aggregate(server, request, query, done) {
+      // get unique list of tags to group by:
+      groupby(server, request, done) {
+        if (!request.query.groupby) {
+          console.log('arg');
+          return done();
+        }
+        console.log('come on');
+        console.log('come on');
+        server.inject({ path: '/api/tag-values' }, (response) => {
+          console.log('api tags');
+          console.log(response.result);
+          return done(null, response.result);
+        });
+      },
+      aggregate(server, groupby, request, query, done) {
         const id = {
           day: { $dayOfMonth: '$createdOn' },
           month: { $month: '$createdOn' },
@@ -71,14 +84,13 @@ exports.aggregate = {
           sum: { $sum: '$value' },
           avg: { $avg: '$value' },
           max: { $max: '$value' },
-          min: { $min: '$value' },
+          min: { $min: '$value' }
         };
-        if (request.query.groupby) {
-          $group.tag = { $tag: '$value' };
-        }
         server.db.tracks.aggregate([
           { $match: query },
-          { $group }
+          {
+            $group
+          }
         ], done);
       },
       map(dataset, aggregate, done) {
