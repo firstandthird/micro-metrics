@@ -29,9 +29,6 @@ exports.track = {
         }
         if (request.payload.data && request.payload.data.ttl) {
           request.payload.expiresAt = new Date(new Date().getTime() + request.payload.data.ttl);
-          console.log('now is:');
-          console.log(new Date());
-          console.log(request.payload.expiresAt);
           delete request.payload.data.ttl;
         }
         return done(null, validated);
