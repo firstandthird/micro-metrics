@@ -12,7 +12,7 @@ module.exports.withRapptor = (options, dataSet, callback) => {
     if (err) {
       return callback(err);
     }
-    module.exports.server.db.tracks.drop(() => {
+    module.exports.server.db.tracks.remove({}, () => {
       if (dataSet.length > 0) {
         module.exports.server.db.tracks.insertMany(dataSet, callback);
       } else {
