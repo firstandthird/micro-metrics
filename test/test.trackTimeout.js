@@ -51,7 +51,6 @@ tap.test('will expire a tracked object if ttl is specified', { timeout: 10000000
       setup.server.db.tracks.find({}).toArray((err, response2) => {
         t.equal(err, null);
         // should be two left:
-        console.log(response2);
         t.equal(response2.length, 2, 'deletes the ttl-field containing track');
         t.equal(response2[0].type, 'nonExpiringType', 'does not delete non-ttl fields');
         t.equal(response2[1].type, 'expiringLater', 'does not delete if ttl is not met');
