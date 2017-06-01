@@ -12,13 +12,16 @@ module.exports.withRapptor = (options, dataSet, callback) => {
     if (err) {
       return callback(err);
     }
-    module.exports.server.db.tracks.drop(() => {
-      if (dataSet.length > 0) {
-        module.exports.server.db.tracks.insertMany(dataSet, callback);
-      } else {
-        return callback();
-      }
-    });
+    if (!options.skipDrop) {
+      module.exports.server.db.tracks.drop(() => {
+        if (dataSet.length > 0) {
+          module.exports.server.db.tracks.insertMany(dataSet, callback);
+        } else {
+          return callback();
+        }
+      });
+    }
+    return callback();
   });
 };
 

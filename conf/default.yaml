@@ -23,9 +23,11 @@ plugins:
   hapi-mongo-indexes:
     collections:
       tracks:
-        keys:
-          - type: 1
-            createdOn: 1
+        -
+          options:
+            expireAfterSeconds: 10
+          keys:
+            expiresAt: 1
   hapi-swaggered:
     requiredTags: []
     info:
