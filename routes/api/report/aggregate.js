@@ -1,5 +1,6 @@
 'use strict';
 const Joi = require('joi');
+const async = require('async');
 exports.aggregate = {
   path: 'aggregate{type?}',
   method: 'get',
@@ -10,6 +11,7 @@ exports.aggregate = {
         last: Joi.string(),
         type: Joi.string(),
         tags: Joi.string(),
+        groupby: Joi.string(),
         fields: Joi.string(),
         value: Joi.number()
       }
@@ -56,18 +58,11 @@ exports.aggregate = {
       // get unique list of tags to group by:
       groupby(server, request, done) {
         if (!request.query.groupby) {
-          console.log('arg');
           return done();
         }
-        console.log('come on');
-        console.log('come on');
-        server.inject({ path: '/api/tag-values' }, (response) => {
-          console.log('api tags');
-          console.log(response.result);
-          return done(null, response.result);
-        });
+        server.req.get(`/api/tag-values?tag=${request.query.groupby}`, {}, done);
       },
-      aggregate(server, groupby, request, query, done) {
+      aggregate(server, request, query, groupby, done) {
         const id = {
           day: { $dayOfMonth: '$createdOn' },
           month: { $month: '$createdOn' },
@@ -86,14 +81,30 @@ exports.aggregate = {
           max: { $max: '$value' },
           min: { $min: '$value' }
         };
-        server.db.tracks.aggregate([
-          { $match: query },
-          {
-            $group
-          }
-        ], done);
+        if (!groupby) {
+          return server.db.tracks.aggregate([
+            { $match: query },
+            { $group }
+          ], done);
+        }
+        // if we are grouping the aggregates by keys:
+        const aggregates = {};
+        async.each(groupby, (tag, done) => {
+          console.log('getting ')
+          console.log(tag)
+          const subQuery = Object.assign({ tags: { $elemMatch: { $eq: tag } } }, query);
+          console.log(subQuery)
+          server.db.tracks.aggregate([
+            { $match: subQuery },
+            { $group }
+          ], (err, result) => {
+
+            console.log(err)
+            console.log(result)
+          }, done);
+        });
       },
-      map(dataset, aggregate, done) {
+      map(dataset, aggregate, groupby, done) {
         aggregate.forEach((item) => {
           const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
           const timestamp = date.getTime();
@@ -111,7 +122,7 @@ exports.aggregate = {
       setHeaders: (request, done) => {
         done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
       },
-      reply(server, request, map, setHeaders, done) {
+      reply(server, request, map, setHeaders, groupby, done) {
         if (request.params.type === '.csv') {
           map.forEach((record) => {
             delete record.date;
