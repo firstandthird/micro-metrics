@@ -88,36 +88,50 @@ exports.aggregate = {
           ], done);
         }
         // if we are grouping the aggregates by keys:
-        const aggregates = {};
-        async.each(groupby, (tag, done) => {
-          console.log('getting ')
-          console.log(tag)
-          const subQuery = Object.assign({ tags: { $elemMatch: { $eq: tag } } }, query);
-          console.log(subQuery)
+        const taggedResults = {};
+        async.each(groupby, (tag, eachDone) => {
+          const subQuery = Object.assign({ tags: { $exists: true } }, query);
           server.db.tracks.aggregate([
             { $match: subQuery },
             { $group }
-          ], (err, result) => {
-
-            console.log(err)
-            console.log(result)
-          }, done);
+          ], (eachErr, result) => {
+            if (eachErr) {
+              return eachDone(eachErr);
+            }
+            taggedResults[tag] = result;
+            return eachDone();
+          });
+        }, (err) => {
+          if (err) {
+            return done(err);
+          }
+          return done(null, taggedResults);
         });
       },
       map(dataset, aggregate, groupby, done) {
-        aggregate.forEach((item) => {
+        const transform = (item) => {
           const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
           const timestamp = date.getTime();
           item.dateString = date.toISOString();
           delete item._id; //eslint-disable-line no-underscore-dangle
           dataset[timestamp] = item;
-        });
+        };
+        if (!groupby) {
+          aggregate.forEach(transform);
+        } else {
+          Object.keys(aggregate).forEach((tag) => {
+            aggregate[tag].forEach(transform);
+          });
+        }
+      }
+      /*
         const arr = Object.keys(dataset).map((key) => {
           const item = dataset[key];
           item.date = key;
           return item;
         });
         done(null, arr);
+        */
       },
       setHeaders: (request, done) => {
         done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
