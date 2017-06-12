@@ -110,6 +110,7 @@ exports.aggregate = {
         });
       },
       map(dataset, aggregate, groupby, done) {
+        // if we're just getting the aggregate data grouped by tag value then we're done:
         if (groupby) {
           return done();
         }
@@ -131,6 +132,7 @@ exports.aggregate = {
         done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
       },
       reply(server, request, map, setHeaders, groupby, aggregate, done) {
+        // groupby just gets the aggregates grouped by tag value:
         if (groupby) {
           return done(null, aggregate);
         }
