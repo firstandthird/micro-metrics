@@ -90,7 +90,8 @@ exports.aggregate = {
         // if we are grouping the aggregates by keys:
         const taggedResults = {};
         async.each(groupby, (tag, eachDone) => {
-          const subQuery = Object.assign({ tags: { $exists: true } }, query);
+          const subQuery = Object.assign({}, query);
+          subQuery[`tags.${request.query.groupby}`] = tag;
           server.db.tracks.aggregate([
             { $match: subQuery },
             { $group }
@@ -109,34 +110,30 @@ exports.aggregate = {
         });
       },
       map(dataset, aggregate, groupby, done) {
-        const transform = (item) => {
+        if (groupby) {
+          return done();
+        }
+        aggregate.forEach((item) => {
           const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
           const timestamp = date.getTime();
           item.dateString = date.toISOString();
           delete item._id; //eslint-disable-line no-underscore-dangle
           dataset[timestamp] = item;
-        };
-        if (!groupby) {
-          aggregate.forEach(transform);
-        } else {
-          Object.keys(aggregate).forEach((tag) => {
-            aggregate[tag].forEach(transform);
-          });
-        }
-      }
-      /*
+        });
         const arr = Object.keys(dataset).map((key) => {
           const item = dataset[key];
           item.date = key;
           return item;
         });
-        done(null, arr);
-        */
+        return done(null, arr);
       },
       setHeaders: (request, done) => {
         done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
       },
-      reply(server, request, map, setHeaders, groupby, done) {
+      reply(server, request, map, setHeaders, groupby, aggregate, done) {
+        if (groupby) {
+          return done(null, aggregate);
+        }
         if (request.params.type === '.csv') {
           map.forEach((record) => {
             delete record.date;
