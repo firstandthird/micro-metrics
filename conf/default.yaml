@@ -23,8 +23,8 @@ plugins:
   hapi-mongo-indexes:
     collections:
       tracks:
-        keys:
-          - type: 1
+        - keys:
+            type: 1
             createdOn: 1
   hapi-swaggered:
     requiredTags: []
