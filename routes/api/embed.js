@@ -24,6 +24,7 @@ exports.embed = {
         server.req.get('/api/report/aggregate', { query }, done);
       },
       html(aggregate, types, tags, request, done) {
+        const routePrefix = request.server.settings.app.routePrefix;
         const currentChart = request.query.chart || 'LineChart';
         const currentType = request.query.type;
         const currentTag = request.query.tags;
@@ -52,7 +53,7 @@ exports.embed = {
               </script>
             </head>
             <body>
-              <form action="/embed" method="get" ${request.query.toolbar === '0' ? 'style="display: none"' : ''}>
+              <form action="${routePrefix}/embed" method="get" ${request.query.toolbar === '0' ? 'style="display: none"' : ''}>
                 <select name="chart">
                   <option value="LineChart" ${currentChart === 'LineChart' ? 'selected' : ''}>Line Chart</option>
                   <option value="Table" ${currentChart === 'Table' ? 'selected' : ''}>Table</option>

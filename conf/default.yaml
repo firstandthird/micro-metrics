@@ -1,4 +1,3 @@
-
 host: 'http://{{ENV.VIRTUAL_HOST}}'
 connection:
   port: '{{ENV.PORT}}'
