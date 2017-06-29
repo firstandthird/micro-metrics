@@ -53,7 +53,7 @@ exports.embed = {
               </script>
             </head>
             <body>
-              <form action="{{ routePrefix }}/embed" method="get" ${request.query.toolbar === '0' ? 'style="display: none"' : ''}>
+              <form action="${routePrefix}/embed" method="get" ${request.query.toolbar === '0' ? 'style="display: none"' : ''}>
                 <select name="chart">
                   <option value="LineChart" ${currentChart === 'LineChart' ? 'selected' : ''}>Line Chart</option>
                   <option value="Table" ${currentChart === 'Table' ? 'selected' : ''}>Table</option>
