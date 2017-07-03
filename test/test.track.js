@@ -24,6 +24,42 @@ tap.test('can call the track route', (t) => {
   });
 });
 
+tap.test('pass tags as string', (t) => {
+  t.notEqual(setup.server, null);
+  setup.server.req.post('/api/track', {
+    payload: {
+      type: 'aType',
+      tags: 'tag1:value1'
+    }
+  }, (err, result) => {
+    t.equal(err, null);
+    t.equal(result.value, 1);
+    t.equal(result.type, 'aType');
+    t.deepEqual(result.tags, { tag1: 'value1' });
+    t.deepEqual(result.tagKeys, ['tag1']);
+    t.equal(typeof new Date(result.createdOn).getTime(), 'number');
+    t.end();
+  });
+});
+
+tap.test('pass tags as object', (t) => {
+  t.notEqual(setup.server, null);
+  setup.server.req.post('/api/track', {
+    payload: {
+      type: 'aType',
+      tags: { tag1: 'value1' }
+    }
+  }, (err, result) => {
+    t.equal(err, null);
+    t.equal(result.value, 1);
+    t.equal(result.type, 'aType');
+    t.deepEqual(result.tags, { tag1: 'value1' });
+    t.deepEqual(result.tagKeys, ['tag1']);
+    t.equal(typeof new Date(result.createdOn).getTime(), 'number');
+    t.end();
+  });
+});
+
 tap.test('can pass in a custom timestamp for createdOn', (t) => {
   t.notEqual(setup.server, null);
   const val = new Date().getTime() - 1000;
