@@ -6,10 +6,14 @@ exports.main = {
   method: 'GET',
   path: '/t.gif',
   handler: (request, reply) => {
+    const settings = request.server.settings.app;
     const payload = request.query;
     const data = request.server.methods.extractInfo(request);
     payload.data = data;
-    request.server.req.post('/api/track', { payload }, (response) => {
+    request.server.req.post(`${settings.routePrefix}/api/track`, { payload }, (err, response) => {
+      if (err) {
+        request.server.log(['error', 'tracking-gif'], { message: 'tracking failed for t.gif', err });
+      }
       reply(emptyGifBuffer)
         .header('Content-Type', 'image/gif')
         .code(200);
