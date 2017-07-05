@@ -7,11 +7,11 @@ exports.embed = {
         done(null, settings.routePrefix || '');
       },
       types(server, prefix, done) {
-        server.req.get(`${prefix}/api/types`, {}, done);
+        server.req.get('/api/types', {}, done);
       },
       tags(server, prefix, request, done) {
         const type = request.query.type;
-        server.req.get(`${prefix}/api/tags`, { query: { type } }, done);
+        server.req.get('/api/tags', { query: { type } }, done);
       },
       aggregate(server, prefix, request, done) {
         const query = {};
@@ -24,7 +24,7 @@ exports.embed = {
         if (request.query.tags) {
           query.tags = request.query.tags;
         }
-        server.req.get(`${prefix}/api/report/aggregate`, { query }, done);
+        server.req.get('/api/report/aggregate', { query }, done);
       },
       html(aggregate, prefix, types, tags, request, done) {
         const currentChart = request.query.chart || 'LineChart';
