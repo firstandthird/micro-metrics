@@ -3,17 +3,20 @@ exports.embed = {
   method: 'get',
   handler: {
     autoInject: {
-      prefix(settings, done) {
-        done(null, settings.routePrefix || '');
-      },
-      types(server, prefix, done) {
+      types(server, done) {
         server.req.get('/api/types', {}, done);
       },
-      tags(server, prefix, request, done) {
+      tags(server, request, done) {
         const type = request.query.type;
         server.req.get('/api/tags', { query: { type } }, done);
       },
-      aggregate(server, prefix, request, done) {
+      tagValues(server, request, done) {
+        if (!request.query.tag) {
+          return done(null, []);
+        }
+        server.req.get('/api/tag-values', { query: { tag: request.query.tag } }, done);
+      },
+      aggregate(server, request, done) {
         const query = {};
         if (request.query.type) {
           query.type = request.query.type;
@@ -21,15 +24,17 @@ exports.embed = {
         if (request.query.period) {
           query.period = request.query.period;
         }
-        if (request.query.tags) {
-          query.tags = request.query.tags;
+        if (request.query.tag) {
+          query.tags = request.query.tag;
         }
         server.req.get('/api/report/aggregate', { query }, done);
       },
-      html(aggregate, prefix, types, tags, request, done) {
+      html(settings, aggregate, types, tags, tagValues, request, done) {
+        const prefix = settings.routePrefix;
         const currentChart = request.query.chart || 'LineChart';
         const currentType = request.query.type;
-        const currentTag = request.query.tags;
+        const currentTag = request.query.tag;
+        const currentTagValue = request.query.tagValue;
         const currentPeriod = request.query.period;
         const html = `
           <html>
@@ -71,9 +76,13 @@ exports.embed = {
                   <option value="">Type</option>
                   ${types.results.map((type) => `<option value="${type}" ${(currentType === type) ? 'selected' : ''}>${type}</option>`).join('')}
                 </select>
-                <select name="tags">
+                <select name="tag">
                   <option value="">Tag</option>
                   ${tags.map((tag) => `<option value="${tag}" ${(currentTag === tag) ? 'selected' : ''}>${tag}</option>`).join('')}
+                </select>
+                <select name="tagValue">
+                  <option value="">Tag Values</option>
+                  ${tagValues.map((value) => `<option value="${value}" ${(currentTagValue === value) ? 'selected' : ''}>${value}</option>`).join('')}
                 </select>
                 <input type="submit" value="Query"/>
               </form>
