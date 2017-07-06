@@ -9,6 +9,7 @@ plugins:
     _priority: -1
   hapi-req:
     _priority: -2
+    localPrefix: '{{routePrefix}}'
   hapi-mongodb:
     _priority: -3
     url: "{{mongo.url}}"
