@@ -25,10 +25,7 @@ exports.report = {
         const query = server.methods.getReportQuery(filter);
         done(null, query);
       },
-      find(query, request, server, done) {
-        if (request.query.unique) {
-          return done();
-        }
+      find(query, server, done) {
         server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
       },
       setHeaders: (request, done) => {
@@ -48,10 +45,9 @@ exports.report = {
           });
           return done(null, server.methods.csv(find));
         }
-
         done(null, {
           count: find.length,
-          results: find,
+          results: find
         });
       }
     }

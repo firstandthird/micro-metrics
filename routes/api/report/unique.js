@@ -27,7 +27,7 @@ exports.report = {
         done(null, query);
       },
       find(query, request, server, done) {
-        const uniqueId = `\$${request.query.unique}`;
+        const uniqueId = `$${request.query.unique}`;
 
         // At a minimum - the unique element should exist
         const q = Object.assign({}, query);
