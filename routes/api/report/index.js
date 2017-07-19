@@ -14,8 +14,7 @@ exports.report = {
         fields: Joi.string(),
         startDate: Joi.string(),
         endDate: Joi.string(),
-        value: Joi.number(),
-        unique: Joi.string()
+        value: Joi.number()
       }
     }
   },
@@ -32,36 +31,10 @@ exports.report = {
         }
         server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
       },
-      findUnique(query, request, server, done) {
-        if (!request.query.unique) {
-          return done();
-        }
-
-        const uniqueId = `\$${request.query.unique}`;
-
-        // At a minimum - the unique element should exist
-        const q = Object.assign({}, query);
-        q[request.query.unique] = { $exists: 1 };
-        server.db.tracks.aggregate([
-          {
-            $match: q
-          },
-          {
-            $group: {
-              _id: uniqueId,
-              types: { $addToSet: '$type' },
-              tags: { $addToSet: '$tags' },
-              values: { $addToSet: '$value' },
-              data: { $addToSet: '$data' },
-              count: { $sum: 1 }
-            }
-          }
-        ], done);
-      },
       setHeaders: (request, done) => {
         done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
       },
-      reply(request, server, find, findUnique, setHeaders, done) {
+      reply(request, server, find, setHeaders, done) {
         if (request.params.type === '.csv') {
           find.forEach((record) => {
             delete record._id; // eslint-disable-line no-underscore-dangle
@@ -76,10 +49,9 @@ exports.report = {
           return done(null, server.methods.csv(find));
         }
 
-        const fnd = find || findUnique;
         done(null, {
-          count: fnd.length,
-          results: fnd,
+          count: find.length,
+          results: find,
         });
       }
     }
