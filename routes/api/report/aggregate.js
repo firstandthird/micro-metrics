@@ -129,17 +129,26 @@ exports.aggregate = {
         return done(null, arr);
       },
       setHeaders: (request, done) => {
-        done(null, request.params.type === '.csv' ? { 'content-type': 'application/csv' } : {});
+        let contentType = {};
+        if (request.params.type === '.csv') {
+          contentType = { 'content-type': 'application/csv' };
+        }
+        if (request.params.type === '.html') {
+          contentType = { 'content-type': 'application/html' };
+        }
+        return done(null, contentType);
       },
-      reply(server, request, map, setHeaders, groupby, aggregate, done) {
-        // groupby just gets the aggregates grouped by tag value:
+      convertOutput(server, setHeaders, map, aggregate, groupby, done) {
         if (groupby) {
           return done(null, aggregate);
         }
-        if (request.params.type === '.csv') {
-          map.forEach((record) => {
-            delete record.date;
-          });
+        map.forEach((record) => {
+          delete record.date;
+        });
+        if (!setHeaders['content-type']) {
+          return done(null, map);
+        }
+        if (setHeaders['content-type'].indexOf('csv') !== -1) {
           return done(null, server.methods.csv(map, [
             {
               label: 'Date',
@@ -159,7 +168,12 @@ exports.aggregate = {
             },
           ]));
         }
-        done(null, map);
+        if (setHeaders['content-type'].endsWith('html')) {
+          return done(null, server.methods.html(map));
+        }
+      },
+      reply(convertOutput, done) {
+        return done(null, convertOutput);
       }
     }
   }
