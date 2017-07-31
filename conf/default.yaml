@@ -1,3 +1,4 @@
+verbose: "{{ENV.VERBOSE || 'false' }}"
 host: 'http://{{ENV.VIRTUAL_HOST}}'
 connection:
   port: '{{ENV.PORT}}'
@@ -15,6 +16,8 @@ plugins:
     url: "{{mongo.url}}"
   hapi-method-loader:
     _priority: -2
+  hapi-log-response:
+    _prority: -1
   hapi-mongodb-collections:
     _priority: -3
     namespace: 'db'

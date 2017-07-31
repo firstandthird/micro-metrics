@@ -800,7 +800,7 @@ tap.test('can use the report method to get an aggregate list of metrics from the
       }, (response) => {
         t.equal(response.statusCode, 200, 'returns HTTP 200');
         t.equal(typeof response.result, 'string');
-        t.equal(response.result.split(os.EOL)[0], '"Date","Avg","Max","Min"');
+        t.equal(response.result.split(os.EOL)[0], '"Date","Sum","Avg","Max","Min"');
         t.equal(response.headers['content-type'], 'application/csv');
         t.end();
       });
