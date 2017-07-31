@@ -146,6 +146,10 @@ exports.aggregate = {
               value: 'dateString'
             },
             {
+              label: 'Sum',
+              value: 'sum'
+            },
+            {
               label: 'Avg',
               value: 'avg'
             },
