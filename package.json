@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
+    "aug": "^2.0.0",
     "hapi-auto-handler": "^1.3.0",
     "hapi-log-response": "^1.3.0",
     "hapi-mongo-indexes": "^2.0.1",
