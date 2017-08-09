@@ -3,7 +3,6 @@ env:
   - localhost=127.0.0.1 MONGO_URL="mongodb://localhost:27017/micrometrics-test"
 services:
   - mongodb
-dist: "precise"
 language: node_js
 node_js:
   - "8"
