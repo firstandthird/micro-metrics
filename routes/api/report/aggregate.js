@@ -138,13 +138,15 @@ exports.aggregate = {
         }
         return done(null, contentType);
       },
-      convertOutput(server, setHeaders, map, aggregate, groupby, done) {
+      convertOutput(server, request, setHeaders, map, aggregate, groupby, done) {
         if (groupby) {
           return done(null, aggregate);
         }
-        map.forEach((record) => {
-          delete record.date;
-        });
+        if (request.params.type === '.csv') {
+          map.forEach((record) => {
+            delete record.date;
+          });
+        }
         if (!setHeaders['content-type']) {
           return done(null, map);
         }
