@@ -1,10 +1,10 @@
 'use strict';
 const tap = require('tap');
 const setup = require('./setup.test.js');
-const os = require('os');
+// const os = require('os');
 const async = require('async');
 
-const twentyMinutes = 1000 * 60 * 20;
+// const twentyMinutes = 1000 * 60 * 20;
 const twoDays = 1000 * 60 * 60 * 24 * 2;
 const threeHours = 1000 * 60 * 60 * 3;
 const current = new Date().getTime();
