@@ -16,6 +16,7 @@ module.exports.withRapptor = (options, dataSet, callback) => {
     console.log('server plugins');
     console.log('server plugins');
     console.log(server.db);
+    console.log(server.plugins)
     module.exports.server.db.tracks.drop(() => {
       if (dataSet.length > 0) {
         module.exports.server.db.tracks.insertMany(dataSet, callback);
