@@ -1,9 +1,17 @@
 sudo: true
 env:
-  - localhost=127.0.0.1 MONGO_URL="mongodb://localhost:27017/micrometrics-test"
+  - localhost=127.0.0.1 MONGO_URL="mongodb://localhost:27017/micrometrics-test" CXX=g++-4.8
 services:
   - mongodb
 language: node_js
 node_js:
   - "8"
   - "6"
+before_install:
+  - sudo apt-get install unicode-data
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
