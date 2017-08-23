@@ -74,28 +74,12 @@ exports.embed = {
       options(request, done) {
         const chart = request.query.chart || 'LineChart';
         const type = request.query.type;
-        const tag = request.query.tag;
-        const tagValue = request.query.tagValue;
         const period = request.query.period;
 
         let title = '';
 
         if (type) {
           title = type;
-        }
-
-        if (tag || tagValue) {
-          const values = [];
-
-          if (tag) {
-            values.push(tag);
-          }
-
-          if (tagValue) {
-            values.push(tagValue);
-          }
-
-          title += ` [${values.join(':')}]`;
         }
 
         if (period) {
@@ -113,112 +97,96 @@ exports.embed = {
         done(null, {
           chart,
           type,
-          tag,
-          tagValue,
           period,
           title
         });
       },
       html(settings, encode, options, types, tags, tagValues, request, done) {
-        const prefix = settings.routePrefix;
-        let script = '';
+        let content = '';
 
         if (options.chart !== 'LineChart') {
-          script = `
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-            <script type="text/javascript">
-              google.charts.load('current', {'packages':['table', 'corechart']});
-              google.charts.setOnLoadCallback(drawTable);
+          console.log(encode.values);
+          const body = encode.values.raw.map(v => `<tr>
+                <td>${v.dateString.slice(0, 10)}</td>
+                <td>${v.sum}</td>
+            </tr>`).join('');
 
-              function drawTable() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('datetime', 'Date');
-                data.addColumn('number', 'Count');
-                data.addRows([
-                  ${encode.values.raw.map((item) => `[new Date(${item.date}), ${item.sum}]`).join(',')}
-                ]);
-
-                var table = new google.visualization.${options.chart}(document.getElementById('chart'));
-
-                table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-              }
-            </script>
+          content = `
+            <div class="table-header">
+              <table cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Content</th>                    
+                  </tr>
+                </thead>
+              </table>
+            </div> 
+            <div class="table-body">
+              <table>
+                <tbody>${body}</tbody>
+              </table>
+            </div>
           `;
+        } else {
+          content = `<div class="svg-container"><img src="http://chartd.co/a.svg?w=580&h=180&d0=${encode.values.string}&ymin=${encode.values.min}&ymax=${encode.values.max}&t=${encodeURIComponent(options.title)}&xmin=${encode.date.min}&xmax=${encode.date.max}&ol=1" class="svg-content"></div>`;
         }
 
         const html = `
           <html>
             <head>
-              ${request.query.refresh ? `<meta http-equiv="refresh" content="${request.query.refresh}">` : ''}            
-              ${script}
+              ${request.query.refresh ? `<meta http-equiv="refresh" content="${request.query.refresh}">` : ''}          
+              
               <style>
-                .button {
-                  background-color: #FFF;
-                  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
-                  border: none;
-                  cursor: pointer;
-                  border-radius: 3px;
-                  box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px, 
-                              rgba(0, 0, 0, 0.2) 0 1px 2px 0, 
-                              rgba(255, 255, 255, 0.7) 0 1px 2px 0 inset;
-                  color: rgba(0, 0, 0, 0.6);
-                  cursor: pointer;
-                  display: inline;
-                  line-height: 20px;
-                  padding: 5px 13px;
-                  text-align: center;
-                  text-decoration-color: rgba(0, 0, 0, 0.6);
-                  text-decoration-line: none;
-                  text-decoration-style: solid;
-                  text-shadow: rgba(255, 255, 255, 0.7) 0 1px 1px;
-                  width: auto;
-                }
-                
-                .button:hover {
-                  background-color: #eaeef1;
-                }
-                
-                .control-holder {
-                  align-items: center;
-                  display:flex;
+                html,
+                body {
+                  margin: 0;
+                  padding: 0;
+                  border: 0;
+                  font-size: 100%;
+                  font: inherit;
+                  vertical-align: baseline;
                 }
               
-                .styled-select {
-                  border-radius: 2px;
-                  background-color: #fbfbfb;
-                  border: 1px solid #ccc;
-                  display: inline-block;
-                  line-height: 46px;
-                  margin-right: 10px;
-                  width: 170px;
-                  overflow: hidden;
-                  position: relative;
+                *, 
+                *:after, 
+                *:before {
+                  -webkit-box-sizing: border-box;
+                  -moz-box-sizing: border-box;
+                  box-sizing: border-box;
                 }
                 
-                .styled-select:after {
-                  background-image: url("data:image/svg+xml,%3Csvg width='16' height='10' viewBox='311 20 16 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23CCC' stroke-width='2' fill='none' d='M312.32 21.83l7.272 6.578L326 21.83'/%3E%3C/svg%3E");
-                  background-size: contain;
-                  background-repeat: no-repeat;
-                  content: '';
-                  height: 8px;
-                  margin-top: -4px;
-                  pointer-events: none;
-                  position: absolute;
-                  right: 10px;
-                  top: 50%;
-                  width: 14px;
+                table { 
+                  width: 100%;
+                  table-layout: fixed;
+                  border-collapse: collapse;
+                  border-spacing: 0;
+                  font-family: arial, sans-serif;
+                  max-width: 100%;
+                  background-color: transparent;                  
                 }
                 
-                .styled-select select {
-                    -webkit-appearance: none;
-                    background: #fbfbfb;
-                    border: none;
-                    height: 35px;
-                    outline: none;
-                    padding: 0 0 0 10px;
-                    width: 110%;
+                table th {
+                  background: #eeeeee;
+                  vertical-align: bottom;
                 }
                 
+                table th,
+                table td {
+                  font-weight: normal;
+                  font-size: 12px;
+                  padding: 8px 15px;
+                  line-height: 20px;
+                  text-align: left;
+                  vertical-align: middle;
+                  border-top: 1px solid #dddddd;
+                }
+                
+                .table-body {
+                  height: 300px;
+                  overflow: scroll;
+                }                             
+              
                 .svg-container {
                   display: inline-block;
                   position: relative;
@@ -236,49 +204,7 @@ exports.embed = {
                 }
               </style>
             </head>
-            <body>
-              <form action="${prefix}/embed" method="get" ${request.query.toolbar === '0' ? 'style="display: none"' : ''}>
-                <div class="control-holder">
-                  <div class="styled-select">
-                    <select name="chart">
-                      <option value="LineChart" ${options.chart === 'LineChart' ? 'selected' : ''}>Line Chart</option>
-                      <option value="Table" ${options.chart === 'Table' ? 'selected' : ''}>Table</option>
-                    </select>
-                  </div>
-                  <div class="styled-select">
-                    <select name="period">
-                      <option value="">Period</option>
-                      <option value="m" ${options.period === 'm' ? 'selected' : ''}>Minute</option>
-                      <option value="h" ${options.period === 'h' ? 'selected' : ''}>Hour</option>
-                      <option value="d" ${options.period === 'd' ? 'selected' : ''}>Day</option>                
-                    </select>
-                  </div>                
-                  <div class="styled-select">
-                    <select name="type">
-                      <option value="">Type</option>
-                      ${types.results.map((type) => `<option value="${type}" ${(options.type === type) ? 'selected' : ''}>${type}</option>`).join('')}
-                    </select>
-                  </div>
-                  <div class="styled-select">
-                    <select name="tag">
-                      <option value="">Tag</option>
-                      ${tags.map((tag) => `<option value="${tag}" ${(options.tag === tag) ? 'selected' : ''}>${tag}</option>`).join('')}
-                    </select>
-                  </div>
-                  <div class="styled-select">
-                    <select name="tagValue">
-                      <option value="">Tag Values</option>
-                      ${tagValues.map((value) => `<option value="${value}" ${(options.tagValue === value) ? 'selected' : ''}>${value}</option>`).join('')}
-                    </select>
-                  </div>                
-                  <input class="button" type="submit" value="Query"/>
-                </div>
-              </form>
-              <div class="svg-container">
-                <img src="http://chartd.co/a.svg?w=580&h=180&d0=${encode.values.string}&ymin=${encode.values.min}&ymax=${encode.values.max}&t=${encodeURIComponent(options.title)}&xmin=${encode.date.min}&xmax=${encode.date.max}&ol=1" class="svg-content">
-              </div>
-              <div id="chart"></div>
-            </body>
+            <body>${content}</body>
           </html>
         `;
         done(null, html);
