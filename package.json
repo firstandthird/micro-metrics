@@ -4,7 +4,6 @@
   "description": "micro metrics",
   "scripts": {
     "start": "rapptor",
-    "dev:server": "npm install && npm prune && nodemon -x 'npm start'",
     "lint": "eslint .",
     "test": "tap"
   },
@@ -40,7 +39,6 @@
   },
   "devDependencies": {
     "async": "^2.3.0",
-    "concurrently": "^3.1.0",
     "eslint": "3.12.2",
     "eslint-config-firstandthird": "3.1.0",
     "eslint-plugin-import": "2.2.0",
