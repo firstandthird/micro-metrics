@@ -6,8 +6,7 @@
     "start": "rapptor",
     "dev:server": "npm install && npm prune && nodemon -x 'npm start'",
     "lint": "eslint .",
-    "test": "PORT=8099 npm run lint && tap test --reporter=spec",
-    "docker-test": "PORT=8099 npm run lint && tap --reporter=spec"
+    "test": "tap"
   },
   "pre-commit": [],
   "repository": {
@@ -28,8 +27,7 @@
   },
   "homepage": "https://github.com/firstandthird/micro-metrics#readme",
   "dependencies": {
-    "hapi-auto-handler": "^1.3.0",
-    "hapi-log-response": "^1.3.0",
+    "hapi-auto-handler": "^1.5.1",
     "hapi-mongo-indexes": "^2.0.1",
     "hapi-mongodb": "6.2.1",
     "hapi-mongodb-collections": "^1.1.0",
@@ -38,7 +36,7 @@
     "joi": "^10.4.1",
     "json2csv": "^3.7.3",
     "lodash": "4.17.4",
-    "rapptor": "^1.16.0"
+    "rapptor": "^1.17.0"
   },
   "devDependencies": {
     "async": "^2.3.0",
@@ -48,7 +46,7 @@
     "eslint-plugin-import": "2.2.0",
     "nodemon": "1.11.0",
     "pre-commit": "1.1.3",
-    "tap": "^10.3.1"
+    "tap": "^10.7.2"
   },
   "eslintConfig": {
     "extends": "firstandthird"
