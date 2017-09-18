@@ -16,8 +16,6 @@ plugins:
     url: "{{mongo.url}}"
   hapi-method-loader:
     _priority: -2
-  hapi-log-response:
-    _prority: -1
   hapi-mongodb-collections:
     _priority: -3
     namespace: 'db'
