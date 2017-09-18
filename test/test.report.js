@@ -710,7 +710,7 @@ tap.test('can use the report method to get an aggregate list of metrics grouped 
     test(init, done) {
       setup.server.inject({
         method: 'GET',
-        url: '/api/report/aggregate?groupby=currency'
+        url: '/api/report/groupBy?groupby=currency'
       }, (response) => {
         t.equal(response.statusCode, 200, 'returns HTTP 200');
         t.equal(typeof response.result, 'object');

@@ -39,7 +39,8 @@
     "joi": "^10.4.1",
     "json2csv": "^3.7.3",
     "lodash": "4.17.4",
-    "rapptor": "^1.16.0"
+    "rapptor": "^1.16.0",
+    "varson": "^1.0.1"
   },
   "devDependencies": {
     "async": "^2.3.0",
