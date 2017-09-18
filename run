@@ -3,6 +3,7 @@
 NAME=micrometrics_app_1
 CMD=$1
 shift
+ARGS=$@
 
 if [[ -z "$CMD" ]]; then
   docker-compose up --build
@@ -25,11 +26,21 @@ if [[ "$CMD" == "lint" ]]; then
 fi
 
 if [[ "$CMD" == "test" ]]; then
-  if [[ -z "$@" ]];  then
-    docker-compose run --rm app npm run docker-test -- test
-  else
-    docker-compose run --rm app npm run docker-test -- $@
+  if [[ -z "$ARGS" ]]; then
+    ARGS="--cov test"
   fi
+  docker-compose run \
+    --rm \
+    -e FORCE_COLOR=1 \
+    -e PORT=8081 \
+    -e NODE_ENV=test \
+    app \
+    npm test -- $ARGS
+  exit
+fi
+
+if [[ "$CMD" == "test-watch" ]]; then
+  nodemon -x "./run test $ARGS"
   exit
 fi
 
