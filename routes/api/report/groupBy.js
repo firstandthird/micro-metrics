@@ -1,8 +1,8 @@
 'use strict';
 const Joi = require('joi');
 const async = require('async');
-exports.groupBy = {
-  path: 'groupBy{type?}',
+exports.groupby = {
+  path: 'groupby{type?}',
   method: 'get',
   config: {
     validate: {
