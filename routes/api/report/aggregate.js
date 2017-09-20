@@ -85,7 +85,7 @@ exports.aggregate = {
           return server.db.tracks.aggregate([
             { $match: query },
             { $group }
-          ], done);
+          ], { explain: false }, done);
         }
         // if we are grouping the aggregates by keys:
         const taggedResults = {};
@@ -95,7 +95,7 @@ exports.aggregate = {
           server.db.tracks.aggregate([
             { $match: subQuery },
             { $group }
-          ], (eachErr, result) => {
+          ], { explain: false }, (eachErr, result) => {
             if (eachErr) {
               return eachDone(eachErr);
             }

@@ -46,7 +46,7 @@ exports.report = {
               count: { $sum: 1 }
             }
           }
-        ], done);
+        ], { explain: false }, done);
       },
       reply(request, server, find, done) {
         done(null, {
