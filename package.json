@@ -5,7 +5,7 @@
   "scripts": {
     "start": "rapptor",
     "lint": "eslint .",
-    "test": "tap"
+    "test": "tap test"
   },
   "pre-commit": [],
   "repository": {
