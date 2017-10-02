@@ -105,7 +105,6 @@ exports.embed = {
         let content = '';
 
         if (options.chart !== 'LineChart') {
-          console.log(encode.values);
           const body = encode.values.raw.map(v => `<tr>
                 <td>${v.dateString.slice(0, 10)}</td>
                 <td>${v.sum}</td>
@@ -182,10 +181,11 @@ exports.embed = {
                   border-top: 1px solid #dddddd;
                 }
                 
+                ${request.query.height ? `
                 .table-body {
-                  height: 300px;
+                  height: ${request.query.height}px;
                   overflow: scroll;
-                }                             
+                }` : ''}
               
                 .svg-container {
                   display: inline-block;
