@@ -27,6 +27,9 @@ exports.embed = {
         if (request.query.tag) {
           query.tags = request.query.tag;
         }
+        if (request.query.last) {
+          query.last = request.query.last;
+        }
         server.req.get('/api/report/aggregate', { query }, done);
       },
       encode(aggregate, done) {
@@ -82,7 +85,9 @@ exports.embed = {
           title = type;
         }
 
-        if (period) {
+        if (request.query.last) {
+          title += ` (last ${request.query.last})`;
+        } else if (period) {
           const periods = {
             d: '30 days',
             h: 'day',
