@@ -807,7 +807,7 @@ tap.test('can use the report method to get an aggregate list of metrics from the
   });
 });
 
-tap.test('can use the report method to get an aggregate list of metrics from the db in html format', (t) => {
+tap.test('can use the embed route to get an aggregate list of metrics from the db in html format', (t) => {
   async.autoInject({
     init(done) {
       setup.withRapptor({}, [{
@@ -878,12 +878,11 @@ tap.test('can use the report method to get an aggregate list of metrics from the
     test(init, done) {
       setup.server.inject({
         method: 'GET',
-        url: '/api/report/aggregate.html'
+        url: '/embed'
       }, (response) => {
         t.equal(response.statusCode, 200, 'returns HTTP 200');
         t.equal(typeof response.result, 'string');
-        t.notEqual(response.result.split('<tr>')[1].indexOf('<th>Date</th> <th>Sum</th> <th>Avg</th> <th>Max</th> <th>Min</th> </tr>'), -1);
-        t.equal(response.headers['content-type'], 'application/html');
+        t.equal(response.headers['content-type'], 'text/html; charset=utf-8');
         t.end();
       });
     }

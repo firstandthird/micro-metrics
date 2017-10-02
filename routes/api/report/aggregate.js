@@ -98,9 +98,6 @@ exports.aggregate = {
         if (request.params.type === '.csv') {
           contentType = { 'content-type': 'application/csv' };
         }
-        if (request.params.type === '.html') {
-          contentType = { 'content-type': 'application/html' };
-        }
         return done(null, contentType);
       },
       convertOutput(server, request, setHeaders, map, aggregate, done) {
@@ -135,9 +132,6 @@ exports.aggregate = {
               value: 'min'
             },
           ]));
-        }
-        if (setHeaders['content-type'].endsWith('html')) {
-          return done(null, server.methods.html(map));
         }
       },
       reply(convertOutput, done) {
