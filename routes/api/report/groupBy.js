@@ -1,8 +1,8 @@
 'use strict';
 const Joi = require('joi');
-
-exports.aggregate = {
-  path: 'aggregate{type?}',
+const async = require('async');
+exports.groupby = {
+  path: 'groupby{type?}',
   method: 'get',
   config: {
     validate: {
@@ -11,6 +11,7 @@ exports.aggregate = {
         last: Joi.string(),
         type: Joi.string(),
         tags: Joi.string(),
+        groupby: Joi.string(),
         fields: Joi.string(),
         value: Joi.number()
       }
@@ -54,7 +55,11 @@ exports.aggregate = {
         }
         done(null, obj);
       },
-      aggregate(server, request, query, done) {
+      // get unique list of tags to group by:
+      groupby(server, request, done) {
+        server.req.get(`/api/tag-values?tag=${request.query.groupby}`, {}, done);
+      },
+      aggregate(server, request, query, groupby, done) {
         const id = {
           day: { $dayOfMonth: '$createdOn' },
           month: { $month: '$createdOn' },
@@ -73,25 +78,26 @@ exports.aggregate = {
           max: { $max: '$value' },
           min: { $min: '$value' }
         };
-        return server.db.tracks.aggregate([
-          { $match: query },
-          { $group }
-        ], { explain: false }, done);
-      },
-      map(dataset, aggregate, done) {
-        aggregate.forEach((item) => {
-          const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
-          const timestamp = date.getTime();
-          item.dateString = date.toISOString();
-          delete item._id; //eslint-disable-line no-underscore-dangle
-          dataset[timestamp] = item;
+        const taggedResults = {};
+        async.each(groupby, (tag, eachDone) => {
+          const subQuery = Object.assign({}, query);
+          subQuery[`tags.${request.query.groupby}`] = tag;
+          server.db.tracks.aggregate([
+            { $match: subQuery },
+            { $group }
+          ], (eachErr, result) => {
+            if (eachErr) {
+              return eachDone(eachErr);
+            }
+            taggedResults[tag] = result;
+            return eachDone();
+          });
+        }, (err) => {
+          if (err) {
+            return done(err);
+          }
+          return done(null, taggedResults);
         });
-        const arr = Object.keys(dataset).map((key) => {
-          const item = dataset[key];
-          item.date = key;
-          return item;
-        });
-        return done(null, arr);
       },
       setHeaders: (request, done) => {
         let contentType = {};
@@ -103,45 +109,8 @@ exports.aggregate = {
         }
         return done(null, contentType);
       },
-      convertOutput(server, request, setHeaders, map, aggregate, done) {
-        if (request.params.type === '.csv') {
-          map.forEach((record) => {
-            delete record.date;
-          });
-        }
-        if (!setHeaders['content-type']) {
-          return done(null, map);
-        }
-        if (setHeaders['content-type'].indexOf('csv') !== -1) {
-          return done(null, server.methods.csv(map, [
-            {
-              label: 'Date',
-              value: 'dateString'
-            },
-            {
-              label: 'Sum',
-              value: 'sum'
-            },
-            {
-              label: 'Avg',
-              value: 'avg'
-            },
-            {
-              label: 'Max',
-              value: 'max'
-            },
-            {
-              label: 'Min',
-              value: 'min'
-            },
-          ]));
-        }
-        if (setHeaders['content-type'].endsWith('html')) {
-          return done(null, server.methods.html(map));
-        }
-      },
-      reply(convertOutput, done) {
-        return done(null, convertOutput);
+      reply(aggregate, done) {
+        return done(null, aggregate);
       }
     }
   }

@@ -1,6 +1,5 @@
 app:
-  image: 'firstandthird/node:6.10-3-nobuild'
-  command: "npm run dev:server" #if you don't want clientkit
+  image: 'firstandthird/node:8.2.1-dev'
   volumes:
     - '.:/home/app/src'
   links:
