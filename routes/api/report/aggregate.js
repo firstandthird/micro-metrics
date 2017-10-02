@@ -76,7 +76,7 @@ exports.aggregate = {
         return server.db.tracks.aggregate([
           { $match: query },
           { $group }
-        ], done);
+        ], { explain: false }, done);
       },
       map(dataset, aggregate, done) {
         aggregate.forEach((item) => {
