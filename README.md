@@ -1,6 +1,8 @@
 # micro-metrics [![Build Status](https://travis-ci.org/firstandthird/micro-metrics.svg?branch=master)](https://travis-ci.org/firstandthird/micro-metrics)
 ## a microservice metrics api server using docker
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/firstandthird/micro-metrics.svg)](https://greenkeeper.io/)
+
 #### API Routes
 - **_/api/track_** (POST)
 
