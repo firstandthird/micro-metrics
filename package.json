@@ -32,7 +32,7 @@
     "hapi-mongodb-collections": "^1.1.0",
     "hapi-req": "^0.4.0",
     "hapi-swaggered": "2.9.0",
-    "joi": "^10.4.1",
+    "joi": "^11.3.3",
     "json2csv": "^3.7.3",
     "lodash": "4.17.4",
     "rapptor": "^2.4.2"
