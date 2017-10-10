@@ -110,10 +110,18 @@ exports.embed = {
         let content = '';
 
         if (options.chart !== 'LineChart') {
-          const body = encode.values.raw.map(v => `<tr>
-                <td>${v.dateString.slice(0, 10)}</td>
+          const body = encode.values.raw.map(v => {
+            let date = v.dateString.slice(0, 10);
+
+            if (options.period === 'h') {
+              date = `${date} ${v.dateString.slice(11, 16)}`;
+            }
+
+            return `<tr>
+                <td>${date}</td>
                 <td>${v.sum}</td>
-            </tr>`).join('');
+            </tr>`;
+          }).join('');
 
           content = `
             <div class="table-header">
