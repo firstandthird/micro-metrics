@@ -814,7 +814,7 @@ tap.test('can use the report method to get an aggregate list of metrics grouped 
         t.equal(response.headers['content-type'], 'application/csv');
         t.equal(typeof response.result, 'string');
         t.equal(response.result.split(os.EOL)[0], '"Date","Dollars","Euros","Yen"');
-        console.log(response.result.split(os.EOL))
+
         const firstRowTokens = response.result.split(os.EOL)[1].split(',');
         t.equal(typeof firstRowTokens[0], 'string');
         t.equal(firstRowTokens[1], '142.45000000000002');
