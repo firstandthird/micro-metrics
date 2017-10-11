@@ -99,18 +99,52 @@ exports.groupby = {
           return done(null, taggedResults);
         });
       },
-      setHeaders: (request, done) => {
+      setHeaders(request, done) {
         let contentType = {};
         if (request.params.type === '.csv') {
           contentType = { 'content-type': 'application/csv' };
         }
-        if (request.params.type === '.html') {
-          contentType = { 'content-type': 'application/html' };
-        }
         return done(null, contentType);
       },
-      reply(aggregate, done) {
-        return done(null, aggregate);
+      convertOutput(server, request, setHeaders, aggregate, done) {
+        if (request.params.type !== '.csv') {
+          return done(null, aggregate);
+        }
+        // dates in first column
+        const columns = [{ label: 'Date', value: 'date' }];
+        // each group by value as a column
+        // Make sure to sort the group by values alphabetically so the csv stays with the same columns all the t
+        const groupByValues = Object.keys(aggregate).sort();
+        groupByValues.forEach((key) => {
+          columns.push({ label: `${key[0].toUpperCase()}${key.substring(1)}`, value: key });
+        });
+        // get list length, assume same number of elements per term:
+        let max = 0;
+        groupByValues.forEach((key) => {
+          if (aggregate[key].length > max) {
+            max = aggregate[key].length;
+          }
+        });
+        // use sum as the value for each row.
+        const rows = [];
+        for (let i = 0; i < max; i++) {
+          const row = {};
+          groupByValues.forEach((key) => {
+            if (i >= aggregate[key].length) {
+              row[key] = 0;
+              return;
+            }
+            const cell = aggregate[key][i];
+            const date = cell._id;
+            row.date = `${date.day}/${date.month}/${date.year}`;
+            row[key] = cell.sum;
+          });
+          rows.push(row);
+        }
+        return done(null, server.methods.csv(rows, columns));
+      },
+      reply(convertOutput, done) {
+        return done(null, convertOutput);
       }
     }
   }
