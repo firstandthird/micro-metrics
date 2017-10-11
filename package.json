@@ -7,6 +7,7 @@
     "lint": "eslint .",
     "test": "tap test"
   },
+  "pre-commit": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/firstandthird/micro-metrics.git"
