@@ -75,6 +75,10 @@ tap.test('tracks in db', (t) => {
   });
 });
 
+tap.test('report', (t) => {
+  //report test here
+});
+
 tap.test('aggregate', (t) => {
   const server = setup.server;
   async.autoInject({
