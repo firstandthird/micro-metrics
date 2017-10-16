@@ -710,7 +710,7 @@ tap.test('can use the report method to get an aggregate list of metrics grouped 
     test(init, done) {
       setup.server.inject({
         method: 'GET',
-        url: '/api/report/aggregate?groupby=currency'
+        url: '/api/report/groupby?groupby=currency'
       }, (response) => {
         t.equal(response.statusCode, 200, 'returns HTTP 200');
         t.equal(typeof response.result, 'object');
@@ -718,6 +718,114 @@ tap.test('can use the report method to get an aggregate list of metrics grouped 
         t.equal(Object.keys(response.result).length, 3);
         t.equal(response.result.dollars[0].max, 142);
         t.equal(response.result.yen[0].max, 1234);
+        t.end();
+      });
+    }
+  });
+});
+
+tap.test('can use the report method to get an aggregate list of metrics grouped by values for a given tag in csv format', (t) => {
+  async.autoInject({
+    init(done) {
+      setup.withRapptor({}, [{
+        type: 'BankAccount',
+        tags: { currency: 'yen' },
+        tagKeys: { currency: 'yen' },
+        fields: ['wc', 'strawberry'],
+        value: 5678,
+        data: '5678',
+        createdOn: new Date(current - (threeHours * 16)),
+        userId: '2d'
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'yen' },
+        tagKeys: { currency: 'yen' },
+        fields: ['wc', 'strawberry'],
+        value: 1234,
+        data: '1234',
+        createdOn: new Date(current - threeHours),
+        userId: '2d'
+      },
+      {
+        type: 'StockAccount',
+        tags: { currency: 'dollars' },
+        value: 142,
+        data: '23566357',
+        userId: 'Montgomery Burns',
+        createdOn: new Date(current - threeHours),
+      },
+      {
+        type: 'StockAccount',
+        tags: { transactionNumber: '1234', currency: 'yen' },
+        value: 160,
+        data: '78667657',
+        createdOn: new Date(current - threeHours),
+        userId: 'Montgomery Burns',
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 0.15,
+        data: '2345234',
+        createdOn: new Date(current - threeHours),
+        userId: '20m'
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 0.15,
+        data: '768567',
+        createdOn: new Date(current - threeHours),
+        userId: '3h'
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'euros', units: 'cents' },
+        value: 0.15,
+        data: '8666345345',
+        createdOn: new Date(current - threeHours),
+        userId: 'current'
+      },
+      {
+        type: 'Radish',
+        tags: { animalVegetableMineral: 'vegetable' },
+        value: 1,
+        data: 'radishes are a good source of electrolytes and minerals ',
+        createdOn: new Date(current - threeHours),
+        userId: 'user1234',
+      },
+      {
+        type: 'BankAccount',
+        tags: { currency: 'dollars', units: 'cents' },
+        value: 0.15,
+        data: '6786785676',
+        createdOn: new Date(current - threeHours),
+        userId: '2d3h'
+      }],
+      done);
+    },
+    test(init, done) {
+      setup.server.inject({
+        method: 'GET',
+        url: '/api/report/groupby.csv?groupby=currency'
+      }, (response) => {
+        t.equal(response.statusCode, 200, 'returns HTTP 200');
+        t.equal(response.headers['content-type'], 'application/csv');
+        t.equal(typeof response.result, 'string');
+        t.equal(response.result.split(os.EOL)[0], '"Date","Dollars","Euros","Yen"');
+
+        const firstRowTokens = response.result.split(os.EOL)[1].split(',');
+        t.equal(typeof firstRowTokens[0], 'string');
+        t.equal(firstRowTokens[1], '142.45000000000002');
+        t.equal(firstRowTokens[2], '0.15');
+        t.equal(firstRowTokens[3], '1394');
+
+        const secondRowTokens = response.result.split(os.EOL)[2].split(',');
+        t.equal(typeof secondRowTokens[0], 'string');
+        t.equal(secondRowTokens[1], '0');
+        t.equal(secondRowTokens[2], '0');
+        t.equal(secondRowTokens[3], '5678');
         t.end();
       });
     }
@@ -807,7 +915,7 @@ tap.test('can use the report method to get an aggregate list of metrics from the
   });
 });
 
-tap.test('can use the report method to get an aggregate list of metrics from the db in html format', (t) => {
+tap.test('can use the embed route to get an aggregate list of metrics from the db in html format', (t) => {
   async.autoInject({
     init(done) {
       setup.withRapptor({}, [{
@@ -878,12 +986,11 @@ tap.test('can use the report method to get an aggregate list of metrics from the
     test(init, done) {
       setup.server.inject({
         method: 'GET',
-        url: '/api/report/aggregate.html'
+        url: '/embed'
       }, (response) => {
         t.equal(response.statusCode, 200, 'returns HTTP 200');
         t.equal(typeof response.result, 'string');
-        t.notEqual(response.result.split('<tr>')[1].indexOf('<th>Date</th> <th>Sum</th> <th>Avg</th> <th>Max</th> <th>Min</th> </tr>'), -1);
-        t.equal(response.headers['content-type'], 'application/html');
+        t.equal(response.headers['content-type'], 'text/html; charset=utf-8');
         t.end();
       });
     }

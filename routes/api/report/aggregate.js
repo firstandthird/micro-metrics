@@ -1,6 +1,6 @@
 'use strict';
 const Joi = require('joi');
-const async = require('async');
+
 exports.aggregate = {
   path: 'aggregate{type?}',
   method: 'get',
@@ -11,7 +11,6 @@ exports.aggregate = {
         last: Joi.string(),
         type: Joi.string(),
         tags: Joi.string(),
-        groupby: Joi.string(),
         fields: Joi.string(),
         value: Joi.number()
       }
@@ -55,14 +54,7 @@ exports.aggregate = {
         }
         done(null, obj);
       },
-      // get unique list of tags to group by:
-      groupby(server, request, done) {
-        if (!request.query.groupby) {
-          return done();
-        }
-        server.req.get(`/api/tag-values?tag=${request.query.groupby}`, {}, done);
-      },
-      aggregate(server, request, query, groupby, done) {
+      aggregate(server, request, query, done) {
         const id = {
           day: { $dayOfMonth: '$createdOn' },
           month: { $month: '$createdOn' },
@@ -81,39 +73,12 @@ exports.aggregate = {
           max: { $max: '$value' },
           min: { $min: '$value' }
         };
-        if (!groupby) {
-          return server.db.tracks.aggregate([
-            { $match: query },
-            { $group }
-          ], { explain: false }, done);
-        }
-        // if we are grouping the aggregates by keys:
-        const taggedResults = {};
-        async.each(groupby, (tag, eachDone) => {
-          const subQuery = Object.assign({}, query);
-          subQuery[`tags.${request.query.groupby}`] = tag;
-          server.db.tracks.aggregate([
-            { $match: subQuery },
-            { $group }
-          ], { explain: false }, (eachErr, result) => {
-            if (eachErr) {
-              return eachDone(eachErr);
-            }
-            taggedResults[tag] = result;
-            return eachDone();
-          });
-        }, (err) => {
-          if (err) {
-            return done(err);
-          }
-          return done(null, taggedResults);
-        });
+        return server.db.tracks.aggregate([
+          { $match: query },
+          { $group }
+        ], { explain: false }, done);
       },
-      map(dataset, aggregate, groupby, done) {
-        // if we're just getting the aggregate data grouped by tag value then we're done:
-        if (groupby) {
-          return done();
-        }
+      map(dataset, aggregate, done) {
         aggregate.forEach((item) => {
           const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
           const timestamp = date.getTime();
@@ -133,15 +98,9 @@ exports.aggregate = {
         if (request.params.type === '.csv') {
           contentType = { 'content-type': 'application/csv' };
         }
-        if (request.params.type === '.html') {
-          contentType = { 'content-type': 'application/html' };
-        }
         return done(null, contentType);
       },
-      convertOutput(server, request, setHeaders, map, aggregate, groupby, done) {
-        if (groupby) {
-          return done(null, aggregate);
-        }
+      convertOutput(server, request, setHeaders, map, aggregate, done) {
         if (request.params.type === '.csv') {
           map.forEach((record) => {
             delete record.date;
@@ -173,9 +132,6 @@ exports.aggregate = {
               value: 'min'
             },
           ]));
-        }
-        if (setHeaders['content-type'].endsWith('html')) {
-          return done(null, server.methods.html(map));
         }
       },
       reply(convertOutput, done) {
