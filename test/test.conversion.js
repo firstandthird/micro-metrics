@@ -76,7 +76,60 @@ tap.test('tracks in db', (t) => {
 });
 
 tap.test('report', (t) => {
-  //report test here
+  const server = setup.server;
+  async.autoInject({
+    add1(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    add2(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'b',
+          session: '123'
+        }
+      }, done);
+    },
+    add3(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'success',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    report1(add1, add2, add3, done) {
+      server.req.get('/api/report/conversion', {
+        query: {
+          name: 'test'
+        }
+      }, done);
+    },
+    results1(report1, done) {
+      const lastReport = report1[report1.length - 1];
+      delete lastReport.date;
+      delete lastReport.dateString;
+      t.deepEqual(lastReport, {
+        'a - impression': 1,
+        'b - impression': 1,
+        'a - success': 1,
+        'b - success': 0 });
+      done();
+    }
+  }, (err, results) => {
+    t.equal(err, null);
+    t.end();
+  });
 });
 
 tap.test('aggregate', (t) => {
