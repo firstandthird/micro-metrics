@@ -136,6 +136,46 @@ exports.report = {
   }
 };
 
+exports.aggregatecsv = {
+  path: '/api/report/conversion/aggregate.csv',
+  method: 'get',
+  config: {
+    validate: {
+      query: {
+        name: Joi.string().required(),
+        period: Joi.string().default('d'),
+        last: Joi.string(),
+      }
+    }
+  },
+  handler: {
+    autoInject: {
+      report(server, request, done) {
+        server.req.get('/api/report/conversion/aggregate', { query: request.query }, done);
+      },
+      setHeaders: (request, done) => done(null, { 'content-type': 'application/csv' }),
+      csv(server, report, setHeaders, done) {
+        const headers = [{
+          Label: 'Option',
+          value: 'option'
+        },
+        {
+          Label: 'Success',
+          value: 'success'
+        },
+        {
+          Label: 'Impression',
+          value: 'impression'
+        }];
+        return done(null, server.methods.csv(report, headers));
+      },
+      reply(csv, done) {
+        done(null, csv);
+      }
+    }
+  }
+};
+
 exports.aggregate = {
   path: '/api/report/conversion/aggregate',
   method: 'get',

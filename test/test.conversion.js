@@ -238,3 +238,56 @@ tap.test('aggregate', (t) => {
     t.end();
   });
 });
+
+tap.test('aggregate csv', (t) => {
+  async.autoInject({
+    add1(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    add2(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'b',
+          session: '123'
+        }
+      }, done);
+    },
+    add3(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'success',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    csv(add1, add2, add3, done) {
+      setup.server.inject({
+        method: 'GET',
+        url: '/api/report/conversion/aggregate.csv?name=test',
+      }, (response) => {
+        done(null, response);
+      });
+    },
+    results1(csv, done) {
+      t.equal(csv.statusCode, 200, 'returns HTTP 200');
+      t.equal(typeof csv.result, 'string');
+      t.equal(csv.result.split(os.EOL)[0], '"option","success","impression"');
+      t.equal(csv.headers['content-type'], 'application/csv');
+      done();
+    }
+  }, (err, results) => {
+    t.equal(err, null);
+    t.end();
+  });
+});
