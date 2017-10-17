@@ -1,5 +1,54 @@
 const Joi = require('joi');
 const async = require('async');
+
+exports.reportcsv = {
+  path: '/api/report/conversion.csv',
+  method: 'get',
+  config: {
+    validate: {
+      query: {
+        name: Joi.string().required(),
+        period: Joi.string().default('d'),
+        last: Joi.string(),
+      }
+    }
+  },
+  handler: {
+    autoInject: {
+      report(server, request, done) {
+        server.req.get('/api/report/conversion', { query: request.query }, done);
+      },
+      setHeaders: (request, done) => done(null, { 'content-type': 'application/csv' }),
+      csv(server, report, setHeaders, done) {
+        const headerObj = {};
+        report.forEach((item) => {
+          Object.keys(item).forEach((key) => {
+            if (!headerObj[key]) {
+              headerObj[key] = key;
+            }
+          });
+        });
+        delete headerObj.date;
+        delete headerObj.dateString;
+        const headers = [{
+          Label: 'Date',
+          value: 'dateString'
+        }];
+        Object.keys(headerObj).forEach((header) => {
+          headers.push({
+            Label: header[0].toUpperCase() + header.substring(1),
+            value: header
+          });
+        });
+        return done(null, server.methods.csv(report, headers));
+      },
+      reply(csv, done) {
+        done(null, csv);
+      }
+    }
+  }
+};
+
 exports.report = {
   path: '/api/report/conversion{type?}',
   method: 'get',
@@ -72,7 +121,9 @@ exports.report = {
             date: req[reqIndex].date
           };
           apiCalls.forEach((call, callIndex) => {
-            columns[`${call.option} - ${call.event}`] = get[callIndex][reqIndex].sum;
+            if (get[callIndex][reqIndex]) {
+              columns[`${call.option} - ${call.event}`] = get[callIndex][reqIndex].sum;
+            }
           });
           out.push(columns);
         });

@@ -2,6 +2,7 @@
 const async = require('async');
 const tap = require('tap');
 const setup = require('./setup.test.js');
+const os = require('os');
 
 tap.beforeEach((done) => {
   setup.withRapptor({}, [], done);
@@ -124,6 +125,59 @@ tap.test('report', (t) => {
         'b - impression': 1,
         'a - success': 1,
         'b - success': 0 });
+      done();
+    }
+  }, (err, results) => {
+    t.equal(err, null);
+    t.end();
+  });
+});
+
+tap.test('report csv', (t) => {
+  async.autoInject({
+    add1(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    add2(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'b',
+          session: '123'
+        }
+      }, done);
+    },
+    add3(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'success',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    csv(add1, add2, add3, done) {
+      setup.server.inject({
+        method: 'GET',
+        url: '/api/report/conversion.csv?name=test',
+      }, (response) => {
+        done(null, response);
+      });
+    },
+    results1(csv, done) {
+      t.equal(csv.statusCode, 200, 'returns HTTP 200');
+      t.equal(typeof csv.result, 'string');
+      t.equal(csv.result.split(os.EOL)[0], '"dateString","a - impression","b - impression","a - success","b - success"');
+      t.equal(csv.headers['content-type'], 'application/csv');
       done();
     }
   }, (err, results) => {
