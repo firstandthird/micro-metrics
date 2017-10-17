@@ -92,3 +92,20 @@ tap.test('can use /t.gif route to get a tracking pixel', (t) => {
     });
   });
 });
+
+tap.test('can use /c.gif route to get a conversion tracking pixel', (t) => {
+  setup.server.inject({
+    url: '/c.gif?type=thisType',
+    method: 'GET',
+  }, (response) => {
+    t.equal(response.statusCode, 200);
+    t.equal(response.headers['content-type'], 'image/gif');
+    setup.server.db.tracks.findOne({ type: 'thisType' }, (err, track) => {
+      t.equal(err, null);
+      t.equal(track.type, 'thisType');
+      t.equal(track.data.ip, '127.0.0.1');
+      t.equal(track.data.userAgent, 'shot');
+      t.end();
+    });
+  });
+});

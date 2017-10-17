@@ -19,3 +19,21 @@ exports.main = {
     });
   }
 };
+
+exports.c = {
+  method: 'GET',
+  path: '/c.gif',
+  handler: (request, reply) => {
+    const payload = request.query;
+    const data = request.server.methods.extractInfo(request);
+    payload.data = data;
+    request.server.req.post('/api/track', { payload }, (err, response) => {
+      if (err) {
+        request.server.log(['error', 'tracking-gif'], { message: 'tracking failed for c.gif', err });
+      }
+      reply(emptyGifBuffer)
+        .header('Content-Type', 'image/gif')
+        .code(200);
+    });
+  }
+};
