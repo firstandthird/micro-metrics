@@ -82,7 +82,9 @@ exports.aggregate = {
             }
           });
         });
-        done(null, Object.values(out));
+        const ret = [];
+        Object.keys(out).forEach((item) => { ret.push(item); });
+        done(null, ret);
       },
       reply(map, done) {
         done(null, map);
