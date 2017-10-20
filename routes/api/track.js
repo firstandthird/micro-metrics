@@ -24,6 +24,8 @@ exports.track = {
         const validated = request.payload;
         validated.tags = server.methods.stringToKeyValue(validated.tags);
         validated.fields = server.methods.stringToKeyValue(validated.fields);
+        validated.data = server.methods.stringToKeyValue(validated.data);
+
         if (validated.tags) {
           validated.tagKeys = Object.keys(validated.tags);
         }
