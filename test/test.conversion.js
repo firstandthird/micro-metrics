@@ -294,20 +294,16 @@ tap.test('aggregate csv', (t) => {
 
 tap.test('can use /c.gif route to get a conversion tracking pixel', (t) => {
   setup.server.inject({
-    url: '/c.gif?type=thisType',
-    method: 'GET',
-    payload: {
-      name: 'test',
-      event: 'impression',
-      option: 'a',
-      session: '123'
-    }
+    url: '/c.gif?name=test&event=impression&option=a&session=123',
+    method: 'GET'
   }, (response) => {
     t.equal(response.statusCode, 200);
     t.equal(response.headers['content-type'], 'image/gif');
-    setup.server.db.tracks.findOne({ type: 'thisType' }, (err, track) => {
+    setup.server.db.tracks.findOne({ type: 'conversion.test' }, (err, track) => {
       t.equal(err, null);
-      t.equal(track.type, 'thisType');
+      t.equal(track.tags.event, 'impression');
+      t.equal(track.tags.option, 'a');
+      t.equal(track.type, 'conversion.test');
       t.equal(track.data.ip, '127.0.0.1');
       t.equal(track.data.userAgent, 'shot');
       t.end();
