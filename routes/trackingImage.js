@@ -9,7 +9,7 @@ exports.main = {
     const payload = request.query;
     const data = request.server.methods.extractInfo(request);
     payload.data = data;
-    request.server.req.post('/api/track', { payload }, (err, response) => {
+    request.server.req.post('/api/conversion', { payload }, (err, response) => {
       if (err) {
         request.server.log(['error', 'tracking-gif'], { message: 'tracking failed for t.gif', err });
       }
