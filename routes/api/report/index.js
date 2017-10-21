@@ -26,6 +26,11 @@ exports.report = {
         done(null, query);
       },
       find(query, server, done) {
+        console.log('the query is:')
+        console.log('the query is:')
+        console.log('the query is:')
+        console.log('the query is:')
+        console.log(query)
         server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
       },
       setHeaders: (request, done) => {
