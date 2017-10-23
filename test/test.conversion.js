@@ -344,7 +344,14 @@ tap.test('can use /api/allConversions to get all conversion types', (t) => {
         }
       }, done);
     },
-    get(add1, add2, add3, done) {
+    add4(done) {
+      setup.server.req.post('/api/track', {
+        payload: {
+          type: 'aType'
+        }
+      }, done);
+    },
+    get(add1, add2, add3, add4, done) {
       server.req.get('/api/allConversions', {}, done);
     },
     results1(get, done) {
