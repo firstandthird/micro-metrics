@@ -310,3 +310,52 @@ tap.test('can use /c.gif route to get a conversion tracking pixel', (t) => {
     });
   });
 });
+
+tap.test('can use /api/allConversions to get all conversion types', (t) => {
+  const server = setup.server;
+  async.autoInject({
+    add1(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'impression',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    add2(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test2',
+          event: 'impression',
+          option: 'b',
+          session: '123'
+        }
+      }, done);
+    },
+    add3(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'success',
+          option: 'a',
+          session: '123'
+        }
+      }, done);
+    },
+    get(add1, add2, add3, done) {
+      server.req.get('/api/allConversions', {}, done);
+    },
+    results1(get, done) {
+      // gets a unique list of conversion tracks:
+      t.equal(get.length, 2);
+      t.notEqual(get.indexOf('conversion.test'), -1);
+      t.notEqual(get.indexOf('conversion.test2'), -1);
+      done();
+    }
+  }, (err, results) => {
+    t.equal(err, null);
+    t.end();
+  });
+});
