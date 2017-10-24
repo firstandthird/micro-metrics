@@ -7,10 +7,7 @@ exports.aggregatecsv = {
   handler: {
     autoInject: {
       aggregate(server, request, done) {
-        console.log('---')
-        console.log('---')
-        console.log('---')
-        server.req.get('/api/report/conversion/aggregate', { query: request.query }, done);
+        server.req.get('/api/report/aggregate', { query: request.query }, done);
       },
       map(aggregate, done) {
         aggregate.forEach((record) => {
