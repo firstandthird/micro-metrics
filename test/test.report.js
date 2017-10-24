@@ -70,7 +70,7 @@ tap.test('can use the report method to get a list of metrics from the db by hour
         value: 0.15,
         data: 'liquid assets only',
         userId: '3h',
-        createdOn: new Date(current - threeHours)
+        createdOn: new Date(current - threeHours - twentyMinutes)
       },
       {
         type: 'BankAccount',
