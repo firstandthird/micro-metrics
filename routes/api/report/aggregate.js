@@ -1,8 +1,57 @@
 'use strict';
 const Joi = require('joi');
 
+exports.aggregatecsv = {
+  path: 'aggregate.csv',
+  method: 'get',
+  handler: {
+    autoInject: {
+      aggregate(server, request, done) {
+        console.log('---')
+        console.log('---')
+        console.log('---')
+        server.req.get('/api/report/conversion/aggregate', { query: request.query }, done);
+      },
+      map(aggregate, done) {
+        aggregate.forEach((record) => {
+          delete record.date;
+        });
+        done(null, aggregate);
+      },
+      csv(server, aggregate, done) {
+        return done(null, server.methods.csv(aggregate, [
+          {
+            label: 'Date',
+            value: 'dateString'
+          },
+          {
+            label: 'Sum',
+            value: 'sum'
+          },
+          {
+            label: 'Avg',
+            value: 'avg'
+          },
+          {
+            label: 'Max',
+            value: 'max'
+          },
+          {
+            label: 'Min',
+            value: 'min'
+          },
+        ]));
+      },
+      send(reply, csv, done) {
+        reply(null, csv).header('content-type', 'application/csv');
+        return done();
+      }
+    }
+  }
+};
+
 exports.aggregate = {
-  path: 'aggregate{type?}',
+  path: 'aggregate',
   method: 'get',
   config: {
     validate: {
@@ -93,50 +142,9 @@ exports.aggregate = {
         });
         return done(null, arr);
       },
-      setHeaders: (request, done) => {
-        let contentType = {};
-        if (request.params.type === '.csv') {
-          contentType = { 'content-type': 'application/csv' };
-        }
-        return done(null, contentType);
+      reply(map, done) {
+        return done(null, map);
       },
-      convertOutput(server, request, setHeaders, map, aggregate, done) {
-        if (request.params.type === '.csv') {
-          map.forEach((record) => {
-            delete record.date;
-          });
-        }
-        if (!setHeaders['content-type']) {
-          return done(null, map);
-        }
-        if (setHeaders['content-type'].indexOf('csv') !== -1) {
-          return done(null, server.methods.csv(map, [
-            {
-              label: 'Date',
-              value: 'dateString'
-            },
-            {
-              label: 'Sum',
-              value: 'sum'
-            },
-            {
-              label: 'Avg',
-              value: 'avg'
-            },
-            {
-              label: 'Max',
-              value: 'max'
-            },
-            {
-              label: 'Min',
-              value: 'min'
-            },
-          ]));
-        }
-      },
-      reply(convertOutput, done) {
-        return done(null, convertOutput);
-      }
     }
   }
 };
