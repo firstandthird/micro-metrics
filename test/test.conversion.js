@@ -311,7 +311,7 @@ tap.test('can use /c.gif route to get a conversion tracking pixel', (t) => {
   });
 });
 
-tap.test('can use /api/allConversions to get all conversion types', (t) => {
+tap.test('can use /api/conversions to get all conversion types', (t) => {
   const server = setup.server;
   async.autoInject({
     add1(done) {
@@ -351,8 +351,15 @@ tap.test('can use /api/allConversions to get all conversion types', (t) => {
         }
       }, done);
     },
-    get(add1, add2, add3, add4, done) {
-      server.req.get('/api/allConversions', {}, done);
+    add5(done) {
+      setup.server.req.post('/api/track', {
+        payload: {
+          type: 'not-a-conversion'
+        }
+      }, done);
+    },
+    get(add1, add2, add3, add4, add5, done) {
+      server.req.get('/api/conversions', {}, done);
     },
     results1(get, done) {
       // gets a unique list of conversion tracks:

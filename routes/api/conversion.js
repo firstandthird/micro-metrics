@@ -1,10 +1,10 @@
 const Joi = require('joi');
 
-exports.allConversions = {
+exports.conversions = {
   method: 'GET',
-  path: '/api/allConversions',
+  path: '/api/conversions',
   handler(request, reply) {
-    request.server.db.tracks.distinct('type', { type: { $regex: /conversion/ } }, (err, results) => {
+    request.server.db.tracks.distinct('type', { type: { $regex: /^conversion/ } }, (err, results) => {
       if (err) {
         return reply(err);
       }
