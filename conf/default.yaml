@@ -1,9 +1,6 @@
-verbose: "{{ENV.VERBOSE || 'false' }}"
 host: 'http://{{ENV.VIRTUAL_HOST}}'
-connection:
-  port: '{{ENV.PORT}}'
 mongo:
-  url: "{{ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics'}}"
+  url: "{{ENV.MONGO_FILE ? readFile(ENV.MONGO_FILE) : ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics'}}"
 
 plugins:
   hapi-auto-handler:
