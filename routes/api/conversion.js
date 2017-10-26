@@ -22,7 +22,8 @@ exports.conversion = {
         name: Joi.string().required(),
         event: Joi.string().required(),
         option: Joi.string().required(),
-        session: Joi.string()
+        session: Joi.string(),
+        data: Joi.object()
       }
     }
   },
@@ -30,7 +31,7 @@ exports.conversion = {
     autoInject: {
       inject(server, request, done) {
         const payload = request.payload;
-        const data = server.methods.extractInfo(request);
+        const data = payload.data || {};
         data.session = payload.session;
         server.req.post('/api/track', {
           payload: {

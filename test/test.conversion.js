@@ -53,7 +53,10 @@ tap.test('tracks in db', (t) => {
       name: 'test',
       event: 'impression',
       option: 'a',
-      session: '123'
+      session: '123',
+      data: {
+        test: 'abc'
+      }
     }
   }, (err, result) => {
     t.equal(err, null);
@@ -67,9 +70,7 @@ tap.test('tracks in db', (t) => {
         option: 'a'
       });
       t.equal(item.data.session, '123');
-      t.notEqual(typeof item.data.ip, 'undefined');
-      t.notEqual(typeof item.data.userAgent, 'undefined');
-      t.notEqual(typeof item.data.referrer, 'undefined');
+      t.equal(item.data.test, 'abc');
       t.equal(item.value, 1);
       t.end();
     });
@@ -294,7 +295,7 @@ tap.test('aggregate csv', (t) => {
 
 tap.test('can use /c.gif route to get a conversion tracking pixel', (t) => {
   setup.server.inject({
-    url: '/c.gif?name=test&event=impression&option=a&session=123',
+    url: '/c.gif?name=test&event=impression&option=a&session=123&data=test:abc',
     method: 'GET'
   }, (response) => {
     t.equal(response.statusCode, 200);
@@ -306,6 +307,7 @@ tap.test('can use /c.gif route to get a conversion tracking pixel', (t) => {
       t.equal(track.type, 'conversion.test');
       t.equal(track.data.ip, '127.0.0.1');
       t.equal(track.data.userAgent, 'shot');
+      t.equal(track.data.test, 'abc');
       t.end();
     });
   });

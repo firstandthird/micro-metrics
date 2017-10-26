@@ -24,6 +24,7 @@ exports.c = {
   path: '/c.gif',
   handler: (request, reply) => {
     const payload = request.query;
+    payload.data = request.server.methods.extractInfo(request);
     request.server.req.post('/api/conversion', { payload }, (err, response) => {
       if (err) {
         request.server.log(['error', 'tracking-gif'], { message: 'tracking failed for c.gif', err });
