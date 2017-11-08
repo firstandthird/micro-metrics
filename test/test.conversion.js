@@ -219,7 +219,17 @@ tap.test('aggregate', (t) => {
         }
       }, done);
     },
-    aggregate(add1, add2, add3, done) {
+    add4(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'total collapse',
+          option: 'c',
+          session: '321'
+        }
+      }, done);
+    },
+    aggregate(add1, add2, add3, add4, done) {
       server.req.get('/api/report/conversion/aggregate', {
         query: {
           name: 'test'
@@ -228,8 +238,9 @@ tap.test('aggregate', (t) => {
     },
     results(aggregate, done) {
       t.deepEqual(aggregate, [
-        { option: 'a', impression: 1, success: 1 },
-        { option: 'b', impression: 1, success: 0 },
+        { option: 'a', impression: 1, success: 1, 'total collapse': 0 },
+        { option: 'b', impression: 1, success: 0, 'total collapse': 0 },
+        { option: 'c', impression: 0, success: 0, 'total collapse': 1 },
       ]);
       done();
     }
@@ -271,7 +282,17 @@ tap.test('aggregate csv', (t) => {
         }
       }, done);
     },
-    csv(add1, add2, add3, done) {
+    add4(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'cinco de mayo party',
+          option: 'c',
+          session: '1235'
+        }
+      }, done);
+    },
+    csv(add1, add2, add3, add4, done) {
       setup.server.inject({
         method: 'GET',
         url: '/api/report/conversion/aggregate.csv?name=test',
@@ -282,7 +303,7 @@ tap.test('aggregate csv', (t) => {
     results1(csv, done) {
       t.equal(csv.statusCode, 200, 'returns HTTP 200');
       t.equal(typeof csv.result, 'string');
-      t.equal(csv.result.split(os.EOL)[0], '"option","success","impression"');
+      t.equal(csv.result.split(os.EOL)[0], '"option","impression","success","cinco de mayo party"');
       t.equal(csv.headers['content-type'], 'application/csv');
       done();
     }
