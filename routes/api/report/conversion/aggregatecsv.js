@@ -13,6 +13,7 @@ exports.aggregatecsv = {
           Object.keys(header).forEach((eventName) => {
             if (seen.indexOf(eventName) === -1) {
               seen.push(eventName);
+              headers.push({
                 Label: eventName.charAt(0).toUpperCase() + eventName.slice(1),
                 value: eventName
               });
