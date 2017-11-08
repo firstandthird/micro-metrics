@@ -220,7 +220,17 @@ tap.test('aggregate', (t) => {
         }
       }, done);
     },
-    aggregate(add1, add2, add3, done) {
+    add4(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'total collapse',
+          option: 'c',
+          session: '321'
+        }
+      }, done);
+    },
+    aggregate(add1, add2, add3, add4, done) {
       server.req.get('/api/report/conversion/aggregate', {
         query: {
           name: 'test'
@@ -228,10 +238,16 @@ tap.test('aggregate', (t) => {
       }, done);
     },
     results(aggregate, done) {
-      t.deepEqual(aggregate, [
-        { option: 'a', impression: 1, success: 1 },
-        { option: 'b', impression: 1, success: 0 },
-      ]);
+      t.equal(aggregate.length, 3);
+      const totals = { impression: 0, success: 0, 'total collapse': 0 };
+      aggregate.forEach((item) => {
+        totals.impression += item.impression;
+        totals.success += item.success;
+        totals['total collapse'] += item['total collapse'];
+      });
+      t.equal(totals.impression, 2);
+      t.equal(totals.success, 1);
+      t.equal(totals['total collapse'], 1);
       done();
     }
   }, (err, results) => {
@@ -272,7 +288,17 @@ tap.test('aggregate csv', (t) => {
         }
       }, done);
     },
-    csv(add1, add2, add3, done) {
+    add4(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'cinco de mayo party',
+          option: 'c',
+          session: '1235'
+        }
+      }, done);
+    },
+    csv(add1, add2, add3, add4, done) {
       setup.server.inject({
         method: 'GET',
         url: '/api/report/conversion/aggregate.csv?name=test',
@@ -283,7 +309,7 @@ tap.test('aggregate csv', (t) => {
     results1(csv, done) {
       t.equal(csv.statusCode, 200, 'returns HTTP 200');
       t.equal(typeof csv.result, 'string');
-      t.equal(csv.result.split(os.EOL)[0], '"option","success","impression"');
+      t.equal(csv.result.split(os.EOL)[0], '"option","impression","success","cinco de mayo party"');
       t.equal(csv.headers['content-type'], 'application/csv');
       done();
     }
