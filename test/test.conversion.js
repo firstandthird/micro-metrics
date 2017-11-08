@@ -238,11 +238,16 @@ tap.test('aggregate', (t) => {
       }, done);
     },
     results(aggregate, done) {
-      t.deepEqual(aggregate, [
-        { option: 'a', impression: 1, success: 1, 'total collapse': 0 },
-        { option: 'b', impression: 1, success: 0, 'total collapse': 0 },
-        { option: 'c', impression: 0, success: 0, 'total collapse': 1 },
-      ]);
+      t.equal(aggregate.length, 3);
+      const totals = { impression: 0, success: 0, 'total collapse': 0 };
+      aggregate.forEach((item) => {
+        totals.impression += item.impression;
+        totals.success += item.success;
+        totals['total collapse'] += item['total collapse'];
+      });
+      t.equal(totals.impression, 2);
+      t.equal(totals.success, 1);
+      t.equal(totals['total collapse'], 1);
       done();
     }
   }, (err, results) => {
