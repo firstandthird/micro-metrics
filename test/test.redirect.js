@@ -18,7 +18,7 @@ tap.test('can use /r route to do a tracked redirect', (t) => {
     }
   });
   setup.server.inject({
-    url: '/r?to=/detour&type=thatType',
+    url: '/r/?to=/detour&type=thatType',
     method: 'GET',
   }, (response) => {
     t.equal(response.statusCode, 302);

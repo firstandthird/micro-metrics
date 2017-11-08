@@ -35,7 +35,7 @@ if [[ "$CMD" == "test" ]]; then
     -e PORT=8081 \
     -e NODE_ENV=test \
     app \
-    npm test -- $ARGS
+    npm run tap -- $ARGS
   exit
 fi
 
