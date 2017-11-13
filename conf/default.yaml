@@ -22,6 +22,8 @@ plugins:
     collections:
       tracks:
         - keys:
+            createdOn: 1
+        - keys:
             type: 1
             createdOn: 1
   hapi-swaggered:
