@@ -320,7 +320,11 @@ tap.test('aggregate csv', (t) => {
     results1(csv, done) {
       t.equal(csv.statusCode, 200, 'returns HTTP 200');
       t.equal(typeof csv.result, 'string');
-      t.equal(csv.result.split(os.EOL)[0], '"option","impression","success","cinco de mayo party"');
+      const list = csv.result.split(os.EOL)[0].split(',');
+      t.notEqual(list.indexOf('"option"'), -1);
+      t.notEqual(list.indexOf('"impression"'), -1);
+      t.notEqual(list.indexOf('"success"'), -1);
+      t.notEqual(list.indexOf('"cinco de mayo party"'), -1);
       t.equal(csv.headers['content-type'], 'application/csv');
       done();
     }
