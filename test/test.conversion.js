@@ -110,7 +110,17 @@ tap.test('report', (t) => {
         }
       }, done);
     },
-    report1(add1, add2, add3, done) {
+    add4(done) {
+      setup.server.req.post('/api/conversion', {
+        payload: {
+          name: 'test',
+          event: 'success',
+          option: 'b',
+          session: '123'
+        }
+      }, done);
+    },
+    report1(add1, add2, add3, add4, done) {
       server.req.get('/api/report/conversion', {
         query: {
           name: 'test'
@@ -125,7 +135,8 @@ tap.test('report', (t) => {
         'a - impression': 1,
         'b - impression': 1,
         'a - success': 1,
-        'b - success': 0 });
+        'b - success': 1
+      });
       done();
     }
   }, (err, results) => {
