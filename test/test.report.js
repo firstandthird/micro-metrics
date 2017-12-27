@@ -817,7 +817,7 @@ tap.test('can use the report method to get an aggregate list of metrics grouped 
 
         const firstRowTokens = response.result.split(os.EOL)[1].split(',');
         t.equal(typeof firstRowTokens[0], 'string');
-        t.equal(firstRowTokens[1], '142.45000000000002');
+        t.equal(parseFloat(firstRowTokens[1]).toFixed(2), '142.45');
         t.equal(firstRowTokens[2], '0.15');
         t.equal(firstRowTokens[3], '1394');
 
