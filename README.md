@@ -1,7 +1,7 @@
-# micro-metrics [![Build Status](https://travis-ci.org/firstandthird/micro-metrics.svg?branch=master)](https://travis-ci.org/firstandthird/micro-metrics)
+# micro-metrics [![Build Status](https://travis-ci.org/firstandthird/micro-metrics.svg?branch=master)](https://travis-ci.org/firstandthird/micro-metrics) [![Coverage Status](https://coveralls.io/repos/github/firstandthird/micro-metrics/badge.svg?branch=master)](https://coveralls.io/github/firstandthird/micro-metrics?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/firstandthird/micro-metrics.svg)](https://greenkeeper.io/)
 ## a microservice metrics api server using docker
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/firstandthird/micro-metrics.svg)](https://greenkeeper.io/)
+
 
 #### API Routes
 - **_/api/track_** (POST)
