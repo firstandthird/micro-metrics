@@ -35,7 +35,7 @@
     "hapi-req": "^0.4.0",
     "hapi-swaggered": "2.9.0",
     "joi": "^10.4.1",
-    "json2csv": "^3.7.3",
+    "json2csv": "^4.0.1",
     "lodash": "4.17.4",
     "rapptor": "^3.4.0"
   },
