@@ -1,3 +1,7 @@
+host: 'http://{{env.virtualHost}}'
+mongo:
+  url: "{{env.mongoFile ? readFile(env.mongoFile) : env.mongoUrl }}"
+
 plugins:
   hapi-auto-handler:
     _priority: -1
