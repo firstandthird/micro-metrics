@@ -2,7 +2,7 @@ module.exports = function(query) {
   const server = this;
   const findObj = {};
 
-  if (query.last && query.last !== '0') {
+  if (typeof query.last !== 'undefined') {
     query.startDate = server.methods.extractStartDate(query.last);
     const end = new Date();
     end.setSeconds(0, 0);
