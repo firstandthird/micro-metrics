@@ -86,7 +86,7 @@ exports.groupby = {
           server.db.tracks.aggregate([
             { $match: subQuery },
             { $group }
-          ], (eachErr, result) => {
+          ], { explain: false, cursor: {} }).toArray((eachErr, result) => {
             if (eachErr) {
               return eachDone(eachErr);
             }
