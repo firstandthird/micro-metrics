@@ -73,10 +73,10 @@ exports.aggregate = {
           max: { $max: '$value' },
           min: { $min: '$value' }
         };
-        return server.db.tracks.aggregate([
+        server.db.tracks.aggregate([
           { $match: query },
           { $group }
-        ], { explain: false, cursor: {} }, done);
+        ], { explain: false, cursor: {} }).toArray(done);
       },
       map(dataset, aggregate, done) {
         aggregate.forEach((item) => {

@@ -46,7 +46,7 @@ exports.report = {
               count: { $sum: 1 }
             }
           }
-        ], { explain: false }, done);
+        ], { explain: false, cursor: {} }).toArray(done);
       },
       reply(request, server, find, done) {
         done(null, {
