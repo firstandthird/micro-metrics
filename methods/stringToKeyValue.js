@@ -19,7 +19,4 @@ module.exports = {
     });
     return obj;
   },
-  // options: {
-  //   callback: false
-  // }
 };
