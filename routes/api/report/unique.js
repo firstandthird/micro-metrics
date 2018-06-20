@@ -19,7 +19,6 @@ exports.report = {
     }
   },
   async handler(request, h) {
-    const response = h.response();
     const server = request.server;
     const filter = request.query || {};
     const query = server.methods.getReportQuery(filter);
