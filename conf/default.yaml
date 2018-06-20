@@ -3,18 +3,15 @@ mongo:
   url: "{{ENV.MONGO_FILE ? readFile(ENV.MONGO_FILE) : ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics'}}"
 
 plugins:
-  hapi-auto-handler:
-    _priority: -1
   hapi-req:
-    _priority: -2
     localPrefix: '{{routePrefix}}'
   hapi-mongodb:
-    _priority: -3
     url: "{{mongo.url}}"
   hapi-method-loader:
-    _priority: -2
+    _dependencies:
+      - "hapi-mongodb"
+      - "hapi-mongodb-collections"
   hapi-mongodb-collections:
-    _priority: -3
     namespace: 'db'
     collections:
       - 'tracks'

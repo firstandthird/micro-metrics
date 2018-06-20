@@ -1,8 +1,5 @@
-'use strict';
 exports.main = {
   method: 'GET',
   path: '/',
-  handler: (request, reply) => {
-    reply('Hello').type('text/plain');
-  }
+  handler: (request, h) => h.response('Hello').type('text/plain')
 };

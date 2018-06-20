@@ -15,25 +15,17 @@ exports.batch = {
       }
     }
   },
-  handler: {
-    autoInject: {
-      payload(request, server, done) {
-        const payloadEvents = request.payload.events;
-        const events = payloadEvents.map((event) => {
-          event.tags = server.methods.stringToKeyValue(event.tags);
-          if (event.tags) {
-            event.tagKeys = Object.keys(event.tags);
-          }
-          return event;
-        });
-        return done(null, events);
-      },
-      insert(server, payload, done) {
-        server.db.tracks.insertMany(payload, done);
-      },
-      reply(insert, done) {
-        done(null, insert.ops);
+  async handler(request, h) {
+    const server = request.server;
+    const payloadEvents = request.payload.events;
+    const payload = payloadEvents.map((event) => {
+      event.tags = server.methods.stringToKeyValue(event.tags);
+      if (event.tags) {
+        event.tagKeys = Object.keys(event.tags);
       }
-    }
+      return event;
+    });
+    const insert = await server.db.tracks.insertMany(payload);
+    return insert.ops;
   }
 };

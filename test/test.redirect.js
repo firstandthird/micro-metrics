@@ -2,32 +2,27 @@
 const tap = require('tap');
 const setup = require('./setup.test.js');
 
-tap.beforeEach((done) => {
-  setup.withRapptor({}, [], done);
-});
-tap.afterEach((done) => {
-  setup.stop(done);
-});
+tap.beforeEach(() => setup.withRapptor({}, []));
+tap.afterEach(() => setup.stop());
 
-tap.test('can use /r route to do a tracked redirect', (t) => {
+tap.test('can use /r route to do a tracked redirect', async(t) => {
   setup.server.route({
     path: '/detour',
     method: 'GET',
-    handler: (req, res) => {
-      res.reply({ success: true });
+    handler(request, h) {
+      return { success: true };
     }
   });
-  setup.server.inject({
+
+  const response = await setup.server.inject({
     url: '/r/?to=/detour&type=thatType',
     method: 'GET',
-  }, (response) => {
-    t.equal(response.statusCode, 302);
-    setup.server.db.tracks.findOne({ type: 'thatType' }, (err, track) => {
-      t.equal(err, null);
-      t.equal(track.type, 'thatType');
-      t.equal(track.data.ip, '127.0.0.1');
-      t.equal(track.data.userAgent, 'shot');
-      t.end();
-    });
   });
+
+  t.equal(response.statusCode, 302);
+  const track = await setup.server.db.tracks.findOne({ type: 'thatType' });
+  t.equal(track.type, 'thatType');
+  t.equal(track.data.ip, '127.0.0.1');
+  t.equal(track.data.userAgent, 'shot');
+  t.end();
 });

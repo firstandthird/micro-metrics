@@ -3,22 +3,18 @@
 exports.main = {
   method: 'GET',
   path: '/r/',
-  handler: (request, reply) => {
+  async handler(request, h) {
     const payload = request.query;
     const to = payload.to;
 
     if (!to) {
-      return reply({ err: 'must provide a location to redirect' });
+      return { err: 'must provide a location to redirect' };
     }
 
     delete payload.to;
 
     payload.data = request.server.methods.extractInfo(request);
-    request.server.req.post('/api/track', { payload }, (err, result) => {
-      if (err) {
-        return reply(err);
-      }
-      return reply.redirect(to);
-    });
+    await request.server.req.post('/api/track', { payload });
+    return h.redirect(to);
   }
 };

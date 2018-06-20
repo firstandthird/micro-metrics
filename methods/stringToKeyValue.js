@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   method(str) {
     if (!str) {
@@ -20,7 +19,7 @@ module.exports = {
     });
     return obj;
   },
-  options: {
-    callback: false
-  }
+  // options: {
+  //   callback: false
+  // }
 };

@@ -1,12 +1,13 @@
 'use strict';
-const csv = require('json2csv');
+const Parser = require('json2csv').Parser;
 
 module.exports = {
   method(content, fields) {
-    const options = { data: content, doubleQuotes: "'", flatten: true };
+    const options = { doubleQuotes: "'", flatten: true };
     if (fields) {
       options.fields = fields;
     }
-    return csv(options);
+    const parser = new Parser(options);
+    return parser.parse(content);
   }
 };

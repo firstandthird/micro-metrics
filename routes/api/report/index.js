@@ -18,22 +18,14 @@ exports.report = {
       }
     }
   },
-  handler: {
-    autoInject: {
-      query(server, request, done) {
-        const filter = request.query || {};
-        const query = server.methods.getReportQuery(filter);
-        done(null, query);
-      },
-      find(query, server, done) {
-        server.db.tracks.find(query).sort({ createdOn: 1 }).toArray((err, results) => done(err, results));
-      },
-      reply(request, server, find, done) {
-        done(null, {
-          count: find.length,
-          results: find
-        });
-      }
-    }
+  async handler(request, h) {
+    const server = request.server;
+    const filter = request.query || {};
+    const query = server.methods.getReportQuery(filter);
+    const find = await server.db.tracks.find(query).sort({ createdOn: 1 }).toArray();
+    return {
+      count: find.length,
+      results: find
+    };
   }
 };

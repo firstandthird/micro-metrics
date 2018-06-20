@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const async = require('async');
 
 exports.report = {
   path: '/api/report/conversion',
@@ -13,77 +12,60 @@ exports.report = {
       }
     }
   },
-  handler: {
-    autoInject: {
-      name(request, done) {
-        done(null, request.query.name);
-      },
-      events(name, server, done) {
-        server.req.get('/api/tag-values', {
-          query: {
-            type: `conversion.${name}`,
-            tag: 'event'
-          }
-        }, done);
-      },
-      options(name, server, done) {
-        server.req.get('/api/tag-values', {
-          query: {
-            type: `conversion.${name}`,
-            tag: 'option'
-          }
-        }, done);
-      },
-      apiCalls(name, request, events, options, done) {
-        const calls = [];
-        events.forEach((event) => {
-          options.forEach((option) => {
-            const query = {
-              type: `conversion.${name}`,
-              tags: `event:${event},option:${option}`
-            };
-            if (request.query.period) {
-              query.period = request.query.period;
-            }
-            if (request.query.last) {
-              query.last = request.query.last;
-            }
-            calls.push({
-              event,
-              option,
-              query
-            });
-          });
-        });
-        done(null, calls);
-      },
-      get(apiCalls, server, done) {
-        async.map(apiCalls, (call, next) => {
-          server.req.get('/api/report/aggregate', {
-            query: call.query
-          }, next);
-        }, done);
-      },
-      map(apiCalls, get, done) {
-        const out = [];
-        const req = get[0];
-        req.forEach((tmp, reqIndex) => {
-          const columns = {
-            dateString: req[reqIndex].dateString,
-            date: req[reqIndex].date
-          };
-          apiCalls.forEach((call, callIndex) => {
-            if (get[callIndex][reqIndex]) {
-              columns[`${call.option} - ${call.event}`] = get[callIndex][reqIndex].sum;
-            }
-          });
-          out.push(columns);
-        });
-        done(null, out);
-      },
-      reply(map, done) {
-        done(null, map);
+  handler: async (request, h) => {
+    const server = request.server;
+    const name = request.query.name;
+    const events = await server.req.get('/api/tag-values', {
+      query: {
+        type: `conversion.${name}`,
+        tag: 'event'
       }
-    }
+    });
+    const options = await server.req.get('/api/tag-values', {
+      query: {
+        type: `conversion.${name}`,
+        tag: 'option'
+      }
+    });
+    const apiCalls = [];
+    events.forEach((event) => {
+      options.forEach((option) => {
+        const query = {
+          type: `conversion.${name}`,
+          tags: `event:${event},option:${option}`
+        };
+        if (request.query.period) {
+          query.period = request.query.period;
+        }
+        if (request.query.last) {
+          query.last = request.query.last;
+        }
+
+        apiCalls.push({
+          event,
+          option,
+          query
+        });
+      });
+    });
+    const get = await Promise.all(apiCalls.map(call => server.req.get('/api/report/aggregate', {
+      query: call.query
+    })));
+    const req = get[0];
+    const map = [];
+    req.forEach((tmp, reqIndex) => {
+      const columns = {
+        dateString: req[reqIndex].dateString,
+        date: req[reqIndex].date
+      };
+      apiCalls.forEach((call, callIndex) => {
+        if (get[callIndex][reqIndex]) {
+          columns[`${call.option} - ${call.event}`] = get[callIndex][reqIndex].sum;
+        }
+      });
+      return map.push(columns);
+    });
+
+    return map;
   }
 };
