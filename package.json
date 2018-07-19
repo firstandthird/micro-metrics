@@ -36,7 +36,7 @@
     "hapi-swaggered": "2.9.0",
     "joi": "^10.4.1",
     "json2csv": "^3.7.3",
-    "lodash": "4.17.4",
+    "lodash": "4.17.5",
     "rapptor": "^3.4.0"
   },
   "devDependencies": {
