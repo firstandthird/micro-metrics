@@ -88,7 +88,17 @@ tap.test('can use the report method to get a list of metrics from the db by day'
     value: 142000000,
     data: 'liquid Assets only',
     userId: '2d',
-    createdOn: new Date(current - twoDays)
+    createdOn: new Date(current - threeHours)
+  },
+  {
+    type: 'BankAccount',
+    tags: { currency: 'yen' },
+    tagKeys: { currency: 'yen' },
+    fields: ['wc', 'strawberry'],
+    value: 142000000,
+    data: 'liquid Assets only',
+    userId: '2d',
+    createdOn: new Date(current - 24 * 360000)
   },
   {
     type: 'BankAccount',

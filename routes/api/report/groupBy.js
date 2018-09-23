@@ -77,6 +77,7 @@ exports.groupby = {
         { $group }
       ], { explain: false, cursor: {} }).toArray();
       taggedResults[tag] = result;
+      return resolve();
     })));
     return taggedResults;
   }
