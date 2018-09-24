@@ -3,7 +3,7 @@ const tap = require('tap');
 const setup = require('./setup.test.js');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
 
 tap.test('can use /r route to do a tracked redirect', async(t) => {
   setup.server.route({

@@ -3,7 +3,7 @@ const setup = require('./setup.test.js');
 const os = require('os');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => await setup.stop());
 
 tap.test('name required', async(t) => {
   try {

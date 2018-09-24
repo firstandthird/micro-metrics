@@ -3,7 +3,8 @@ const tap = require('tap');
 const setup = require('./setup.test.js');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
+
 
 tap.test('it can add a session and user id to the tracking payload', async(t) => {
   const response = await setup.server.inject({

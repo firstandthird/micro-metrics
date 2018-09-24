@@ -6,12 +6,10 @@ module.exports.withRapptor = async (options, dataSet) => {
   const rapptor = new Rapptor({});
   await rapptor.start();
   module.exports.server = rapptor.server;
-  await rapptor.server.db.tracks.drop(async() => {
-  });
+  await rapptor.server.db.tracks.remove({});
 };
 
-module.exports.stop = () => {
-  module.exports.server.db.tracks.drop(async() => {
-    await module.exports.server.stop();
-  });
+module.exports.stop = async() => {
+  await module.exports.server.db.tracks.remove({});
+  await module.exports.server.stop();
 };

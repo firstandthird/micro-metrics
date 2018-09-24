@@ -4,7 +4,8 @@ const setup = require('./setup.test.js');
 const async = require('async');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
+
 
 tap.test('can use the tags method to get a list of tags used in the db', async(t) => {
   t.notEqual(setup.server, null);

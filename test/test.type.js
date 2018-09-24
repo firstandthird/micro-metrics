@@ -4,7 +4,8 @@ const setup = require('./setup.test.js');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
 
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
+
 
 tap.test('can use the get method to get a metric from the db', async(t) => {
   await setup.server.db.tracks.insertMany([{

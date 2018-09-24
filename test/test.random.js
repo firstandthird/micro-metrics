@@ -3,7 +3,7 @@ const tap = require('tap');
 const setup = require('./setup.test.js');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
 
 tap.test('can use the generate method to generate a random db for testing', async(t) => {
   const result = await setup.server.methods.generate(new Date().getTime() - (1000 * 60 * 60 * 24 * 30), 10);

@@ -3,7 +3,8 @@ const tap = require('tap');
 const setup = require('./setup.test.js');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
+
 
 tap.test('can call the track route', async(t) => {
   t.notEqual(setup.server, null);

@@ -5,9 +5,7 @@ const setup = require('./setup.test.js');
 tap.beforeEach(() => {
   return setup.withRapptor({}, []);
 });
-tap.afterEach(() => {
-  return setup.stop();
-});
+tap.afterEach(async() => { await setup.stop(); });
 
 tap.test('batch insert', async(t) => {
   const created = new Date();

@@ -3,7 +3,8 @@ const tap = require('tap');
 const setup = require('./setup.test.js');
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
+
 
 tap.test('can use the /api/tag-values?tag={tagKey} to get a list of distinct keys', async(t) => {
   await setup.server.db.tracks.insertMany([{
