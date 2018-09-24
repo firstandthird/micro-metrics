@@ -2,7 +2,7 @@
 const _ = require('lodash');
 
 // generates numEntries of random data, having between 0 and 3 tags and dating from present back to startDate:
-module.exports = function(startDate, numEntries, callback) {
+module.exports = async function(startDate, numEntries) {
   const getRandomDate = () => new Date(_.random(startDate, new Date().getTime()));
   const randomTypes = ['Views', 'Posts', 'Users', 'Responses', 'Horses'];
   const randomTags = {
@@ -43,5 +43,6 @@ module.exports = function(startDate, numEntries, callback) {
     entries.push(cur);
   }
   // now add them to db:
-  this.db.tracks.insertMany(entries, (err, result) => callback(err, result));
+  const result = await this.db.tracks.insertMany(entries);
+  return result;
 };

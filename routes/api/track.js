@@ -18,31 +18,16 @@ exports.track = {
       })
     }
   },
-  handler: {
-    autoInject: {
-      validated(server, request, done) {
-        const validated = request.payload;
-        validated.tags = server.methods.stringToKeyValue(validated.tags);
-        validated.fields = server.methods.stringToKeyValue(validated.fields);
-        validated.data = server.methods.stringToKeyValue(validated.data);
-
-        if (validated.tags) {
-          validated.tagKeys = Object.keys(validated.tags);
-        }
-        return done(null, validated);
-      },
-      insert(server, validated, done) {
-        server.db.tracks.insertOne(validated, done);
-      },
-      verify(insert, done) {
-        if (insert.result.ok !== 1) {
-          return done({ err: insert.result, type: 'dbErr', message: 'Db Insert Result returned ok:0', data: insert });
-        }
-        return done(null, insert.ops[0]);
-      },
-      reply(verify, done) {
-        return done(null, verify);
-      }
+  async handler(request, h) {
+    const server = request.server;
+    const validated = request.payload;
+    validated.tags = server.methods.stringToKeyValue(validated.tags);
+    validated.fields = server.methods.stringToKeyValue(validated.fields);
+    validated.data = server.methods.stringToKeyValue(validated.data);
+    if (validated.tags) {
+      validated.tagKeys = Object.keys(validated.tags);
     }
+    const insert = await server.db.tracks.insertOne(validated);
+    return insert.ops[0];
   }
 };

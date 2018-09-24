@@ -36,7 +36,7 @@
 
 - **_/api/types_** (GET)
 
-Returns a list of all the metric types in the database. 
+Returns a list of all the metric types in the database.
 
 
 #### Tracking Pixel

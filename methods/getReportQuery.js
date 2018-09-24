@@ -3,10 +3,13 @@ module.exports = function(query) {
   const findObj = {};
 
   if (typeof query.last !== 'undefined') {
-    query.startDate = server.methods.extractStartDate(query.last);
-    const end = new Date();
-    end.setSeconds(0, 0);
-    query.endDate = end.getTime() + (1000 * 60);
+    // if 'last' is 0 then don't set a range
+    if (query.last !== '0') {
+      query.startDate = server.methods.extractStartDate(query.last);
+      const end = new Date();
+      end.setSeconds(0, 0);
+      query.endDate = end.getTime() + (1000 * 60);
+    }
   }
 
   if (query.type) {

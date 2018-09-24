@@ -1,4 +1,3 @@
-'use strict';
 const Joi = require('joi');
 
 exports.report = {
@@ -19,41 +18,34 @@ exports.report = {
       }
     }
   },
-  handler: {
-    autoInject: {
-      query(server, request, done) {
-        const filter = request.query || {};
-        const query = server.methods.getReportQuery(filter);
-        done(null, query);
-      },
-      find(query, request, server, done) {
-        const uniqueId = `$${request.query.unique}`;
+  async handler(request, h) {
+    const server = request.server;
+    const filter = request.query || {};
+    const query = server.methods.getReportQuery(filter);
 
-        // At a minimum - the unique element should exist
-        const q = Object.assign({}, query);
-        q[request.query.unique] = { $exists: 1 };
-        server.db.tracks.aggregate([
-          {
-            $match: q
-          },
-          {
-            $group: {
-              _id: uniqueId,
-              types: { $addToSet: '$type' },
-              tags: { $addToSet: '$tags' },
-              values: { $addToSet: '$value' },
-              data: { $addToSet: '$data' },
-              count: { $sum: 1 }
-            }
-          }
-        ], { explain: false, cursor: {} }).toArray(done);
+    const uniqueId = `$${request.query.unique}`;
+
+    // At a minimum - the unique element should exist
+    const q = Object.assign({}, query);
+    q[request.query.unique] = { $exists: 1 };
+    const find = await server.db.tracks.aggregate([
+      {
+        $match: q
       },
-      reply(request, server, find, done) {
-        done(null, {
-          count: find.length,
-          results: find,
-        });
+      {
+        $group: {
+          _id: uniqueId,
+          types: { $addToSet: '$type' },
+          tags: { $addToSet: '$tags' },
+          values: { $addToSet: '$value' },
+          data: { $addToSet: '$data' },
+          count: { $sum: 1 }
+        }
       }
-    }
+    ], { explain: false, cursor: {} }).toArray();
+    return {
+      count: find.length,
+      results: find,
+    };
   }
 };

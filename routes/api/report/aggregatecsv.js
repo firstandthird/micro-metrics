@@ -2,45 +2,35 @@
 exports.aggregatecsv = {
   path: 'aggregate.csv',
   method: 'get',
-  handler: {
-    autoInject: {
-      aggregate(server, request, done) {
-        server.req.get('/api/report/aggregate', { query: request.query }, done);
+  async handler(request, h) {
+    const server = request.server;
+    const aggregate = await server.req.get('/api/report/aggregate', { query: request.query });
+    aggregate.forEach((record) => {
+      delete record.date;
+    });
+
+    const csv = await server.methods.csv(aggregate, [
+      {
+        label: 'Date',
+        value: 'dateString'
       },
-      map(aggregate, done) {
-        aggregate.forEach((record) => {
-          delete record.date;
-        });
-        done(null, aggregate);
+      {
+        label: 'Sum',
+        value: 'sum'
       },
-      csv(server, aggregate, done) {
-        return done(null, server.methods.csv(aggregate, [
-          {
-            label: 'Date',
-            value: 'dateString'
-          },
-          {
-            label: 'Sum',
-            value: 'sum'
-          },
-          {
-            label: 'Avg',
-            value: 'avg'
-          },
-          {
-            label: 'Max',
-            value: 'max'
-          },
-          {
-            label: 'Min',
-            value: 'min'
-          },
-        ]));
+      {
+        label: 'Avg',
+        value: 'avg'
       },
-      send(reply, csv, done) {
-        reply(null, csv).header('content-type', 'application/csv');
-        return done();
-      }
-    }
+      {
+        label: 'Max',
+        value: 'max'
+      },
+      {
+        label: 'Min',
+        value: 'min'
+      },
+    ]);
+    return h.response(csv).header('content-type', 'application/csv');
   }
 };
