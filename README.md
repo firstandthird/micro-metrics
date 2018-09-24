@@ -4,6 +4,7 @@
 
 
 #### API Routes
+
 - **_/api/track_** (POST)
 
   Create a new metric to track. Payload must be a JSON packet, can have the following params:
@@ -36,7 +37,7 @@
 
 - **_/api/types_** (GET)
 
-Returns a list of all the metric types in the database. 
+Returns a list of all the metric types in the database.
 
 
 #### Tracking Pixel
