@@ -98,7 +98,7 @@ tap.test('can use the report method to get a list of metrics from the db by day'
     value: 142000000,
     data: 'liquid Assets only',
     userId: '2d',
-    createdOn: new Date(current - 24 * 360000)
+    createdOn: new Date(current - twentyMinutes)
   },
   {
     type: 'BankAccount',
@@ -106,7 +106,7 @@ tap.test('can use the report method to get a list of metrics from the db by day'
     value: 0.15,
     data: 'liquid assets only',
     userId: '2d3h',
-    createdOn: new Date(current - twoDays - threeHours)
+    createdOn: new Date(current - sixtyDays)
   }]);
   const response = await setup.server.inject({
     method: 'GET',
