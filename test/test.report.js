@@ -11,7 +11,7 @@ const threeHours = 1000 * 60 * 60 * 3;
 const current = new Date().getTime();
 
 tap.beforeEach(() => setup.withRapptor({}, []));
-tap.afterEach(() => setup.stop());
+tap.afterEach(async() => { await setup.stop(); });
 
 tap.test('can use the report method to get a list of metrics from the db - defaults to hourly', async(t) => {
   await setup.server.db.tracks.insertMany([{
