@@ -7,18 +7,19 @@ exports.aggregate = {
     validate: {
       query: {
         period: Joi.string().default('d').allow(['h', 'm', 'd']),
-        last: Joi.string(),
+        last: Joi.string().optional(),
         type: Joi.string(),
         tags: Joi.string(),
         fields: Joi.string(),
-        value: Joi.number()
+        value: Joi.number(),
+        startDate: Joi.date().optional(),
+        endDate: Joi.date().optional()
       }
     }
   },
   async handler(request, h) {
-    const response = h.response();
     const server = request.server;
-    if (!request.query.last) {
+    if (!request.query.last && !request.query.endDate && !request.query.startDate) {
       const defaultLast = {
         d: '30d',
         h: '1d',
