@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const moment = require('moment');
 
 exports.aggregate = {
   path: 'aggregate',
@@ -41,8 +42,14 @@ exports.aggregate = {
     let current = start;
     const dataset = {};
     while (current < end) {
+      const date = moment(current);
+
+      if (request.query.startDate && request.query.endDate) {
+        date.utcOffset(moment(request.query.startDate).format());
+      }
+
       dataset[current] = {
-        dateString: new Date(current).toISOString(),
+        dateString: date.toISOString(),
         sum: 0,
         avg: 0,
         max: 0,
@@ -74,8 +81,13 @@ exports.aggregate = {
       { $group }
     ], { explain: false, cursor: {} }).toArray();
     aggregate.forEach((item) => {
-      const date = new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0); // eslint-disable-line no-underscore-dangle
-      const timestamp = date.getTime();
+      const date = moment(new Date(item._id.year, item._id.month - 1, item._id.day, item._id.hour || 0, item._id.minute || 0)); // eslint-disable-line no-underscore-dangle
+
+      if (request.query.startDate && request.query.endDate) {
+        date.utcOffset(moment(request.query.startDate).format());
+      }
+
+      const timestamp = date.valueOf();
       item.dateString = date.toISOString();
       delete item._id; //eslint-disable-line no-underscore-dangle
       dataset[timestamp] = item;
