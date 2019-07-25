@@ -1,6 +1,6 @@
-host: 'http://{{ENV.VIRTUAL_HOST}}'
+host: 'http://{{env.virtualHost}}'
 mongo:
-  url: "{{ENV.MONGO_FILE ? readFile(ENV.MONGO_FILE) : ENV.MONGO_URL || 'mongodb://mongo:27017/micrometrics'}}"
+  url: "{{env.mongoFile ? readFile(env.mongoFile) : env.mongoUrl }}"
 
 plugins:
   hapi-req:
